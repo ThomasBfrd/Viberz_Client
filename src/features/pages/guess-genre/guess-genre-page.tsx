@@ -82,7 +82,7 @@ const GuessGenrePage = () => {
             }
             const saveProgression = async () => {
                 try {
-                    const fetchRandomSong = await xpGamesService.addGameHistory(jwtToken, history);
+                    const fetchRandomSong: ResultGame | undefined = await xpGamesService.addGameHistory(jwtToken, history);
 
                     setResultGame(fetchRandomSong);
                 } catch (error) {
