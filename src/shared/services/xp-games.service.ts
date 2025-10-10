@@ -1,4 +1,5 @@
 import type {ACTIVITY_TYPE} from "../enums/activities.enum.ts";
+import type {ResultGame} from "../../features/pages/guess-genre/guess-genre-page.tsx";
 
 export interface GameHistory {
     earnedXp: number;
@@ -20,7 +21,7 @@ const userService = {
                 body: JSON.stringify(gameHistory)
             });
 
-            const data: GameHistory = await response.json();
+            const data: ResultGame = await response.json();
 
             return data;
         } catch (error) {
