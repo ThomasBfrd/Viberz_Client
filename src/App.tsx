@@ -1,5 +1,5 @@
 import './App.css'
-import {Navigate, Route, Routes} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import {lazy, Suspense} from "react";
 import Loader from "./shared/components/loader/loader.tsx";
 import HomePage from "./features/pages/home/home-page.tsx";
@@ -21,7 +21,7 @@ function App() {
                     <Route path="/profile" element={<Profile/>}/>
                     <Route path="/profile/edit" element={<EditProfile/>}/>
                     <Route path="/guess-genre" element={<GuessGenre />}/>
-                    <Route path="*" element={<Navigate to="/home" replace={true}/>}/>
+                    <Route path="*" element={<HomePage />} />
                 </Routes>
             </Suspense>
         </>
