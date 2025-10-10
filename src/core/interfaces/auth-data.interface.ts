@@ -3,4 +3,4 @@ export interface AuthData {
     refreshToken: string;
     expiresIn: number;
     userId: string;
-};
+}
