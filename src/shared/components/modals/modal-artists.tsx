@@ -1,5 +1,5 @@
 import './modal-artists.scss';
-import {useContext, useEffect, useRef, useState} from "react";
+import {type RefObject, useContext, useEffect, useRef, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import artistService from "../../services/artist.service.ts";
 import Loader from "../loader/loader.tsx";
@@ -28,7 +28,7 @@ const ModalSearchArtists = ({addSearchedArtist, toggleModal, artistsSelected}: M
     const [artists, setArtists] = useState<ArtistSearchResponse[]>([]);
     const [selectedArtist, setSelectedArtist] = useState<string[]>(artistsSelected.length > 0 ? artistsSelected : []);
     const [errorMessage, setErrorMessage] = useState('');
-    const timerId = useRef(0);
+    const timerId: RefObject<string | number | NodeJS.Timeout | undefined> = useRef(0);
     const {jwtToken} = useContext(AuthContext);
 
     const handleSearch = async (e: any) => {

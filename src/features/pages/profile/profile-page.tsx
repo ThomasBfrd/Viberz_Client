@@ -80,11 +80,15 @@ const ProfilePage = () => {
                         <h3 className="experience-value">{userInfos?.xp.level}</h3>
                     </div>
                     <div className="experience-bar">
-                        <div className="experience-progression-bar"
-                             style={{width: (userInfos?.xp.currentXp / userInfos?.xp.xpForNextLevel) * 100 + '%'}}>
+                        {userInfos?.xp.currentXp && userInfos?.xp.xpForNextLevel ? (
+                            <>
+                                <div className="experience-progression-bar"
+                                     style={{width: (userInfos?.xp.currentXp / userInfos?.xp.xpForNextLevel) * 100 + '%'}}>
 
-                        </div>
-                        <p className="experience-progression-text">{userInfos?.xp.currentXp} / {userInfos?.xp.xpForNextLevel}</p>
+                                </div>
+                                <p className="experience-progression-text">{userInfos?.xp.currentXp} / {userInfos?.xp.xpForNextLevel}</p>
+                            </>
+                        ) : null}
                     </div>
                     <div className="reputation">
                         <div className="reputation-infos">
