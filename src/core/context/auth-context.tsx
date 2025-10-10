@@ -2,7 +2,6 @@ import {type Context, createContext, type ReactNode, useCallback, useEffect, use
 import type {UserInfos} from "../../shared/interfaces/user.interface.ts";
 import type {AuthData} from "../interfaces/auth-data.interface.ts";
 import type {AuthContextInterface, RefreshTokenDTO} from "../interfaces/auth-context.interface.ts";
-import {useNavigate} from "react-router-dom";
 
 const defaultAuthContext: AuthContextInterface = {
     jwtToken: null,
@@ -96,6 +95,7 @@ function AuthProvider({children}: { children: ReactNode}) {
             if (!response.ok) throw new Error("Failed to refresh token");
 
             const data: AuthData = await response.json();
+            console.log(data)
             return login(data);
         } catch (error) {
             console.error("Refresh token failed", error);
@@ -106,8 +106,8 @@ function AuthProvider({children}: { children: ReactNode}) {
     // --- AUTO LOGIN AU MONTAGE ---
     useEffect(() => {
         const stored: string | null = localStorage.getItem("auth");
-        if (!stored && (window.location.pathname !== ("home") || window.location.pathname.includes("callback"))) {
-            logout();
+        if (!stored && window.location.pathname !== "/home" && !window.location.pathname.includes("/callback")) {
+            // Pas de logout() nécessaire ici
             return window.location.replace("/home");
         }
 
@@ -115,9 +115,8 @@ function AuthProvider({children}: { children: ReactNode}) {
             const parsed = JSON.parse(stored);
             setJwtToken(parsed.jwtToken);
             setRefreshToken(parsed.refreshToken);
-            setExpiresAt(parsed.expiresAt);
+            setExpiresAt(parsed.expiresIn);  // ← Changé en expiresIn
         }
-
     }, []);
 
     // Déclenche le refresh une fois que le refreshToken est en state
