@@ -4,10 +4,9 @@ import {
     useSpotifyPlayer,
     usePlaybackState,
     usePlayerDevice,
-    useWebPlaybackSDKReady, type PlayerDevice,
+    useWebPlaybackSDKReady,
 } from "react-spotify-web-playback-sdk";
 import type {GuessSong, Artist} from "../../../shared/interfaces/guess-song.interface.ts";
-import clsx from "clsx";
 import "./music-player.scss";
 
 interface PlayerProps {
