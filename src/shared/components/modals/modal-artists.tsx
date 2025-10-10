@@ -41,7 +41,6 @@ const ModalSearchArtists = ({addSearchedArtist, toggleModal, artistsSelected}: M
             if (searchItem.length < 3 && searchItem.length > 0) {
                 setErrorMessage('3 characters min');
             }
-            console.log(searchItem)
             searchArtist(searchItem);
         }, delay);
     }
@@ -76,7 +75,6 @@ const ModalSearchArtists = ({addSearchedArtist, toggleModal, artistsSelected}: M
 
     function handleDeleteArtist(artist: string) {
         if (selectedArtist.length > 0) {
-            console.log(artist)
             const newSelectedArtist = selectedArtist.filter(artistSelected => artistSelected !== artist);
             setSelectedArtist(newSelectedArtist);
         }

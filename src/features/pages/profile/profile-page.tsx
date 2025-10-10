@@ -25,7 +25,6 @@ const ProfilePage = () => {
                 try {
                     const fetched: UserInfos | undefined = await userService.getUserInfos(jwtToken);
                     if (fetched) {
-                        console.log(fetched)
                         setUserInfos(fetched);
                         setImage(fetched?.user?.image);
                         setGenresSelected(fetched?.user?.favoriteGenres);
@@ -43,7 +42,6 @@ const ProfilePage = () => {
     }, [jwtToken]);
 
     const onClickEdit = () => {
-        console.log(userInfos)
         navigate("/profile/edit", {
             state: {
                 userInfos: userInfos

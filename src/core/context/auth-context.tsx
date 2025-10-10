@@ -96,7 +96,6 @@ function AuthProvider({children}: { children: ReactNode}) {
             if (!response.ok) throw new Error("Failed to refresh token");
 
             const data: AuthData = await response.json();
-            console.log(data)
             return login(data);
         } catch (error) {
             console.error("Refresh token failed", error);

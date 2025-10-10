@@ -71,12 +71,10 @@ export default function EditProfileComponent() {
 
     function handleSelectGenre(genre: string) {
         if (genresSelected.length > 0 && genresSelected.includes(genre)) {
-            console.log("premiere condition")
             return setGenresSelected([...genresSelected.filter((genreItem) => genreItem !== genre)])
         }
 
         if (genresSelected.length < 3 && !genresSelected.includes(genre)) {
-            console.log("second condition")
             return setGenresSelected([...genresSelected, genre]);
         }
     }
@@ -88,7 +86,6 @@ export default function EditProfileComponent() {
 
 
         if (userName === null || userName?.length === 0) {
-            console.log("userName is null")
             setErrorUserName("Username is required");
             return;
         }
@@ -136,7 +133,6 @@ export default function EditProfileComponent() {
         }
 
         if (jwtToken && updateUserPayload) {
-            console.log(updateUserPayload)
             try {
                 const updateResult = await userService.updateUserInfos(jwtToken, updateUserPayload);
                 if (updateResult !== undefined) {
