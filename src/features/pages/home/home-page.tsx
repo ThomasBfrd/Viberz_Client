@@ -1,9 +1,8 @@
 import {initiateSpotifyAuth} from "../../../shared/services/authentication-service.ts";
-import {type RefObject, useContext, useEffect, useMemo, useRef, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import './home-page.css';
 import {useNavigate} from "react-router-dom";
-import {useDraggable} from "react-use-draggable-scroll";
 import ProfilePicture from "../../../shared/components/profile-picture/profile-picture.tsx";
 import Loader from "../../../shared/components/loader/loader.tsx";
 
