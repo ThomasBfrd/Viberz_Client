@@ -1,0 +1,7 @@
+.profile-image img {
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 100px;
+}
+
+/*# sourceMappingURL=profile-picture.css.map */
