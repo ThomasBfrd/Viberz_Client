@@ -1,0 +1,23 @@
+import type {ArtistSearchResponse} from "../components/modals/modal-artists.tsx";
+
+const artistService = {
+    getSearchedArtists: async (accessToken: string, search: string) => {
+        try {
+            const response = await fetch(`https://localhost:7214/api/search?artist=${search.toLowerCase()}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                const artists: ArtistSearchResponse[] = await response.json();
+                return artists;
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+}
+
+export default artistService;
