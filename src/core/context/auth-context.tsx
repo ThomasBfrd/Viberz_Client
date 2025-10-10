@@ -2,7 +2,6 @@ import {type Context, createContext, type ReactNode, useCallback, useEffect, use
 import type {UserInfos} from "../../shared/interfaces/user.interface.ts";
 import type {AuthData} from "../interfaces/auth-data.interface.ts";
 import type {AuthContextInterface, RefreshTokenDTO} from "../interfaces/auth-context.interface.ts";
-import {useNavigate} from "react-router-dom";
 
 const defaultAuthContext: AuthContextInterface = {
     jwtToken: null,

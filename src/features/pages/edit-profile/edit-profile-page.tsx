@@ -1,5 +1,5 @@
 import './edit-profile-page.scss';
-import {useContext, useEffect, useState} from "react";
+import {type ChangeEvent, useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import type {UserInfos} from "../../../shared/interfaces/user.interface.ts";
 import type {UpdateUser} from '../../../shared/interfaces/update-user.interface.ts';

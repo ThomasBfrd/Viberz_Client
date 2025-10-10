@@ -1,3 +1,4 @@
+// @ts-ignore
 export enum GENRE {
     BASS_HOUSE = 0,
     TRAP = 1,
