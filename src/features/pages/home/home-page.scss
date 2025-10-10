@@ -1,0 +1,205 @@
+.home-container {
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  padding: 20px;
+}
+
+.home-loader {
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.home-header {
+  max-width: 580px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: flex-start;
+  width: 100%;
+
+  & .hello-text {
+    margin-left: 10px;
+    color: var(--white);
+    font-size: 2.5rem;
+    font-family: 'Roboto-Bold', 'sans-serif';
+    margin-bottom: 10px;
+  }
+
+  & .not-connected {
+
+    & .connect-button {
+      border-style: hidden;
+      margin-top: 10px;
+      margin-left: 10px;
+      width: fit-content;
+      height: fit-content;
+      padding: 10px;
+      border-radius: 20px;
+      background-color: var(--active);
+      color: var(--white);
+      font-size: 1rem;
+      font-family: 'Roboto-Medium', 'sans-serif';
+    }
+  }
+
+  & .icon-profile {
+    position: relative;
+    cursor: pointer;
+    height: 54px;
+    width: 54px;
+    border: 2px solid var(--white);
+    border-radius: 100px;
+    align-self: flex-end;
+  }
+
+  & .hello {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+
+  & .header-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 10px;
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    max-width: 320px;
+    scrollbar-width: none;
+
+    & .menu-item {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--dark);
+      border: 2px solid var(--active);
+      border-radius: 30px;
+      padding: 10px;
+      height: 45px;
+      width: 100px;
+      min-width: 100px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--active);
+      }
+
+      & .menu-item-text {
+        color: white;
+        font-size: 0.8rem;
+        font-family: 'Roboto-Regular', 'sans-serif';
+      }
+    }
+
+    & .menu-item-active {
+      background-color: var(--active);
+    }
+  }
+}
+
+.home-body {
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 20px;
+
+  & .home-category {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+    height: 150px;
+    width: 100%;
+    border-radius: 24px;
+    padding: 20px;
+    border: 2px solid #FFFFFF;
+    cursor: pointer;
+
+    & .home-category-type {
+      color: #fff;
+      font-size: 0.8rem;
+      font-family: 'Roboto-Light', 'sans-serif';
+      width: 100%;
+      margin-left: 5px;
+    }
+
+    & .home-category-name {
+      color: #fff;
+      width: 75%;
+      font-size: 2rem;
+      text-wrap: balance;
+      font-family: 'Roboto-Bold', 'sans-serif';
+    }
+  }
+
+  & .disabled {
+    overflow: hidden;
+    position: relative;
+    cursor: unset;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      filter: grayscale(1) blur(3px);
+      -webkit-filter: grayscale(1) blur(3px);
+      z-index: 1;
+    }
+
+    &:after {
+      content: "Not available";
+      color: var(--white);
+      top: 0;
+      left: 0;
+      position: absolute;
+      background-color: rgba(24, 39, 37, 0.3);
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-family: 'Roboto-Bold', 'sans-serif';
+      z-index: 2;
+    }
+  }
+}
