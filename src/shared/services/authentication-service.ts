@@ -11,7 +11,7 @@ export function initiateSpotifyAuth() {
 
 export async function getRefreshToken() {
     const refreshToken: string | null = localStorage.getItem('refreshToken');
-    const url: string = `https://localhost:7214/refreshSpotifyToken`;
+    const url: string = `${import.meta.env.VITE_BACKEND_URL}/refreshSpotifyToken`;
 
     const payload = {
         method: 'POST',

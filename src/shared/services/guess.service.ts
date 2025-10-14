@@ -1,7 +1,7 @@
 const guessService = {
     guessGenre: async (accessToken: string) => {
         try {
-            const response = await fetch('https://localhost:7214/api/guess/guess-genre', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/guess/guess-genre`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

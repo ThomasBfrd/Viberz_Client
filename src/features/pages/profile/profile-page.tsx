@@ -64,16 +64,6 @@ const ProfilePage = () => {
                 </div>
             </div>
             <div className="profile-body">
-                {/*<div className="follows">*/}
-                {/*    <div className="following">*/}
-                {/*        <h3>120</h3>*/}
-                {/*        <p>following</p>*/}
-                {/*    </div>*/}
-                {/*    <div className="followers">*/}
-                {/*        <h3>50</h3>*/}
-                {/*        <p>followers</p>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <div className="experience">
                     <div className="experience-text">
                         <p className="experience-label">lvl.</p>
@@ -83,7 +73,7 @@ const ProfilePage = () => {
                         {userInfos?.xp.currentXp && userInfos?.xp.xpForNextLevel ? (
                             <>
                                 <div className="experience-progression-bar"
-                                     style={{width: (userInfos?.xp.currentXp / userInfos?.xp.xpForNextLevel) * 100 + '%'}}>
+                                     style={{width: ((userInfos?.xp.currentXp - userInfos?.xp.xpForPreviousLevel) / userInfos?.xp.xpForNextLevel) * 100 + '%'}}>
 
                                 </div>
                                 <p className="experience-progression-text">{userInfos?.xp.currentXp} / {userInfos?.xp.xpForNextLevel}</p>
@@ -101,7 +91,7 @@ const ProfilePage = () => {
                     <div className="tastes-container">
                         <h4 className="tastes-label">Top genres</h4>
                         <div className="tastes-list">
-                            {genresSelected ? genresSelected.map((genre: string, index: number) => (
+                            {genresSelected.length > 0 ? genresSelected.map((genre: string, index: number) => (
                                 <div key={index} className="tastes-list-item">{genre}{index === genresSelected.length - 1 ? "" : ","}</div>
                             )) : <div className="tastes-list-item">You don't have selected genres...</div>}
                         </div>
@@ -109,7 +99,7 @@ const ProfilePage = () => {
                     <div className="tastes-container">
                         <h4 className="tastes-label">Top artists</h4>
                         <div className="tastes-list">
-                            {artists ? artists.map((artist: string, index: number) => (
+                            {artists.length > 0 ? artists.map((artist: string, index: number) => (
                                 <div key={index} className="tastes-list-item">{artist}{index === artists.length - 1 ? "" : ","}</div>
                             )) : <div className="tastes-list-item">You don't have selected artists...</div>}
                         </div>

@@ -15,6 +15,7 @@ export interface ResultGame {
     userId: string;
     level: number;
     currentXp: number;
+    xpForPreviousLevel: number;
     xpForNextLevel: number;
     gradeName: string;
     levelUp: boolean;
@@ -36,7 +37,7 @@ const GuessGenrePage = () => {
     const [path, setPath] = useState<string>("");
     const [liked, setLiked] = useState<boolean>(false);
     const [resultGame, setResultGame] = useState<ResultGame | undefined>(undefined);
-    const totalWaves: number = 3;
+    const totalWaves: number = 2;
 
     useEffect(() => {
         if (jwtToken && !randomSong) {
@@ -178,7 +179,7 @@ const GuessGenrePage = () => {
                         </div>
                         <div className="experience-bar">
                             <div className="experience-progression-bar"
-                                 style={{width: (resultGame.currentXp / resultGame.xpForNextLevel) * 100 + '%'}}>
+                                 style={{width: ((resultGame.currentXp - resultGame.xpForPreviousLevel) / resultGame.xpForNextLevel) * 100 + '%'}}>
 
                             </div>
                             <p className="experience-progression-text">{resultGame.currentXp} / {resultGame.xpForNextLevel}</p>
