@@ -1,7 +1,7 @@
 const genresService = {
     getGenres: async (accessToken: string) => {
         try {
-            const response = await fetch('https://localhost:7214/api/genres/getGenres', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/genres/getGenres`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

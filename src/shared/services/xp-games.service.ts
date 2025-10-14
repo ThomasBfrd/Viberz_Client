@@ -12,7 +12,7 @@ const userService = {
     addGameHistory: async (jwtToken: string, gameHistory: GameHistory) => {
         console.log(jwtToken);
         try {
-            const response = await fetch('https://localhost:7214/api/xp-history/add-history-game', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/xp-history/add-history-game`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,

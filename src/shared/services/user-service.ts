@@ -6,7 +6,7 @@ const userService = {
     getUserInfos: async (jwtToken: string) => {
         console.log(jwtToken);
         try {
-            const response = await fetch('https://localhost:7214/api/user/me', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
@@ -37,7 +37,7 @@ const userService = {
     updateUserInfos: async (jwtToken: string, updateUserInfoPayload: UpdateUser) => {
         console.log(updateUserInfoPayload);
         try {
-            const response = await fetch('https://localhost:7214/api/user/me', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
