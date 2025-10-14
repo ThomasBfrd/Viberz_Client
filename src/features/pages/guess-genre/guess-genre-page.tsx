@@ -37,7 +37,7 @@ const GuessGenrePage = () => {
     const [path, setPath] = useState<string>("");
     const [liked, setLiked] = useState<boolean>(false);
     const [resultGame, setResultGame] = useState<ResultGame | undefined>(undefined);
-    const totalWaves: number = 2;
+    const totalWaves: number = 6;
 
     useEffect(() => {
         if (jwtToken && !randomSong) {
