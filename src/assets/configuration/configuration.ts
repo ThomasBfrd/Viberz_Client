@@ -1,3 +1,4 @@
+export const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 export const VITE_CLIENT_ID = import.meta.env.SPOTIFY_CLIENT_ID;
 export const VITE_REDIRECT_URI = import.meta.env.REDIRECT_URI ?? "";
 export const VITE_AUTH_ENDPOINT = import.meta.env.AUTH_ENDPOINT

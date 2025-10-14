@@ -37,6 +37,7 @@ function AuthProvider({children}: { children: ReactNode}) {
 
     // --- LOGIN ---
     const login = (data: AuthData) => {
+        console.log(data)
         const expiry = Date.now() + 5 * 1000;
         const authStorage: string | null = localStorage.getItem("auth");
         let parsed: string = "";
@@ -86,7 +87,7 @@ function AuthProvider({children}: { children: ReactNode}) {
                 refreshToken: refreshToken,
                 clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID
             }
-            const response = await fetch("https://localhost:7214/refreshSpotifyToken", {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/refreshSpotifyToken`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bodyRequest),

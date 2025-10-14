@@ -20,7 +20,7 @@ const CallbackPage = () => {
 
         const fetchToken = async () => {
             try {
-                const res = await fetch("https://localhost:7214/getSpotifyToken", {
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getSpotifyToken`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code, redirectUri: import.meta.env.VITE_REDIRECT_URI }),
