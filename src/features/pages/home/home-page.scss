@@ -1,14 +1,22 @@
 .home-container {
-  height: 100dvh;
+  position: relative;
+  height: 100vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  background-color: var(--background);
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: start;
   padding: 20px;
+  z-index: 1;
+
 }
+
+.home-header, .home-body {
+  position: relative;
+  z-index: 2;
+}
+
 
 .home-loader {
   overflow: hidden;
@@ -152,7 +160,7 @@
 
     & .home-category-type {
       color: #fff;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-family: 'Roboto-Light', 'sans-serif';
       width: 100%;
       margin-left: 5px;
@@ -160,7 +168,7 @@
 
     & .home-category-name {
       color: #fff;
-      width: 75%;
+      width: 50%;
       font-size: 2rem;
       text-wrap: balance;
       font-family: 'Roboto-Bold', 'sans-serif';

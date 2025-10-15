@@ -4,7 +4,6 @@ import type {UpdateUser} from "../interfaces/update-user.interface.ts";
 
 const userService = {
     getUserInfos: async (jwtToken: string) => {
-        console.log(jwtToken);
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
                 method: 'GET',
@@ -35,7 +34,6 @@ const userService = {
         }
     },
     updateUserInfos: async (jwtToken: string, updateUserInfoPayload: UpdateUser) => {
-        console.log(updateUserInfoPayload);
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
                 method: 'PUT',
@@ -57,7 +55,6 @@ const userService = {
                 },
                 xp: data.xp
             };
-            console.log(userInfo);
             return userInfo;
         } catch (error) {
             console.error('Erreur lors de la récupération des informations utilisateur:', error);
