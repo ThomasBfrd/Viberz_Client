@@ -10,7 +10,6 @@ export interface GameHistory {
 
 const userService = {
     addGameHistory: async (jwtToken: string, gameHistory: GameHistory) => {
-        console.log(jwtToken);
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/xp-history/add-history-game`, {
                 method: 'POST',

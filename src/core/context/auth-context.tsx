@@ -37,7 +37,6 @@ function AuthProvider({children}: { children: ReactNode}) {
 
     // --- LOGIN ---
     const login = (data: AuthData) => {
-        console.log(data)
         const expiry = Date.now() + 5 * 1000;
         const authStorage: string | null = localStorage.getItem("auth");
         let parsed: string = "";
@@ -96,7 +95,6 @@ function AuthProvider({children}: { children: ReactNode}) {
             if (!response.ok) throw new Error("Failed to refresh token");
 
             const data: AuthData = await response.json();
-            console.log(data)
             return login(data);
         } catch (error) {
             console.error("Refresh token failed", error);
@@ -108,7 +106,6 @@ function AuthProvider({children}: { children: ReactNode}) {
     useEffect(() => {
         const stored: string | null = localStorage.getItem("auth");
         if (!stored && window.location.pathname !== "/home" && !window.location.pathname.includes("/callback")) {
-            // Pas de logout() nécessaire ici
             return window.location.replace("/home");
         }
 
@@ -116,7 +113,7 @@ function AuthProvider({children}: { children: ReactNode}) {
             const parsed = JSON.parse(stored);
             setJwtToken(parsed.jwtToken);
             setRefreshToken(parsed.refreshToken);
-            setExpiresAt(parsed.expiresIn);  // ← Changé en expiresIn
+            setExpiresAt(parsed.expiresIn);
         }
     }, []);
 

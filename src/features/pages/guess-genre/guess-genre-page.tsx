@@ -32,7 +32,7 @@ const GuessGenrePage = () => {
     const [score, setScore] = useState<number>(0);
     const [earnedXp, setEarnedXp] = useState<number>(0);
     const [genres, setGenres] = useState<string[]>([]);
-    const {jwtToken} = useContext(AuthContext);
+    const {jwtToken, logout} = useContext(AuthContext);
     const [confirmModalVisible, setConfirmModalVisible] = useState<boolean>(false);
     const [path, setPath] = useState<string>("");
     const [liked, setLiked] = useState<boolean>(false);
@@ -40,6 +40,12 @@ const GuessGenrePage = () => {
     const totalWaves: number = 6;
 
     useEffect(() => {
+
+        if (!jwtToken) {
+            logout();
+            navigate("/home");
+        }
+
         if (jwtToken && !randomSong) {
             const getSongFromRandomPlaylist = async () => {
                 try {
@@ -214,7 +220,7 @@ const GuessGenrePage = () => {
                                             isCorrect !== null && genre !== randomSong.genre && "quiz-answers-props-button-null",
                                             isCorrect !== null && !isCorrect && genre !== randomSong.genre && "quiz-answers-props-button-result-false"
                                         )}
-                                        onClick={() => onSelectGenre(genre)}>
+                                        onClick={() => !resultWave ? onSelectGenre(genre) : null}>
                                         <p className="quiz-answers-props-button-text">{genre}</p>
                                     </div>
                                 ))}
@@ -235,7 +241,7 @@ const GuessGenrePage = () => {
                                 </button>
                             ) : (
                                 <button className={!answer ? "quiz-submit-button disabled" :"quiz-submit-button"}
-                                        onClick={onSubmitAnswer}>
+                                        onClick={() => answer && onSubmitAnswer()}>
                                     <p className="quiz-submit-button-text">Verify</p>
                                 </button>
                             )}

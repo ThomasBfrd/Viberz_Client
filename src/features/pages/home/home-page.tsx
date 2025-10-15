@@ -48,7 +48,7 @@ const menuItems: Array<MenuItem> = [
 ]
 
 export default function HomePage() {
-    const {isLoggedIn} = useContext(AuthContext);
+    const {isLoggedIn, jwtToken} = useContext(AuthContext);
     const [logged, setLogged] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
@@ -154,7 +154,7 @@ export default function HomePage() {
                                 <div
                                     className={menuItem.available ? "home-category" : "home-category disabled"}
                                     style={{backgroundImage : `url(${menuItem.background})`}}
-                                    onClick={() => onRedirectToCategory(menuItem.path)}
+                                    onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : initiateSpotifyAuth()}
                                     key={index}>
                                     <div className="home-category-type">{menuItem.type}</div>
                                     <div className="home-category-name">{menuItem.name}</div>
