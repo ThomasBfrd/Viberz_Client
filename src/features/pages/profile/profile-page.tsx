@@ -54,7 +54,7 @@ const ProfilePage = () => {
         <div className="profile-container">
             <div className="profile-header">
                 {image ? (
-                    <ProfilePicture image={image} height={100} width={100}/>
+                    <ProfilePicture image={image} height={90} width={90}/>
                 ) : null}
                 <div className="profile-header-infos">
                     <p className="profile-header-infos-name">@{userName?.toLowerCase()}</p>

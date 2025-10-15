@@ -40,6 +40,6 @@
 
 html,
 body {
-    height: 100dvh;
-    overflow: hidden;
+    height: 100vh;
+    background-color: var(--background);
 }
