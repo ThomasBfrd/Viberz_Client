@@ -146,7 +146,7 @@ const PlayerUI = ({randomSong}: { randomSong: GuessSong }) => {
                     <div className="informations-text-artists">
                             <p className="artists">
                         {randomSong.song.track.artists.map((artist: Artist, index: number) => (
-                                <>{artist.name}{randomSong.song.track.artists.length - 1 !== index ? ', ' : ''}</>
+                                <span key={index}>{artist.name}{randomSong.song.track.artists.length - 1 !== index ? ', ' : ''}</span>
                         ))}
                             </p>
                     </div>
