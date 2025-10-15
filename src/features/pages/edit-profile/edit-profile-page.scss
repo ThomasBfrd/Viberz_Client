@@ -4,8 +4,8 @@
   background-color: var(--background);
   align-items: center;
   justify-content: flex-start;
-  height: 100dvh;
-  width: 100dvw;
+  height: 100vh;
+  width: 100vw;
 }
 
 .edit-profile-content {
@@ -13,10 +13,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 5px;
   max-width: 500px;
   width: 100%;
-  height: 100%;
 }
 
 .buttons-navigation {
@@ -45,13 +44,13 @@
 .back {
   align-self: flex-start;
   margin-left: 20px;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .next {
   align-self: flex-end;
   margin-right: 20px;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .input-container {
@@ -102,7 +101,7 @@
 
 
 .favorites-container {
-  margin-bottom: 15%;
+  margin-bottom: 8%;
   border-radius: 18px;
   padding: 10px;
   display: flex;

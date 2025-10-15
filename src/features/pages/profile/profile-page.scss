@@ -1,6 +1,6 @@
 .profile-container {
   background-color: var(--background);
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -9,7 +9,7 @@
 }
 
 .profile-header {
-  padding-top: 15%;
+  padding-top: 12%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -75,7 +75,6 @@
     align-items: center;
     gap: 5px;
     width: 100%;
-    margin-bottom: 15px;
 
     & .experience-text {
       display: flex;
@@ -184,6 +183,7 @@
       background-color: var(--dark);
       border-radius: 14px;
       padding: 10px 0;
+      margin-bottom: 15px;
       width: 100%;
 
       & .tastes-label {
@@ -221,4 +221,20 @@
   align-self: flex-end;
   justify-self: flex-end;
   width: 100%;
+}
+
+@media screen and (max-height: 670px) {
+  .profile-header {
+    padding-top: 8%;
+  }
+
+  .profile-body {
+    & .profile-category {
+      margin-top: 5%;
+
+      & .tastes-container {
+        margin-bottom: 0px;
+      }
+    }
+  }
 }
