@@ -6,20 +6,22 @@ import {
     usePlayerDevice,
     useWebPlaybackSDKReady,
 } from "react-spotify-web-playback-sdk";
-import type {GuessSong, Artist} from "../../../shared/interfaces/guess-song.interface.ts";
+import type {RandomSong, Artist} from "../../../shared/interfaces/guess-song.interface.ts";
 import "./music-player.scss";
+import Loader from "../../../shared/components/loader/loader.tsx";
 
 interface PlayerProps {
-    randomSong?: GuessSong | undefined;
+    randomSong?: RandomSong | undefined;
+    accessToken?: string;
 }
 
-const MusicPlayer = ({randomSong}: PlayerProps) => {
+const MusicPlayer = ({randomSong, accessToken}: PlayerProps) => {
     const getOAuthToken = useCallback(
-        (callback: any) => callback(randomSong?.accessToken ?? ""),
-        [randomSong?.accessToken]
+        (callback: any) => callback(accessToken ?? ""),
+        [accessToken]
     );
 
-    if (!randomSong) return <p>Chargement...</p>;
+    if (!randomSong) return <Loader />;
 
     return (
         <WebPlaybackSDK
@@ -28,14 +30,14 @@ const MusicPlayer = ({randomSong}: PlayerProps) => {
             initialVolume={0.5}
             connectOnInitialized={true}
         >
-            <PlayerUI randomSong={randomSong}/>
+            <PlayerUI randomSong={randomSong} accessToken={accessToken}/>
         </WebPlaybackSDK>
     );
 };
 
-const PlayerUI = ({randomSong}: { randomSong: GuessSong }) => {
+const PlayerUI = ({randomSong, accessToken}: PlayerProps) => {
     const player = useSpotifyPlayer();
-    const playbackState = usePlaybackState(true);  // Active les mises à jour intervalle (toutes les 1s pendant la lecture)
+    const playbackState = usePlaybackState(true);
     const device = usePlayerDevice();
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState<number>(0);
@@ -47,7 +49,7 @@ const PlayerUI = ({randomSong}: { randomSong: GuessSong }) => {
         if (playbackState) {
             setIsPlaying(!playbackState.paused);
             setProgress(playbackState.position || 0);
-            setDuration(playbackState.duration || randomSong.song.track.duration_ms || 0);
+            setDuration(playbackState.duration || randomSong?.song.track.duration_ms || 0);
         }
     }, [playbackState, randomSong]);
 
@@ -61,11 +63,11 @@ const PlayerUI = ({randomSong}: { randomSong: GuessSong }) => {
                 await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device.device_id}`, {
                     method: "PUT",
                     headers: {
-                        "Authorization": `Bearer ${randomSong.accessToken}`,
+                        "Authorization": `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        uris: [`spotify:track:${randomSong.song.track.id}`],
+                        uris: [`spotify:track:${randomSong?.song.track.id}`],
                         position_ms: 0
                     }),
                 });
@@ -74,17 +76,17 @@ const PlayerUI = ({randomSong}: { randomSong: GuessSong }) => {
                 await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${device.device_id}`, {
                     method: "PUT",
                     headers: {
-                        "Authorization": `Bearer ${randomSong.accessToken}`,
+                        "Authorization": `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                     },
                 });
 
                 // Initialise la duration depuis les métadonnées de la track (disponible immédiatement)
-                setDuration(randomSong.song.track.duration_ms || 0);
+                setDuration(randomSong?.song.track.duration_ms || 0);
                 setProgress(0);
 
             } catch (err) {
-                console.error("Erreur lors du chargement : ", err);
+                console.error("Error for loading player : ", err);
             }
         };
 
@@ -93,13 +95,12 @@ const PlayerUI = ({randomSong}: { randomSong: GuessSong }) => {
         return () => {
 
         }
-    }, [device, randomSong, player]);  // Déclenche quand device est ready
+    }, [device, randomSong, player, accessToken]);
 
     const handlePlayPause = async () => {
         if (!player) return;
         if (isPlaying) await player.pause();
         else await player.resume();
-        // Pas besoin de setIsPlaying manuellement, le useEffect sync s'en charge
     };
 
     const displayTimecodes = useCallback(() => {
@@ -122,35 +123,33 @@ const PlayerUI = ({randomSong}: { randomSong: GuessSong }) => {
             setProgress(newPosition);
             await player.seek(newPosition);
         } catch (err) {
-            console.error("Erreur lors du changement de position : ", err);
+            console.error("Can't change the current position : ", err);
         }
     };
 
     // Optionnel : Afficher un loading si SDK pas prêt
     const sdkReady = useWebPlaybackSDKReady();
-    if (!sdkReady) return <p>Chargement du player Spotify...</p>;
-
-    if (!device) return <p>Attente du device...</p>;
+    if (!sdkReady || !device) return <Loader />;
 
     return (
         <div className="container">
             <div className="informations">
                 <div className="cover">
                     <img
-                        src={randomSong.song.track.album.images[0]?.url || ''}
-                        alt={`${randomSong.song.track.name} cover`}
-                        style={{width: '100%', height: '100%', objectFit: 'cover'}}  // Ajout pour l'image
+                        src={randomSong?.song.track.album.images[0]?.url || ''}
+                        alt={`${randomSong?.song.track.name} cover`}
+                        style={{width: '100%', height: '100%', objectFit: 'cover'}}
                     />
                 </div>
                 <div className="informations-text">
                     <div className="informations-text-artists">
                             <p className="artists">
-                        {randomSong.song.track.artists.map((artist: Artist, index: number) => (
-                                <span key={index}>{artist.name}{randomSong.song.track.artists.length - 1 !== index ? ', ' : ''}</span>
+                        {randomSong?.song.track.artists.map((artist: Artist, index: number) => (
+                                <span key={index}>{artist.name}{randomSong?.song.track.artists.length - 1 !== index ? ', ' : ''}</span>
                         ))}
                             </p>
                     </div>
-                    <p className="song-text">{randomSong.song.track.name}</p>
+                    <p className="song-text">{randomSong?.song.track.name}</p>
                 </div>
                 <div className="play">
                     <button className="play-button" onClick={handlePlayPause}>
