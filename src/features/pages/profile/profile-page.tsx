@@ -23,7 +23,7 @@ const ProfilePage = () => {
             const fetchUser = async () => {
                 setIsLoading(true);
                 try {
-                    const fetched: UserInfos | undefined = await userService.getUserInfos(jwtToken);
+                    const fetched: UserInfos | null = await userService.getUserInfos(jwtToken);
                     if (fetched) {
                         setUserInfos(fetched);
                         setImage(fetched?.user?.image);

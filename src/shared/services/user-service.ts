@@ -12,7 +12,19 @@ const userService = {
                     'Content-Type': 'application/json'
                 }
             });
+
+            if (!response.ok) {
+                console.error(`HTTP error! status: ${response.status}`);
+                return null;
+            }
+
             const data: UserInfos = await response.json();
+
+            if (!data.user || !data.user.email) {
+                return null;
+            }
+
+
             const userInfo: UserInfos = {
                 user: {
                     userName: data.user.userName ?? null,
@@ -25,12 +37,18 @@ const userService = {
                 xp: data.xp,
             };
 
-            const userStorage: {userName: string; image: string;} = {userName: userInfo?.user.userName, image: userInfo?.user.image};
+            const userStorage: {userName: string; image: string;} = {
+                userName: userInfo?.user.userName,
+                image: userInfo?.user.image
+            };
             localStorage.setItem('user', JSON.stringify(userStorage));
 
             return userInfo;
+
         } catch (error) {
-            console.error('Erreur lors de la récupération des informations utilisateur:', error);
+            console.error('Can\'t get user infos:', error);
+
+            return null;
         }
     },
     updateUserInfos: async (jwtToken: string, updateUserInfoPayload: UpdateUser) => {
@@ -43,7 +61,18 @@ const userService = {
                 },
                 body: JSON.stringify(updateUserInfoPayload)
             });
+
+            if (!response.ok) {
+                console.error(`HTTP error! status: ${response.status}`);
+                return null;
+            }
+
             const data: UserInfos = await response.json();
+
+            if (!data.user) {
+                return null;
+            }
+
             const userInfo: UserInfos = {
                 user: {
                     userName: data?.user.userName,
@@ -55,9 +84,11 @@ const userService = {
                 },
                 xp: data.xp
             };
+
             return userInfo;
         } catch (error) {
-            console.error('Erreur lors de la récupération des informations utilisateur:', error);
+            console.error('Can\'t update your profile:', error);
+            return null;
         }
     }
 }
