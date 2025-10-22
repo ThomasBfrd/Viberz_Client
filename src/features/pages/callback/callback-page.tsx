@@ -47,8 +47,11 @@ const CallbackPage = () => {
         const getUserInfos = async () => {
             setIsLoading(true);
             try {
-                const fetched: UserInfos | undefined = await userService.getUserInfos(jwtToken);
-                if (fetched) setUser(fetched);
+                const fetched: UserInfos | null = await userService.getUserInfos(jwtToken);
+                if (fetched) {
+                    console.log("getUserInfos:", fetched);
+                    setUser(fetched);
+                }
             } catch (err) {
                 console.error("Erreur getUserInfos:", err);
             } finally {

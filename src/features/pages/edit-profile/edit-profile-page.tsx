@@ -26,6 +26,7 @@ export default function EditProfileComponent() {
     const [errorEmail, setErrorEmail] = useState<string | null>(null);
     const [displayGenresList, setDisplayGenresList] = useState<boolean>(true);
     const [errorUpdate, setErrorUpdate] = useState<boolean>(false);
+    const [errorNoUserName, setErrorNoUserName] = useState<boolean>(false);
     const {jwtToken} = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation()
@@ -112,6 +113,7 @@ export default function EditProfileComponent() {
 
 
         setErrorUserName(null);
+        setIsLoading(false);
         setErrorEmail(null);
 
         const updateUserPayload: UpdateUser = {
@@ -134,8 +136,8 @@ export default function EditProfileComponent() {
 
         if (jwtToken && updateUserPayload) {
             try {
-                const updateResult = await userService.updateUserInfos(jwtToken, updateUserPayload);
-                if (updateResult !== undefined) {
+                const updateResult: UserInfos | null = await userService.updateUserInfos(jwtToken, updateUserPayload);
+                if (updateResult !== null) {
                     setUserInfos(updateResult);
                 }
 
@@ -175,7 +177,12 @@ export default function EditProfileComponent() {
     }
 
     function goToProfilePage() {
-        navigate("/profile");
+        console.log('go to profile page', userInfos?.user)
+        if (!userName || userName.length === 0) {
+            setErrorNoUserName(true);
+        } else {
+            navigate("/profile");
+        }
     }
 
     function onChangeUsername(e: ChangeEvent<HTMLInputElement>) {
@@ -190,6 +197,9 @@ export default function EditProfileComponent() {
         <div className="edit-profile-container">
             {errorUpdate ? (
                 <Modal eventType="error" message="Cannot update your profile, please try again" handleClose={() => setErrorUpdate(!errorUpdate)} />
+            ) : null}
+            {errorNoUserName ? (
+                <Modal eventType="error" message="You have to set a username." handleClose={() => setErrorNoUserName(!errorNoUserName)} />
             ) : null}
             {modalIsOpened ? (
                 <>
