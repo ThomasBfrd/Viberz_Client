@@ -117,13 +117,18 @@ export default function HomePage() {
                     </div>
                     ) : null}
                     <div className="home-header">
-                        {logged ? (
-                            <>
+                        <div className="header-logo-profile">
+                            <div className="header-logo">Viberz</div>
+                            {logged ? (
                                 <div className="icon-profile" onClick={onRedirectToProfile}>
                                     {userImage ? (
                                         <ProfilePicture image={userImage} height={50} width={50} />
                                     ) : null}
                                 </div>
+                            ) : null}
+                        </div>
+                        {logged ? (
+                            <>
                                 <div className="hello">
                                     <h1 className="hello-text">Hello{userName ? `, ${userName}` : ""}</h1>
                                 </div>
@@ -136,7 +141,7 @@ export default function HomePage() {
                         )
                         }
                         <div className="header-menu">
-                            <div className={categoryType === "all" ? "menu-item menu-item-active" : "menu-item"} onClick={() => setCategoryType("All")}>
+                            <div className={categoryType === "all" ? "menu-item menu-item-active" : "menu-item"} onClick={() => setCategoryType("all")}>
                                 <p className="menu-item-text">All</p>
                             </div>
                             {types.map((type: string, index: number) => {
@@ -156,8 +161,8 @@ export default function HomePage() {
                                     style={{backgroundImage : `url(${menuItem.background})`}}
                                     onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : initiateSpotifyAuth()}
                                     key={index}>
-                                    <div className="home-category-type">{menuItem.type}</div>
-                                    <div className="home-category-name">{menuItem.name}</div>
+                                    <span className="home-category-type">{menuItem.type}</span>
+                                    <h3 className="home-category-name">{menuItem.name}</h3>
                                 </div>
                             )
                         })}

@@ -1,7 +1,11 @@
-export interface GuessSong {
+export interface RandomGuessSongs {
+    randomSong: RandomSong[];
+    accessToken: string;
+}
+
+export interface RandomSong {
     song: Song;
     genre: string;
-    accessToken: string;
     earnedXp: number;
     otherGenres: string[];
 }

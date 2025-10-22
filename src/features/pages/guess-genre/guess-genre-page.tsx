@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import type {GuessSong} from "../../../shared/interfaces/guess-song.interface.ts";
+import type {RandomGuessSongs, RandomSong} from "../../../shared/interfaces/guess-song.interface.ts";
 import guessService from "../../../shared/services/guess.service.ts";
 import './guess-genre-page.scss';
 import {AuthContext} from "../../../core/context/auth-context.tsx";
@@ -23,7 +23,8 @@ export interface ResultGame {
 
 const GuessGenrePage = () => {
     const navigate = useNavigate();
-    const [randomSong, setRandomSong] = useState<GuessSong | undefined>(undefined);
+    const [randomSongs, setRandomSongs] = useState<RandomGuessSongs | null>(null);
+    const [randomSong, setRandomSong] = useState<RandomSong | null>(null);
     const [wave, setWave] = useState<number>(1);
     const [gameCompleted, setGameCompleted] = useState<boolean>(false);
     const [answer, setAnswer] = useState<string | null>(null);
@@ -46,11 +47,11 @@ const GuessGenrePage = () => {
             navigate("/home");
         }
 
-        if (jwtToken && !randomSong) {
+        if (jwtToken && wave === 1) {
             const getSongFromRandomPlaylist = async () => {
                 try {
-                    const fetchRandomSong = await guessService.guessGenre(jwtToken);
-                    setRandomSong(fetchRandomSong);
+                    const fetchRandomSongs : RandomGuessSongs = await guessService.guessGenre(jwtToken);
+                    setRandomSongs(fetchRandomSongs);
                 } catch (error) {
                     console.error(error)
                 }
@@ -58,16 +59,9 @@ const GuessGenrePage = () => {
             getSongFromRandomPlaylist();
         }
 
-        return () => {
-        };
-    }, [jwtToken, randomSong]);
-
-    useEffect(() => {
-        if (randomSong) {
-            const getGenres = shuffleGenres([randomSong.genre, ...randomSong.otherGenres]);
-            setGenres(getGenres);
-        }
-    }, [randomSong]);
+        return () => {};
+        
+    }, [jwtToken, logout, navigate, wave]);
 
     useEffect(() => {
         if (wave === totalWaves) {
@@ -75,10 +69,18 @@ const GuessGenrePage = () => {
         } else {
             setAnswer(null);
             setIsCorrect(null);
-            setRandomSong(undefined);
+            setRandomSong(null);
             setGenres([]);
+
+            const random: RandomSong | undefined = randomSongs?.randomSong[wave - 1];
+
+            if (random) {
+                const getGenres = shuffleGenres([random.genre, ...random.otherGenres]);
+                setGenres(getGenres);
+                setRandomSong(random);
+            }
         }
-    }, [wave]);
+    }, [wave, randomSongs]);
 
     useEffect(() => {
         if (gameCompleted && jwtToken) {
@@ -89,9 +91,9 @@ const GuessGenrePage = () => {
             }
             const saveProgression = async () => {
                 try {
-                    const fetchRandomSong: ResultGame | undefined = await xpGamesService.addGameHistory(jwtToken, history);
+                    const fetchSaveProgression: ResultGame | undefined = await xpGamesService.addGameHistory(jwtToken, history);
 
-                    setResultGame(fetchRandomSong);
+                    setResultGame(fetchSaveProgression);
                 } catch (error) {
                     console.error(error)
                 }
@@ -114,7 +116,7 @@ const GuessGenrePage = () => {
             if (answer === randomSong?.genre) {
                 setIsCorrect(true);
                 setScore(score + 1);
-                setEarnedXp(earnedXp + randomSong?.earnedXp);
+                setEarnedXp(earnedXp + randomSong.earnedXp);
             } else {
                 setIsCorrect(false);
             }
@@ -132,7 +134,7 @@ const GuessGenrePage = () => {
                 method: liked ? 'DELETE' : 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${randomSong?.accessToken}`
+                    'Authorization': `Bearer ${randomSongs?.accessToken}`
                 },
                 body: JSON.stringify({
                     ids: [randomSong?.song.track.id]
@@ -196,12 +198,12 @@ const GuessGenrePage = () => {
                     <>
                         <div className="quiz-header">
                             <p className="quiz-text">Question {wave}/{totalWaves-1}</p>
-                            <div className="quiz-step" style={{width: `${(wave / totalWaves) * 100}%`}}></div>
+                            <div className="quiz-step" style={{width: `${((wave - 1) / (totalWaves - 1)) * 100}%`}}></div>
                             <div className="quiz-step-completed"></div>
                         </div>
                         <div className="quiz-player">
                             {randomSong ? (
-                                <MusicPlayer randomSong={randomSong} />
+                                <MusicPlayer randomSong={randomSong} accessToken={randomSongs?.accessToken} />
                             ) : (
                                 <p style={{color: '#fff'}}>Loading song...</p>
                             )}
@@ -216,9 +218,9 @@ const GuessGenrePage = () => {
                                         className={clsx(
                                             "quiz-answers-props-button",
                                             answer === genre && "quiz-answers-props-button-selected",
-                                            isCorrect !== null && genre === randomSong.genre && "quiz-answers-props-button-correct",
-                                            isCorrect !== null && genre !== randomSong.genre && "quiz-answers-props-button-null",
-                                            isCorrect !== null && !isCorrect && genre !== randomSong.genre && "quiz-answers-props-button-result-false"
+                                            isCorrect !== null && genre === randomSong?.genre && "quiz-answers-props-button-correct",
+                                            isCorrect !== null && genre !== randomSong?.genre && "quiz-answers-props-button-null",
+                                            isCorrect !== null && !isCorrect && genre !== randomSong?.genre && "quiz-answers-props-button-result-false"
                                         )}
                                         onClick={() => !resultWave ? onSelectGenre(genre) : null}>
                                         <p className="quiz-answers-props-button-text">{genre}</p>
