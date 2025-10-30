@@ -123,3 +123,36 @@
   color: var(--white);
   font-size: 12px;
 }
+
+.quiz-answers-props-button-text {
+  color: var(--white);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.artists-name {
+  color: var(--white);
+  font-size: 14px;
+}
+
+.hidden-text {
+  display: block;
+  filter: blur(10px);
+}
+
+.reveal-text {
+  animation: reveal-text 0.5s ease-in-out;
+}
+
+@keyframes reveal-text {
+  from {
+    filter: blur(10px);
+  }
+  to {
+    filter: blur(0px);
+  }
+}

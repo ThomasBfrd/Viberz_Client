@@ -8,6 +8,7 @@ export interface RandomSong {
     genre: string;
     earnedXp: number;
     otherGenres: string[];
+    otherSongs: OtherRandomSong[];
 }
 
 export interface Image {
@@ -35,4 +36,9 @@ export interface Track {
 
 export interface Song {
     track: Track;
+}
+
+export interface OtherRandomSong {
+    title: string;
+    artists: string[];
 }

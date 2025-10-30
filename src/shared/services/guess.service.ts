@@ -1,7 +1,13 @@
+import type {ACTIVITY_TYPE} from "../enums/activities.enum.ts";
+
 const guessService = {
-    guessGenre: async (accessToken: string) => {
+    getSongs: async (accessToken: string, gameType: ACTIVITY_TYPE, genres?: string[]) => {
+        const params = new URLSearchParams();
+        if (genres) {
+            genres.forEach(genre => params.append("definedGenre", genre));
+        }
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/guess/guess-genre`, {
+            const response: Response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/guess${genres ? `?gameType=${gameType}&${params}` : `?gameType=${gameType}`}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

@@ -1,12 +1,5 @@
-import type {ACTIVITY_TYPE} from "../enums/activities.enum.ts";
-import type {ResultGame} from "../../features/pages/guess-genre/guess-genre-page.tsx";
-
-export interface GameHistory {
-    earnedXp: number;
-    activityType: ACTIVITY_TYPE;
-    genre?: string;
-    createdAt: string;
-}
+import type {ResultGame} from "../interfaces/result-game.interface.ts";
+import type {GameHistory} from "../interfaces/game-history.interface.ts";
 
 const userService = {
     addGameHistory: async (jwtToken: string, gameHistory: GameHistory) => {

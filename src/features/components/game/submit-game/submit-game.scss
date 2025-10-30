@@ -1,0 +1,72 @@
+.quiz-submit {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.quiz-action-button {
+  background-color: var(--active);
+  padding: 10px;
+  border-radius: 100px;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  border-style: hidden;
+  cursor: pointer;
+  transition: background-color 0.09s ease-in-out;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--dark);
+    }
+  }
+}
+
+.disabled {
+  background-color: rgba(38,173,214,0.15);
+  cursor: initial;
+}
+
+.quiz-submit-button-text {
+  color: var(--white);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.quiz-button-like {
+  cursor: pointer;
+  border-style: hidden;
+  background-color: var(--active);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 100px;
+  padding: 10px;
+  transition: background-color 0.09s ease-in-out;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--dark);
+    }
+  }
+}
+
+.liked {
+  background-color: var(--dark);
+  transition: background-color 0.09s ease-in-out;
+
+  &:hover {
+    background-color: var(--background);
+  }
+}
+
+.quiz-button-like-text {
+  color: var(--white);
+}
