@@ -1,43 +1,72 @@
-import {useEffect} from "react";
+import {useCallback, useState} from "react";
+
+export interface FetchResult<T> {
+    success: boolean;
+    data: T | null;
+    error?: unknown;
+    aborted?: boolean;
+}
 
 export interface FetchOptions {
-    url: string;
     method: 'GET' | 'POST' | 'PUT' | 'DELETE';
     body?: any;
     jwtToken: string;
 };
 
-export const useFetch = ({url, method, body, jwtToken
-}: FetchOptions) => {
-    useEffect(() => {
+export function useFetch<T>() {
+    const [data, setData] = useState<T | null>(null as T);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<unknown>(undefined);
+
+    const fetchData = useCallback(async (url: string, options: FetchOptions): Promise<FetchResult<T>> => {
         const controller: AbortController = new AbortController();
-        const signal: AbortSignal = controller.signal;
-        const fetchOptions = {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwtToken}`
-            },
-            body: body ?? null,
-            signal
-        };
+        setIsLoading(true);
+        setError(null);
 
-        const fetchData = async () => {
-            try {
-                const response = await fetch(url, fetchOptions);
-                return await response.json();
+        try {
+            const response = await fetch(url, {
+                method: options.method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${options.jwtToken}`
+                },
+                body: typeof options.body === "string" ? options.body : JSON.stringify(options.body),
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            catch (error: any) {
-                if (error.message === 'Aborted') return;
-                console.error(error);
+
+            if (response.status === 204) {
+                setData(null as T);
+                return {success: true, data: null};
             }
+
+            let result: T | null = null;
+            const contentType = response.headers.get('content-type');
+
+            if (contentType && contentType.includes('application/json')) {
+                result = await response.json() as T;
+                setData(result);
+            }
+
+            return {success: true, data: result};
         }
+        catch (error: unknown) {
+            if (error instanceof DOMException && error.name === 'AbortError') {
+                return {success: false, data: null, aborted: true};
+            }
+            const errorObj = error instanceof Error ? error : new Error('An unknown error occurred.');
+            setError(errorObj);
+            console.error(errorObj);
 
-        fetchData();
-
-        return () => {
-            controller.abort();
+            return {success: false, data: null, error: errorObj};
         }
+        finally {
+            setIsLoading(false);
+        }
+    }, []);
 
-    }, [url])
-};
+    return { fetchData, data, isLoading, error };
+}

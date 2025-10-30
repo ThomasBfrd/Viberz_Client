@@ -8,7 +8,8 @@ import Aurora from "./shared/components/external/Aurora/aurora.tsx";
 const Callback = lazy(() => import("./features/pages/callback/callback-page.tsx"));
 const Profile = lazy(() => import("./features/pages/profile/profile-page.tsx"));
 const EditProfile = lazy(() => import("./features/pages/edit-profile/edit-profile-page.tsx"));
-const GuessGenre = lazy(() => import("./features/pages/guess-genre/guess-genre-page.tsx"));
+const GuessGenre = lazy(() => import("./features/pages/guess/./guess-page.tsx"));
+const GuessSong = lazy(() => import("./features/pages/guess/./guess-page.tsx"));
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/profile" element={<Profile/>}/>
                     <Route path="/profile/edit" element={<EditProfile/>}/>
                     <Route path="/guess-genre" element={<GuessGenre />}/>
+                    <Route path="/guess-song" element={<GuessSong />}/>
                     <Route path="*" element={<HomePage />} />
                 </Routes>
             </Suspense>
