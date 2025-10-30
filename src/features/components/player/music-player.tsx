@@ -1,21 +1,24 @@
-import {useState, useCallback, useEffect, useRef} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {
-    WebPlaybackSDK,
-    useSpotifyPlayer,
     usePlaybackState,
     usePlayerDevice,
+    useSpotifyPlayer,
     useWebPlaybackSDKReady,
+    WebPlaybackSDK,
 } from "react-spotify-web-playback-sdk";
-import type {RandomSong, Artist} from "../../../shared/interfaces/guess-song.interface.ts";
+import type {Artist, RandomSong} from "../../../shared/interfaces/guess-song.interface.ts";
 import "./music-player.scss";
 import Loader from "../../../shared/components/loader/loader.tsx";
+import clsx from "clsx";
 
 interface PlayerProps {
     randomSong?: RandomSong | undefined;
+    gameType: string | null;
+    resultWave: boolean;
     accessToken?: string;
 }
 
-const MusicPlayer = ({randomSong, accessToken}: PlayerProps) => {
+const MusicPlayer = ({randomSong, accessToken, gameType, resultWave}: PlayerProps) => {
     const getOAuthToken = useCallback(
         (callback: any) => callback(accessToken ?? ""),
         [accessToken]
@@ -30,12 +33,12 @@ const MusicPlayer = ({randomSong, accessToken}: PlayerProps) => {
             initialVolume={0.5}
             connectOnInitialized={true}
         >
-            <PlayerUI randomSong={randomSong} accessToken={accessToken}/>
+            <PlayerUI randomSong={randomSong} gameType={gameType} resultWave={resultWave} accessToken={accessToken}/>
         </WebPlaybackSDK>
     );
 };
 
-const PlayerUI = ({randomSong, accessToken}: PlayerProps) => {
+const PlayerUI = ({randomSong, accessToken, gameType, resultWave}: PlayerProps) => {
     const player = useSpotifyPlayer();
     const playbackState = usePlaybackState(true);
     const device = usePlayerDevice();
@@ -73,13 +76,13 @@ const PlayerUI = ({randomSong, accessToken}: PlayerProps) => {
                 });
 
                 // Immédiatement pause pour éviter l'auto-play
-                await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${device.device_id}`, {
-                    method: "PUT",
-                    headers: {
-                        "Authorization": `Bearer ${accessToken}`,
-                        "Content-Type": "application/json",
-                    },
-                });
+                // await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${device.device_id}`, {
+                //     method: "PUT",
+                //     headers: {
+                //         "Authorization": `Bearer ${accessToken}`,
+                //         "Content-Type": "application/json",
+                //     },
+                // });
 
                 // Initialise la duration depuis les métadonnées de la track (disponible immédiatement)
                 setDuration(randomSong?.song.track.duration_ms || 0);
@@ -138,6 +141,10 @@ const PlayerUI = ({randomSong, accessToken}: PlayerProps) => {
                     <img
                         src={randomSong?.song.track.album.images[0]?.url || ''}
                         alt={`${randomSong?.song.track.name} cover`}
+                        className={clsx(
+                            gameType === "guess-song" && !resultWave && "hidden-text",
+                            gameType === "guess-song" && resultWave && "reveal-text"
+                        )}
                         style={{width: '100%', height: '100%', objectFit: 'cover'}}
                     />
                 </div>
@@ -145,11 +152,22 @@ const PlayerUI = ({randomSong, accessToken}: PlayerProps) => {
                     <div className="informations-text-artists">
                             <p className="artists">
                         {randomSong?.song.track.artists.map((artist: Artist, index: number) => (
-                                <span key={index}>{artist.name}{randomSong?.song.track.artists.length - 1 !== index ? ', ' : ''}</span>
+                                <span key={index}
+                                      className={clsx(
+                                          gameType === "guess-song" && !resultWave && "hidden-text",
+                                          gameType === "guess-song" && resultWave && "reveal-text"
+                                      )}
+                                >
+                                    {artist.name}{randomSong?.song.track.artists.length - 1 !== index ? ', ' : ''}
+                                </span>
                         ))}
                             </p>
                     </div>
-                    <p className="song-text">{randomSong?.song.track.name}</p>
+                    <p className={clsx(
+                        "song-text",
+                        gameType === "guess-song" && !resultWave && "hidden-text",
+                        gameType === "guess-song" && resultWave && "reveal-text"
+                    )}>{randomSong?.song.track.name}</p>
                 </div>
                 <div className="play">
                     <button className="play-button" onClick={handlePlayPause}>
