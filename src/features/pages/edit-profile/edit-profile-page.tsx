@@ -136,6 +136,7 @@ export default function EditProfileComponent() {
 
         if (jwtToken && updateUserPayload) {
             try {
+                setIsLoading(true);
                 const updateResult: UserInfos | null = await userService.updateUserInfos(jwtToken, updateUserPayload);
                 if (updateResult !== null) {
                     setUserInfos(updateResult);
@@ -148,6 +149,7 @@ export default function EditProfileComponent() {
                 return setErrorUpdate(true);
             }
             finally {
+                setIsLoading(false);
                 setIsLoading(false);
             }
         }
@@ -177,7 +179,6 @@ export default function EditProfileComponent() {
     }
 
     function goToProfilePage() {
-        console.log('go to profile page', userInfos?.user)
         if (!userName || userName.length === 0) {
             setErrorNoUserName(true);
         } else {
