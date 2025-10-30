@@ -28,7 +28,7 @@ const menuItems: Array<MenuItem> = [
         name: 'Guess the song',
         type: 'play',
         path: '/guess-song',
-        available: false,
+        available: true,
         background: "img/background-2.webp"
     },
     {
