@@ -49,7 +49,6 @@ const CallbackPage = () => {
             try {
                 const fetched: UserInfos | null = await userService.getUserInfos(jwtToken);
                 if (fetched) {
-                    console.log("getUserInfos:", fetched);
                     setUser(fetched);
                 }
             } catch (err) {
