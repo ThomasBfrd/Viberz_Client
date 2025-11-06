@@ -1,6 +1,6 @@
-import type {MenuType} from "../../features/pages/home/home-page.tsx";
+import type {MenuType} from "../types/menu.type.ts";
 
-export export interface MenuItem {
+export interface MenuItem {
     name: string;
     type: MenuType;
     path: string;

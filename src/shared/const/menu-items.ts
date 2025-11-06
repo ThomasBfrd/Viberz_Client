@@ -1,4 +1,4 @@
-import type {MenuItem} from "../../features/pages/home/home-page.tsx";
+import type {MenuItem} from "../interfaces/menu-item.interface.ts";
 
 export const menuItems: Array<MenuItem> = [
     {
