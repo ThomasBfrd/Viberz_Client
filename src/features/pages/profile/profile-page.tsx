@@ -1,7 +1,7 @@
 import './profile-page.scss';
 import {useContext, useEffect, useState} from "react";
 import type {UserInfos} from "../../../shared/interfaces/user.interface.ts";
-import userService from "../../../shared/services/user-service.ts";
+import userService from "../../../shared/services/user.service.ts";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import ProfilePicture from "../../../shared/components/profile-picture/profile-picture.tsx";
 import Loader from "../../../shared/components/loader/loader.tsx";
@@ -50,39 +50,40 @@ const ProfilePage = () => {
     }
 
     return (
-         isLoading ? <Loader/> : (
-        <div className="profile-container">
+         isLoading ? <Loader /> : (
+        <div className="profile-container" data-testid="profile-container">
             <div className="profile-header">
                 {image ? (
                     <ProfilePicture image={image} height={90} width={90}/>
                 ) : null}
                 <div className="profile-header-infos">
-                    <p className="profile-header-infos-name">@{userName?.toLowerCase()}</p>
+                    <p className="profile-header-infos-name" data-testid="profile-username">@{userName?.toLowerCase()}</p>
                 </div>
                 <div className="profile-header-buttons">
-                    <button className="button-edit" onClick={onClickEdit}>Edit</button>
+                    <button className="button-edit" onClick={onClickEdit} data-testid="edit-button">Edit</button>
                 </div>
             </div>
             <div className="profile-body">
                 <div className="experience">
                     <div className="experience-text">
                         <p className="experience-label">lvl.</p>
-                        <h3 className="experience-value">{userInfos?.xp.level}</h3>
+                        <h3 className="experience-value" data-testid="profile-level">{userInfos?.xp?.level}</h3>
                     </div>
                     <div className="experience-bar">
-                        {userInfos?.xp.currentXp && userInfos?.xp.xpForNextLevel ? (
+                        {userInfos?.xp?.currentXp && userInfos?.xp?.xpForNextLevel ? (
                             <>
                                 <div className="experience-progression-bar"
-                                     style={{width: ((userInfos?.xp.currentXp - userInfos?.xp.xpForPreviousLevel) / userInfos?.xp.xpForNextLevel) * 100 + '%'}}>
+                                     style={{width: ((userInfos?.xp?.currentXp - userInfos?.xp?.xpForPreviousLevel) / userInfos?.xp.xpForNextLevel) * 100 + '%'}}
+                                     data-testid="profile-progression-bar">
 
                                 </div>
-                                <p className="experience-progression-text">{userInfos?.xp.currentXp} / {userInfos?.xp.xpForNextLevel}</p>
+                                <p className="experience-progression-text" data-testid="profile-progression-text">{userInfos?.xp.currentXp} / {userInfos?.xp.xpForNextLevel}</p>
                             </>
                         ) : null}
                     </div>
                     <div className="reputation">
                         <div className="reputation-infos">
-                            <h2 className="grade">Grade : <span className="grade-label">{userInfos?.xp.gradeName}</span></h2>
+                            <h2 className="grade">Grade : <span className="grade-label" data-testid="profile-grade-name">{userInfos?.xp?.gradeName}</span></h2>
                         </div>
                     </div>
                 </div>
@@ -91,17 +92,17 @@ const ProfilePage = () => {
                     <div className="tastes-container">
                         <h4 className="tastes-label">Top genres</h4>
                         <div className="tastes-list">
-                            {genresSelected.length > 0 ? genresSelected.map((genre: string, index: number) => (
-                                <div key={index} className="tastes-list-item">{genre}{index === genresSelected.length - 1 ? "" : ","}</div>
-                            )) : <div className="tastes-list-item">You don't have selected genres...</div>}
+                            {genresSelected && genresSelected.length > 0 ? genresSelected.map((genre: string, index: number) => (
+                                <div key={index} className="tastes-list-item" data-testid="profile-genres">{genre}{index === genresSelected.length - 1 ? "" : ","}</div>
+                            )) : <div className="tastes-list-item" data-testid="profile-genres">You don't have selected genres...</div>}
                         </div>
                     </div>
                     <div className="tastes-container">
                         <h4 className="tastes-label">Top artists</h4>
                         <div className="tastes-list">
-                            {artists.length > 0 ? artists.map((artist: string, index: number) => (
-                                <div key={index} className="tastes-list-item">{artist}{index === artists.length - 1 ? "" : ","}</div>
-                            )) : <div className="tastes-list-item">You don't have selected artists...</div>}
+                            {artists && artists.length > 0 ? artists.map((artist: string, index: number) => (
+                                <div key={index} className="tastes-list-item" data-testid="profile-artists">{artist}{index === artists.length - 1 ? "" : ","}</div>
+                            )) : <div className="tastes-list-item" data-testid="profile-artists">You don't have selected artists...</div>}
                         </div>
                     </div>
                 </div>

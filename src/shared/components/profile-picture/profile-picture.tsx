@@ -8,8 +8,8 @@ interface ProfilePictureProps {
 
 const ProfilePicture = ({image, width, height}: ProfilePictureProps) => {
     return (
-        <div className="profile-image">
-            <img src={image} width={width} height={height} alt="user-profile" />
+        <div className="profile-image" data-testid="profile-image">
+            <img src={image} width={width} height={height} alt="user-profile" data-testid="profile-image-source" />
         </div>
     )
 }
