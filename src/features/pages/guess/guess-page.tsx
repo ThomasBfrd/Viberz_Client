@@ -10,7 +10,6 @@ import './guess-page.scss';
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import MusicPlayer from "../../components/player/music-player.tsx";
 import Footer from "../../../shared/components/footer/footer.tsx";
-import Modal from "../../../shared/components/modal/modal.tsx";
 import {useNavigate} from "react-router-dom";
 import xpGamesService from "../../../shared/services/xp-games.service.ts";
 import {ACTIVITY_TYPE} from "../../../shared/enums/activities.enum.ts";
@@ -25,6 +24,7 @@ import {shuffle} from "../../../shared/utils/shuffle.ts";
 import PreSelectGenresGame from "../../components/game/pre-select-genres-game.tsx";
 import {useFetch} from "../../../shared/hooks/useFetch.tsx";
 import useInitializeGameType from "../../../shared/hooks/useInitializeGameType.tsx";
+import EventModal from "../../../shared/components/event-modal/event-modal.tsx";
 
 const GuessPage = () => {
     const navigate = useNavigate();
@@ -251,10 +251,10 @@ const GuessPage = () => {
     return (
         <div className="quiz-page-container">
             {!gameCompleted && confirmModalVisible ? (
-                <Modal eventType="warning"
-                       message="Are you sure to cancel this game ? You will lost your earnings."
-                       handleSubmit={confirmCancel}
-                       handleClose={() => setConfirmModalVisible(false)} />
+                <EventModal eventType="warning"
+                            message="Are you sure to cancel this game ? You will lost your earnings."
+                            handleSubmit={confirmCancel}
+                            handleClose={() => setConfirmModalVisible(false)} />
             ) : null}
             {gameType === "guess-song" && !readyGuessSong ? (
                 <PreSelectGenresGame

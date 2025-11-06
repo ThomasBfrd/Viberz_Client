@@ -3,14 +3,16 @@ import {type ChangeEvent, useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import type {UserInfos} from "../../../shared/interfaces/user.interface.ts";
 import type {UpdateUser} from '../../../shared/interfaces/update-user.interface.ts';
-import userService from "../../../shared/services/user-service.ts";
+import userService from "../../../shared/services/user.service.ts";
 import genresService from "../../../shared/services/genres.service.ts";
 import {useLocation, useNavigate} from 'react-router-dom';
-import ModalSearchArtists from "../../../shared/components/modals/modal-artists.tsx";
+import ModalSearchArtists from "../../../shared/components/modal-search-artists/modal-artists.tsx";
 import ProfilePicture from "../../../shared/components/profile-picture/profile-picture.tsx";
 import EditIcon from "../../../assets/svg/edit-icon/edit-icon.tsx";
 import ExpandableList from "../../../shared/components/expandable-list/expandable-list.tsx";
-import Modal from "../../../shared/components/modal/modal.tsx";
+import {emailRegex, userNameRegex} from "../../../shared/const/input-regex.ts";
+import Loader from "../../../shared/components/loader/loader.tsx";
+import EventModal from "../../../shared/components/event-modal/event-modal.tsx";
 
 export default function EditProfileComponent() {
     const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +21,9 @@ export default function EditProfileComponent() {
     const [genres, setGenres] = useState<string[] | undefined>(undefined);
     const [genresSelected, setGenresSelected] = useState<string[]>([]);
     const [artists, setArtists] = useState<string[]>([]);
-    const [userName, setUserName] = useState<string | null>(null);
-    const [email, setEmail] = useState<string>(userInfos?.user?.email ?? "");
-    const [image, setImage] = useState<string>(userInfos?.user?.image ?? "");
+    const [userName, setUserName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [image, setImage] = useState<string>("");
     const [errorUserName, setErrorUserName] = useState<string | null>(null);
     const [errorEmail, setErrorEmail] = useState<string | null>(null);
     const [displayGenresList, setDisplayGenresList] = useState<boolean>(true);
@@ -39,6 +41,11 @@ export default function EditProfileComponent() {
         setEmail(locationState?.user?.email ?? "");
         setGenresSelected(locationState?.user.favoriteGenres);
         setArtists(locationState?.user.favoriteArtists);
+
+        if (locationState?.user.favoriteGenres.length > 0) {
+            setDisplayGenresList(false);
+        }
+
     }, [location]);
 
     useEffect(() => {
@@ -67,7 +74,7 @@ export default function EditProfileComponent() {
     }
 
     function handleCloseModal() {
-        setModalIsOpened(false);
+        setModalIsOpened(!modalIsOpened);
     }
 
     function handleSelectGenre(genre: string) {
@@ -80,41 +87,13 @@ export default function EditProfileComponent() {
         }
     }
 
-    async function submitForm(e: any) {
-        e.preventDefault();
-        const userNameRegex: RegExp = /^[a-zA-Z0-9_-]{3,20}$/
-        const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    async function submitForm() {
+        setIsLoading(false);
 
-
-        if (userName === null || userName?.length === 0) {
+        if (userName.length === 0) {
             setErrorUserName("Username is required");
             return;
         }
-
-        if (userName?.length <= 3 || userName?.length > 15) {
-            setErrorUserName("Username must be between 3 and 15 characters");
-            return;
-        }
-
-        if (email === null || email?.length === 0) {
-            setErrorEmail("Email is required");
-            return;
-        }
-
-        if (!userNameRegex.test(userName)) {
-            setErrorUserName("UserName is not valid");
-            return;
-        }
-
-        if (!emailRegex.test(email)) {
-            setErrorEmail("Email is not valid");
-            return;
-        }
-
-
-        setErrorUserName(null);
-        setIsLoading(false);
-        setErrorEmail(null);
 
         const updateUserPayload: UpdateUser = {
             image: image.split(',')[1] ?? image,
@@ -124,12 +103,14 @@ export default function EditProfileComponent() {
             favoriteGenres: genresSelected
         }
 
+        const currentImage = userInfos?.user.image?.split(',')[1] ?? userInfos?.user.image;
+
         if (updateUserPayload && userInfos &&
-            updateUserPayload.image === userInfos?.user.image?.split(",")[1] &&
+            updateUserPayload.image === currentImage &&
             updateUserPayload.email === userInfos?.user.email &&
             updateUserPayload.userName === userInfos?.user.userName &&
-            updateUserPayload.favoriteArtists.every((artist: string) => userInfos?.user.favoriteArtists.includes(artist)) &&
-            updateUserPayload.favoriteGenres.every((genre: string) => userInfos?.user.favoriteGenres.includes(genre))) {
+            updateUserPayload.favoriteArtists === userInfos?.user.favoriteArtists &&
+            updateUserPayload.favoriteGenres === userInfos?.user.favoriteGenres) {
 
             return navigate("/profile");
         }
@@ -150,7 +131,6 @@ export default function EditProfileComponent() {
             }
             finally {
                 setIsLoading(false);
-                setIsLoading(false);
             }
         }
 
@@ -162,7 +142,7 @@ export default function EditProfileComponent() {
 
         const validExtensions = ["image/jpeg", "image/jpg", "image/png"];
         if (!validExtensions.includes(file.type)) {
-            alert("Only jpg, JPEG and png are authorized!");
+            console.error("Only jpg, JPEG and png are authorized!");
             return;
         }
 
@@ -187,38 +167,66 @@ export default function EditProfileComponent() {
     }
 
     function onChangeUsername(e: ChangeEvent<HTMLInputElement>) {
-        setUserName(e.target.value);
+        const username = e.target.value;
+        setUserName(username);
+        if (username === null || username?.length === 0) {
+            return setErrorUserName("Username is required");
+        } else if (username?.length < 3 || username?.length > 15) {
+            return setErrorUserName("Username must be between 3 and 15 characters");
+        } else if (!userNameRegex.test(username)) {
+            return setErrorUserName("Username is not valid");
+        } else {
+            setErrorUserName(null);
+            return;
+        }
     }
 
     function onChangeEmail(e: ChangeEvent<HTMLInputElement>) {
-        setEmail(e.target.value);
+        const email = e.target.value;
+        setEmail(email);
+        if (email === null || email?.length === 0) {
+            setErrorEmail("Email is required");
+            return;
+        } else if (!emailRegex.test(email)) {
+            setErrorEmail("Email is not valid");
+            return;
+        } else {
+            setErrorEmail(null);
+            return;
+        }
     }
 
     return (
-        <div className="edit-profile-container">
-            {errorUpdate ? (
-                <Modal eventType="error" message="Cannot update your profile, please try again" handleClose={() => setErrorUpdate(!errorUpdate)} />
-            ) : null}
-            {errorNoUserName ? (
-                <Modal eventType="error" message="You have to set a username." handleClose={() => setErrorNoUserName(!errorNoUserName)} />
+        <div className="edit-profile-container" data-testid="edit-profile-container">
+            {isLoading ? (<div className="loading-edit-profile"><Loader /></div>) : null}
+            {errorUpdate || errorNoUserName ? (
+                <EventModal
+                    eventType="error"
+                    message={errorUpdate ? "Cannot update your profile, please try again" : "You have to set a username."}
+                    data-testid="edit-profile-error-modal"
+                    handleClose={() => errorUpdate ? setErrorUpdate(!errorUpdate) : setErrorNoUserName(!errorNoUserName)} />
             ) : null}
             {modalIsOpened ? (
-                <>
                     <ModalSearchArtists
                         addSearchedArtist={handleAddArtist}
                         toggleModal={handleCloseModal}
-                        artistsSelected={artists}
-                    >
+                        artistsSelected={artists}>
                     </ModalSearchArtists>
-                </>
                 ) : null
             }
-            <div className="edit-profile-content">
-                <div className="buttons-navigation">
-                    <button className="action-button back" onClick={goToProfilePage} disabled={isLoading}>
+            <div className="edit-profile-content" data-testid="edit-profile-error-form">
+                <div className="buttons-navigation" data-testid="edit-profile-buttons-navigation">
+                    <button
+                        className="action-button back"
+                        data-testid="edit-profile-button-back"
+                        onClick={goToProfilePage} disabled={isLoading}>
                         <span className="action-button-text">Back</span>
                     </button>
-                    <button className="action-button next" onClick={submitForm} disabled={isLoading}>
+                    <button
+                        className={isLoading || errorEmail || errorUserName ? "action-button next disabled" :
+                            "action-button next"}
+                        data-testid="edit-profile-button-save"
+                        onClick={submitForm} disabled={isLoading || errorEmail !== null || errorUserName !== null}>
                         <span className="action-button-text">Save</span>
                     </button>
                 </div>
@@ -234,6 +242,7 @@ export default function EditProfileComponent() {
                         type="file"
                         accept="image/png, image/jpeg"
                         style={{ display: "none" }}
+                        data-testid="edit-profile-edit-image-input"
                         onChange={handleFileChange}
                     />
 
@@ -242,39 +251,56 @@ export default function EditProfileComponent() {
                     </label>
 
                 </div>
-                <div className="input-container">
-                    <input className="form-input" id="nickname" placeholder="Username"
-                           defaultValue={userInfos?.user?.userName} onChange={onChangeUsername}/>
+                <div className="input-container" data-testid="edit-profile-inputs-container">
+                    <input
+                        className="form-input"
+                        id="username"
+                        placeholder="Username"
+                        data-testid="edit-profile-input-username"
+                        value={userName ?? ""}
+                        onChange={onChangeUsername}/>
                     {errorUserName ? (
-                        <p className="error-input">{errorUserName}</p>
+                        <p className="error-input" data-testid="edit-profile-error-text-username">{errorUserName}</p>
                     ) : null}
-                    <input className="form-input" id="emailAddress" placeholder="Email"
-                           defaultValue={userInfos?.user?.email} onChange={onChangeEmail}/>
+                    <input
+                        className="form-input"
+                        id="emailAddress"
+                        placeholder="Email"
+                        data-testid="edit-profile-input-email"
+                        value={email ?? ""}
+                        onChange={onChangeEmail}/>
                     {errorEmail ? (
-                        <p className="error-input">{errorEmail}</p>
+                        <p className="error-input" data-testid="edit-profile-error-text-email">{errorEmail}</p>
                     ) : null}
                 </div>
                 <ExpandableList
                     title="Favorite genres"
                     subTitle="(Max. 3)"
+                    displayButton={!(genresSelected.length === 0)}
+                    forceIcon={!displayGenresList && genresSelected.length > 0}
                     toggleExpand={handleToggleSelectGenre} />
-                <div className="favorites-container">
+                <div className="favorites-container" data-testid="edit-profile-favorites-container">
                     {genresSelected.length === 0 || displayGenresList ? (
                         genres?.map((genre: string, index: number) => (
                             <div key={index}
                                  className={genresSelected.includes(genre) ?
                                      "favorites-selected-card" : "favorites-card"}
+                                 data-testid="edit-profile-select-genre"
                                  onClick={() => handleSelectGenre(genre)}>
                                 <p
                                     className={genresSelected.includes(genre) ?
                                         "favorite-selected-genres-text" :
-                                        "favorite-genres-text"}>{genre}
+                                        "favorite-genres-text"}
+                                    data-testid="edit-profile-selected-genre-text">
+                                    {genre}
                                 </p>
                             </div>
                         ))
                     ) : genresSelected?.map((genre: string, index: number) => (
-                            <div key={index} className="favorites-selected-card">
-                                <p className="favorite-selected-genres-text">{genre}</p>
+                            <div key={index} className="favorites-selected-card" data-testid="edit-profile-select-genre">
+                                <p
+                                    className="favorite-selected-genres-text"
+                                    data-testid="edit-profile-selected-genre-text">{genre}</p>
                             </div>
                         )
                     )}
@@ -282,17 +308,21 @@ export default function EditProfileComponent() {
                 <ExpandableList
                     title="Favorite artists"
                     subTitle="(Max. 3)"
-                    toggleExpand={() => setModalIsOpened(true)}
+                    displayButton={true}
+                    toggleExpand={() => setModalIsOpened(!modalIsOpened)}
                     forceIcon={true}/>
                 {artists.length === 0 ? (
                         <div>
-                            <p className="form-message">No artists selected</p>
+                            <p className="form-message" data-testid="edit-profile-no-artists">No artists selected</p>
                         </div>
                     ) :
-                    (<div className="favorites-container">
+                    (<div className="favorites-container" data-testid="edit-profile-favorites-artists-container">
                         {artists.map((artist, index) => (
                             <div className="favorites-selected-card" key={index}>
-                                <p className="favorite-selected-genres-text" key={index}>{artist}</p>
+                                <p
+                                    className="favorite-selected-genres-text"
+                                    data-testid="edit-profile-selected-artist-text"
+                                    key={index}>{artist}</p>
                             </div>
                         ))}
                     </div>)

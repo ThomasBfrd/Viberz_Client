@@ -1,51 +1,12 @@
-import {initiateSpotifyAuth} from "../../../shared/services/authentication-service.ts";
+import {initiateSpotifyAuth} from "../../../shared/services/authentication.service.ts";
 import {useContext, useEffect, useMemo, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import './home-page.css';
 import {useNavigate} from "react-router-dom";
 import ProfilePicture from "../../../shared/components/profile-picture/profile-picture.tsx";
 import Loader from "../../../shared/components/loader/loader.tsx";
-
-export type MenuType = 'all' | 'play' | 'listen' | 'learn';
-
-export interface MenuItem {
-    name: string;
-    type: MenuType;
-    path: string;
-    available: boolean;
-    background: string
-}
-
-const menuItems: Array<MenuItem> = [
-    {
-        name: 'Guess the genre',
-        type: 'play',
-        path: '/guess-genre',
-        available: true,
-        background: "img/background-1.webp"
-    },
-    {
-        name: 'Guess the song',
-        type: 'play',
-        path: '/guess-song',
-        available: true,
-        background: "img/background-2.webp"
-    },
-    {
-        name: 'Share and discover',
-        type: 'listen',
-        path: '/playlists',
-        available: false,
-        background: "img/background-3.webp"
-    },
-    {
-        name: 'Learn the structures',
-        type: 'learn',
-        path: '/learn-structures',
-        available: false,
-        background: "img/background-4.webp"
-    },
-]
+import type {MenuItem} from "../../../shared/interfaces/menu-item.interface.ts";
+import {menuItems} from "../../../shared/const/menu-items.ts";
 
 export default function HomePage() {
     const {isLoggedIn, jwtToken} = useContext(AuthContext);
@@ -109,16 +70,17 @@ export default function HomePage() {
     }
 
     return (
-        <div className="home-container">
+        <div className="home-container" data-testid="home-container">
                 <>
                 {loading ? (
                     <div className="home-loader">
                         <Loader />
                     </div>
-                    ) : null}
+                    ) : null
+                }
                     <div className="home-header">
                         <div className="header-logo-profile">
-                            <div className="header-logo">Viberz</div>
+                            <div className="header-logo" data-testid="home-title">Viberz</div>
                             {logged ? (
                                 <div className="icon-profile" onClick={onRedirectToProfile}>
                                     {userImage ? (
@@ -130,24 +92,32 @@ export default function HomePage() {
                         {logged ? (
                             <>
                                 <div className="hello">
-                                    <h1 className="hello-text">Hello{userName ? `, ${userName}` : ""}</h1>
+                                    <h1 className="hello-text" data-testid="home-username">Hello{userName ? `, ${userName}` : ""}</h1>
                                 </div>
                             </>
                         ) : (
-                            <div className="not-connected">
+                            <div className="not-connected" data-testid="home-not-connected">
                                 <h3 className="hello-text">Login to play and discover</h3>
-                                <button className="connect-button" onClick={() => initiateSpotifyAuth()}>Connect with Spotify</button>
+                                <button
+                                    className="connect-button"
+                                    data-testid="home-connect-button"
+                                    onClick={() => initiateSpotifyAuth()}>Connect with Spotify</button>
                             </div>
                         )
                         }
                         <div className="header-menu">
-                            <div className={categoryType === "all" ? "menu-item menu-item-active" : "menu-item"} onClick={() => setCategoryType("all")}>
-                                <p className="menu-item-text">All</p>
+                            <div className={categoryType === "all" ? "menu-item menu-item-active" : "menu-item"}
+                                 data-testid="home-menu-item"
+                                 onClick={() => setCategoryType("all")}>
+                                <p className="menu-item-text" data-testid="home-menu-item-text">All</p>
                             </div>
                             {types.map((type: string, index: number) => {
                                 return (
-                                    <div className={categoryType === type ? "menu-item menu-item-active" : "menu-item"} key={index} onClick={() => setCategoryType(type)}>
-                                        <p className="menu-item-text">{type}</p>
+                                    <div className={categoryType === type ? "menu-item menu-item-active" : "menu-item"}
+                                         key={index}
+                                         data-testid="home-menu-item"
+                                         onClick={() => setCategoryType(type)}>
+                                        <p className="menu-item-text" data-testid="home-menu-item-text">{type}</p>
                                     </div>
                                 )
                             })}
@@ -162,7 +132,7 @@ export default function HomePage() {
                                     onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : initiateSpotifyAuth()}
                                     key={index}>
                                     <span className="home-category-type">{menuItem.type}</span>
-                                    <h3 className="home-category-name">{menuItem.name}</h3>
+                                    <h3 className="home-category-name" data-testid="home-category-name">{menuItem.name}</h3>
                                 </div>
                             )
                         })}

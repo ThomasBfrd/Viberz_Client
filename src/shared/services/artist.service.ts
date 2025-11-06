@@ -1,4 +1,4 @@
-import type {ArtistSearchResponse} from "../components/modals/modal-artists.tsx";
+import type {ArtistSearchResponse} from "../components/modal-search-artists/modal-artists.tsx";
 
 const artistService = {
     getSearchedArtists: async (accessToken: string, search: string) => {

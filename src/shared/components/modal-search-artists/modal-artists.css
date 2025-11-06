@@ -56,7 +56,14 @@
   padding: 10px;
 }
 
-.send-button {
+.save-container {
+  align-self: center;
+  max-width: 340px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.save-container .send-button {
   padding: 16px;
   border-radius: 18px;
   background-color: var(--active);
@@ -65,8 +72,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  align-self: flex-end;
-  margin-right: 45px;
   border-style: hidden;
   color: var(--white);
   font-size: 16px;

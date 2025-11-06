@@ -2,7 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import type {UserInfos} from "../../../shared/interfaces/user.interface.ts";
-import userService from "../../../shared/services/user-service.ts";
+import userService from "../../../shared/services/user.service.ts";
 import Loader from "../../../shared/components/loader/loader.tsx";
 import type {AuthData} from "../../../core/interfaces/auth-data.interface.ts";
 

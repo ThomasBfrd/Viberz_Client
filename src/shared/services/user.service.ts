@@ -1,4 +1,4 @@
-import {base64ToImage} from "../utils/base64Images.ts";
+import {base64ToImage} from "../utils/base64-images.ts";
 import type {UserInfos} from "../interfaces/user.interface.ts";
 import type {UpdateUser} from "../interfaces/update-user.interface.ts";
 
