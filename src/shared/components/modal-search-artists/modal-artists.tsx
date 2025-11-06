@@ -90,7 +90,7 @@ const ModalSearchArtists = ({addSearchedArtist, toggleModal, artistsSelected}: M
     }
 
     return (
-        <div className="modal-container">
+        <div className="modal-container" data-testid="modal-search-artists-container">
             <div className="modal-card">
                 <button className="close-modal" onClick={handleCancel}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
@@ -99,7 +99,7 @@ const ModalSearchArtists = ({addSearchedArtist, toggleModal, artistsSelected}: M
                     </svg>
                 </button>
                 <p className="search-label">Search Artist</p>
-                <input className="input-search" type="name" onChange={handleSearch}></input>
+                <input className="input-search" type="text" onChange={handleSearch}></input>
                 <p className="input-error-message">{errorMessage}</p>
                 <div className="result-search-container">
                     {isLoading ? (
@@ -151,9 +151,11 @@ const ModalSearchArtists = ({addSearchedArtist, toggleModal, artistsSelected}: M
                     </div>
                 </div>
             ) : null}
-            <button className="send-button" onClick={handleCloseModal}>
-                <p>Save</p>
-            </button>
+            <div className="save-container">
+                <button className="send-button" onClick={handleCloseModal}>
+                    <p>Save</p>
+                </button>
+            </div>
         </div>
     );
 };
