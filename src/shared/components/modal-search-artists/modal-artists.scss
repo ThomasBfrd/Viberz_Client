@@ -57,22 +57,29 @@
   padding: 10px;
 }
 
-.send-button {
-  padding: 16px;
-  border-radius: 18px;
-  background-color: var(--active);
-  height: 40px;
-  width: 90px;
+.save-container {
+  align-self: center;
+  max-width: 340px;
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-end;
-  margin-right: 45px;
-  border-style: hidden;
-  color: var(--white);
-  font-size: 16px;
-  cursor: pointer;
+  justify-content: flex-end;
+
+  & .send-button {
+    padding: 16px;
+    border-radius: 18px;
+    background-color: var(--active);
+    height: 40px;
+    width: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: hidden;
+    color: var(--white);
+    font-size: 16px;
+    cursor: pointer;
+  }
 }
+
 
 .result-search-container {
   display: flex;

@@ -1,5 +1,5 @@
 import React from 'react';
-import './modal.scss';
+import './event-modal.scss';
 
 export type EventType = "success" | "error" | "info" | "warning";
 
@@ -38,7 +38,7 @@ export interface ModalProps {
     handleSubmit?: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ eventType, message, handleClose, handleSubmit }) => {
+const EventModal: React.FC<ModalProps> = ({ eventType, message, handleClose, handleSubmit }) => {
     const { message: baseMessage, messageActionButton, messageCancelButton, hasSubmitAction } =
         eventModalType[eventType];
 
@@ -48,18 +48,24 @@ const Modal: React.FC<ModalProps> = ({ eventType, message, handleClose, handleSu
     const onActionClick = showSubmitButton ? handleSubmit! : handleClose;
 
     return (
-        <div className="modal-container">
+        <div className="modal-container" data-testid="event-modal-container">
             <div className={`modal-content`}>
-                <p className="modal-title">{baseMessage}</p>
-                <p className="modal-message">{message}</p>
+                <p className="modal-title" data-testid="event-modal-title">{baseMessage}</p>
+                <p className="modal-message" data-testid="event-modal-message">{message}</p>
 
                 <div className="modal-buttons">
                     {showCancelButton && (
-                        <button onClick={handleClose} className="modal-button modal-cancel">
+                        <button
+                            onClick={handleClose}
+                            className="modal-button modal-cancel"
+                            data-testid="event-modal-cancel-button">
                             {messageCancelButton}
                         </button>
                     )}
-                    <button onClick={onActionClick} className="modal-button modal-action">
+                    <button
+                        onClick={onActionClick}
+                        className="modal-button modal-action"
+                        data-testid="event-modal-action-button">
                         {messageActionButton}
                     </button>
                 </div>
@@ -68,4 +74,4 @@ const Modal: React.FC<ModalProps> = ({ eventType, message, handleClose, handleSu
     );
 };
 
-export default Modal;
+export default EventModal;

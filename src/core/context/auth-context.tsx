@@ -3,7 +3,7 @@ import type {UserInfos} from "../../shared/interfaces/user.interface.ts";
 import type {AuthData} from "../interfaces/auth-data.interface.ts";
 import type {AuthContextInterface, RefreshTokenDTO} from "../interfaces/auth-context.interface.ts";
 
-const defaultAuthContext: AuthContextInterface = {
+export const defaultAuthContext: AuthContextInterface = {
     jwtToken: null,
     refreshToken: null,
     expiresAt: null,
