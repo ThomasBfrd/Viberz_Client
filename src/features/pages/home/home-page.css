@@ -65,6 +65,9 @@
   font-family: "Roboto-Bold", "sans-serif";
   margin-bottom: 10px;
 }
+.home-header .not-connected {
+  margin-top: 20px;
+}
 .home-header .not-connected .connect-button {
   border-style: hidden;
   margin-top: 10px;
