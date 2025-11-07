@@ -55,14 +55,14 @@
 
 .back {
   align-self: flex-start;
-  margin-left: 20px;
+  margin-left: 30px;
   margin-top: 30px;
 }
 
 .next {
-  align-self: flex-end;
-  margin-right: 20px;
+  width: 300px;
   margin-top: 30px;
+  border-radius: 18px;
 }
 
 .input-container {

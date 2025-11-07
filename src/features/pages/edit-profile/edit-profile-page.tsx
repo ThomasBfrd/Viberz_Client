@@ -1,5 +1,5 @@
 import './edit-profile-page.scss';
-import {type ChangeEvent, useContext, useEffect, useState} from "react";
+import {type ChangeEvent, useCallback, useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import type {UserInfos} from "../../../shared/interfaces/user.interface.ts";
 import type {UpdateUser} from '../../../shared/interfaces/update-user.interface.ts';
@@ -35,7 +35,6 @@ export default function EditProfileComponent() {
 
     useEffect(() => {
         const locationState: UserInfos = location.state.userInfos;
-        setUserInfos(locationState);
         setImage(locationState?.user?.image ?? "");
         setUserName(locationState?.user?.userName ?? null);
         setEmail(locationState?.user?.email ?? "");
@@ -65,10 +64,6 @@ export default function EditProfileComponent() {
         };
     }, [genres, jwtToken]);
 
-    useEffect(() => {
-
-    }, [modalIsOpened, artists]);
-
     function handleAddArtist(artists: string[]): void {
         setArtists(artists);
     }
@@ -87,10 +82,10 @@ export default function EditProfileComponent() {
         }
     }
 
-    async function submitForm() {
+    const submitForm = useCallback(async () => {
         setIsLoading(false);
 
-        if (userName.length === 0) {
+        if (!userName || userName.length === 0) {
             setErrorUserName("Username is required");
             return;
         }
@@ -134,7 +129,7 @@ export default function EditProfileComponent() {
             }
         }
 
-    }
+    }, [artists, email, genresSelected, image, jwtToken, navigate, userInfos, userName]);
 
     function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -158,17 +153,20 @@ export default function EditProfileComponent() {
         setDisplayGenresList(!displayGenresList);
     }
 
-    function goToProfilePage() {
-        if (!userName || userName.length === 0) {
+    const goToProfilePage = useCallback(() => {
+        if (!userName || userName.length === 0 || userInfos?.user?.userName.length === 0) {
             setErrorNoUserName(true);
         } else {
             navigate("/profile");
         }
-    }
+    }, [navigate, userInfos, userName]);
 
     function onChangeUsername(e: ChangeEvent<HTMLInputElement>) {
-        const username = e.target.value;
+        const username: string = e.target.value;
         setUserName(username);
+        setErrorNoUserName(false);
+
+
         if (username === null || username?.length === 0) {
             return setErrorUserName("Username is required");
         } else if (username?.length < 3 || username?.length > 15) {
@@ -221,13 +219,6 @@ export default function EditProfileComponent() {
                         data-testid="edit-profile-button-back"
                         onClick={goToProfilePage} disabled={isLoading}>
                         <span className="action-button-text">Back</span>
-                    </button>
-                    <button
-                        className={isLoading || errorEmail || errorUserName ? "action-button next disabled" :
-                            "action-button next"}
-                        data-testid="edit-profile-button-save"
-                        onClick={submitForm} disabled={isLoading || errorEmail !== null || errorUserName !== null}>
-                        <span className="action-button-text">Save</span>
                     </button>
                 </div>
                 <div className="profile-image">
@@ -327,6 +318,13 @@ export default function EditProfileComponent() {
                         ))}
                     </div>)
                 }
+                <button
+                    className={isLoading || errorEmail || errorUserName ? "action-button next disabled" :
+                        "action-button next"}
+                    data-testid="edit-profile-button-save"
+                    onClick={submitForm} disabled={isLoading || errorEmail !== null || errorUserName !== null}>
+                    <span className="action-button-text">Save</span>
+                </button>
             </div>
         </div>
     )
