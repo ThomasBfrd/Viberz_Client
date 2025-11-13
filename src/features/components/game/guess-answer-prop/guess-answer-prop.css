@@ -6,6 +6,7 @@
   background-color: rgba(38, 173, 214, 0.15);
   border-radius: 8px;
   width: 100%;
+  height: 120%;
 }
 
 .quiz-answers-props-button:not(.quiz-answers-props-button-correct):not(.quiz-answers-props-button-null):not(.quiz-answers-props-button-result-false):hover {
@@ -35,10 +36,10 @@
   color: rgba(255, 255, 255, 0.15);
 }
 
-.quiz-answers-props-button-text {
+.artists-name {
+  text-align: center;
+  font-size: 13.5px;
   color: var(--white);
-  padding: 10px;
-  width: fit-content;
 }
 
 /*# sourceMappingURL=guess-answer-prop.css.map */
