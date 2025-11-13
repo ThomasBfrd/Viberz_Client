@@ -1,0 +1,117 @@
+.settings-container {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+}
+.settings-container .settings-content {
+  padding: 20px;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+.settings-container .settings-content .settings-title {
+  color: var(--white);
+  font-size: 1.5rem;
+  font-family: "Roboto-Bold", "sans-serif";
+  margin-bottom: 10px;
+}
+.settings-container .settings-content .button-settings {
+  width: 100%;
+  padding: 15px 0;
+  background-color: var(--active);
+  border-radius: 30px;
+  border-style: hidden;
+  color: var(--white);
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.settings-container .settings-content .delete-account {
+  background-color: darkred;
+  color: var(--white);
+}
+.settings-container .settings-content .signal-bug {
+  background-color: var(--dark);
+  color: var(--white);
+  border: 2px solid var(--white);
+}
+.settings-container .settings-content .logout {
+  margin-top: 80px;
+  background-color: var(--gray);
+  color: var(--dark);
+  justify-self: flex-end;
+}
+
+.bug-signal {
+  position: absolute;
+  bottom: 10px;
+  background-color: rgba(217, 217, 217, 0.2);
+  border: 1px solid var(--white);
+  border-radius: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 0;
+  animation: bug-window 0.3s ease-in-out;
+}
+.bug-signal .bug-signal-text {
+  color: var(--white);
+  margin: 5px 0;
+}
+.bug-signal .bug-description {
+  font-size: 16px;
+  align-self: flex-start;
+  margin-left: 20px;
+}
+.bug-signal .bug-signal-input {
+  width: 90%;
+  padding: 10px;
+  border-radius: 10px;
+  border-style: hidden;
+}
+.bug-signal .bug-action-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+.bug-signal .bug-action-buttons .bug-button {
+  border-style: hidden;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 100px;
+  background-color: var(--active);
+  color: var(--white);
+  font-size: 16px;
+  font-weight: bold;
+  width: 100px;
+}
+.bug-signal .bug-action-buttons .cancel-bug {
+  color: var(--dark);
+  background-color: var(--gray);
+}
+
+@keyframes bug-window {
+  from {
+    bottom: -100px;
+  }
+  to {
+    bottom: 10px;
+  }
+}
+
+/*# sourceMappingURL=settings-page.css.map */

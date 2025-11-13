@@ -1,9 +1,4 @@
 .modal-container {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.9);
-  height: 100%;
-  width: 100%;
-  z-index: 99;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,7 +8,7 @@
 
 .modal-card {
   height: auto;
-  width: 340px;
+  width: 300px;
   background-color: var(--background);
   border-radius: 18px;
   padding: 12px 8px;
@@ -37,8 +32,8 @@
   padding: 16px;
   border-radius: 18px;
   background-color: var(--white);
-  width: 290px;
-  height: 40px;
+  width: 250px;
+  height: 30px;
   color: #000;
   font-size: 16px;
   border-color: unset;
@@ -58,7 +53,7 @@
 
 .save-container {
   align-self: center;
-  max-width: 340px;
+  max-width: 300px;
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -213,4 +208,4 @@
   fill: var(--white);
 }
 
-/*# sourceMappingURL=modal-artists.css.map */
+/*# sourceMappingURL=search-artists.css.map */

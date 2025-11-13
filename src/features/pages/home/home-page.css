@@ -2,6 +2,10 @@
   position: relative;
   height: 100vh;
   overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dark) transparent;
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
@@ -213,6 +217,28 @@
   font-size: 1.5rem;
   font-family: "Roboto-Bold", "sans-serif";
   z-index: 2;
+}
+
+.home-footer {
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.home-footer .home-footer-text:last-child {
+  border-left: 1px solid var(--white);
+  padding-left: 20px;
+}
+.home-footer .home-footer-text {
+  cursor: pointer;
+  text-underline: white;
+  color: var(--white);
+  font-size: 0.8rem;
+  font-family: "Roboto-Medium", "sans-serif";
+  margin-top: 20px;
 }
 
 @media screen and (min-width: 580px) {

@@ -51,6 +51,7 @@ const userService = {
             return null;
         }
     },
+
     updateUserInfos: async (jwtToken: string, updateUserInfoPayload: UpdateUser) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
@@ -88,6 +89,61 @@ const userService = {
             return userInfo;
         } catch (error) {
             console.error('Can\'t update your profile:', error);
+            return null;
+        }
+    },
+
+    deleteUser: async (jwtToken: string, userId: string) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userId)
+            });
+
+            if (!response.ok) {
+                console.error(`HTTP error! status: ${response.status}`);
+                return null;
+            }
+
+            const data: boolean = await response.json();
+
+            if (!data) {
+                return null;
+            }
+
+            return data;
+
+        } catch (error) {
+            console.error('Can\'t update your profile:', error);
+            return null;
+        }
+    },
+
+    isWhitelisted: async (email: string) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/is-whitelisted`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(email)
+            });
+
+            if (!response.ok) {
+                console.error(`HTTP error! status: ${response.status}`);
+                return null;
+            }
+
+            const data: boolean = await response.json();
+
+            return data;
+        }
+        catch (error) {
+            console.error('Your email address is not whitelisted:', error);
             return null;
         }
     }

@@ -1,0 +1,39 @@
+.legal-container {
+  width: 100%;
+  height: 100%;
+  max-width: 350px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding-bottom: 20px;
+  margin: 20px auto;
+
+  & p, h1, h2, h3, span, li {
+    color: var(--white);
+    text-wrap: balance;
+  }
+
+  & h1 {
+    margin: 30px auto;
+    text-align: center;
+  }
+
+  & h2 {
+    margin: 20px 0;
+  }
+
+  & .back-button {
+    margin-top: 20px;
+    align-self: center;
+    cursor: pointer;
+    border-style: hidden;
+    padding: 10px;
+    background-color: var(--active);
+    color: var(--white);
+    border-radius: 30px;
+    width: 100px;
+  }
+}

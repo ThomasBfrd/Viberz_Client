@@ -24,7 +24,8 @@ import {shuffle} from "../../../shared/utils/shuffle.ts";
 import PreSelectGenresGame from "../../components/game/pre-select-genres-game.tsx";
 import {useFetch} from "../../../shared/hooks/useFetch.tsx";
 import useInitializeGameType from "../../../shared/hooks/useInitializeGameType.tsx";
-import EventModal from "../../../shared/components/event-modal/event-modal.tsx";
+import ModalOverlay from "../../../shared/components/modal-overlay/modal-overlay.tsx";
+import EventAction from "../../../shared/components/event-action/event-action.tsx";
 
 const GuessPage = () => {
     const navigate = useNavigate();
@@ -44,44 +45,51 @@ const GuessPage = () => {
     const [genres, setGenres] = useState<string[]>([]);
     const [songs, setSongs] = useState<OtherRandomSong[]>([])
     const [allGenres, setAllGenres] = useState<string[]>([]);
-    const {jwtToken, logout} = useContext(AuthContext);
+    const {jwtToken} = useContext(AuthContext);
     const [confirmModalVisible, setConfirmModalVisible] = useState<boolean>(false);
     const [path, setPath] = useState<string>("");
     const [liked, setLiked] = useState<boolean>(false);
     const [resultGame, setResultGame] = useState<ResultGame | undefined>(undefined);
+    const [isLoadingSongs, setIsLoadingSongs] = useState(false);
     const totalWaves: number = 6;
 
     useEffect(() => {
 
-        if (jwtToken && gameType === "guess-genre" && wave === 1 && !randomSongs) {
+        if (jwtToken && gameType === "guess-genre" && wave === 1 && !randomSongs && !isLoadingSongs) {
+            setIsLoadingSongs(true);
+
             const getSongFromRandomPlaylist = async () => {
                 try {
-                    const fetchRandomSongs : RandomGuessSongs = await guessService.getSongs(jwtToken, ACTIVITY_TYPE.GUESS_GENRE);
+                    const fetchRandomSongs: RandomGuessSongs = await guessService.getSongs(jwtToken, ACTIVITY_TYPE.GUESS_GENRE);
                     setRandomSongs(fetchRandomSongs);
                 } catch (error) {
                     console.error(error)
+                } finally {
+                    setIsLoadingSongs(false);
                 }
             }
 
             getSongFromRandomPlaylist();
         }
 
-        if (jwtToken && gameType === "guess-song" && readyGuessSong && wave === 1 && !randomSongs) {
+        if (jwtToken && gameType === "guess-song" && readyGuessSong && wave === 1 && !randomSongs && !isLoadingSongs) {
+            setIsLoadingSongs(true);
+            
             const getSongFromRandomPlaylist = async () => {
                 try {
                     const fetchRandomSongs : RandomGuessSongs = await guessService.getSongs(jwtToken, ACTIVITY_TYPE.GUESS_SONG, genres);
                     setRandomSongs(fetchRandomSongs);
                 } catch (error) {
                     console.error(error)
+                } finally {
+                    setIsLoadingSongs(false);
                 }
             }
 
             getSongFromRandomPlaylist();
         }
-
-        return () => {};
         
-    }, [gameType, genres, jwtToken, logout, navigate, randomSongs, readyGuessSong, wave]);
+    }, [gameType, genres, isLoadingSongs, jwtToken, randomSongs, readyGuessSong, wave]);
 
     useEffect(() => {
 
@@ -97,10 +105,7 @@ const GuessPage = () => {
             }
 
             getGenres();
-
         }
-
-        return () => {};
 
     }, [jwtToken, gameType]);
 
@@ -249,12 +254,16 @@ const GuessPage = () => {
     }, [gameType]);
 
     return (
-        <div className="quiz-page-container">
+        <div className="quiz-page-container" data-testid="guess-page-container">
             {!gameCompleted && confirmModalVisible ? (
-                <EventModal eventType="warning"
-                            message="Are you sure to cancel this game ? You will lost your earnings."
-                            handleSubmit={confirmCancel}
-                            handleClose={() => setConfirmModalVisible(false)} />
+                <ModalOverlay
+                    isClosable={false}
+                    children={<EventAction
+                        eventType="warning"
+                        message="Are you sure to cancel this game ? You will lost your earnings."
+                        handleSubmit={confirmCancel}
+                        handleClose={() => setConfirmModalVisible(false)} />}
+                />
             ) : null}
             {gameType === "guess-song" && !readyGuessSong ? (
                 <PreSelectGenresGame
@@ -269,7 +278,11 @@ const GuessPage = () => {
                             <StepperGame wave={wave} totalWaves={totalWaves} />
                             <div className="quiz-player">
                                 {randomSong ? (
-                                    <MusicPlayer randomSong={randomSong} gameType={gameType} resultWave={resultWave} accessToken={randomSongs?.accessToken} />
+                                    <MusicPlayer 
+                                        randomSong={randomSong} 
+                                        gameType={gameType} 
+                                        resultWave={resultWave} 
+                                        accessToken={randomSongs?.accessToken} />
                                 ) : (
                                     <p style={{color: '#fff'}}>Loading song...</p>
                                 )}

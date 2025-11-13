@@ -2,6 +2,7 @@ import type {AuthContextInterface} from "../../../core/interfaces/auth-context.i
 
 export const mockAuthContext: AuthContextInterface = {
     jwtToken: "fake-token",
+    userId: "fake-user-id",
     refreshToken: null,
     expiresAt: null,
     isLoggedIn: true,

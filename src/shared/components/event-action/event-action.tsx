@@ -1,5 +1,5 @@
 import React from 'react';
-import './event-modal.scss';
+import './event-action.scss';
 
 export type EventType = "success" | "error" | "info" | "warning";
 
@@ -38,7 +38,7 @@ export interface ModalProps {
     handleSubmit?: () => void;
 }
 
-const EventModal: React.FC<ModalProps> = ({ eventType, message, handleClose, handleSubmit }) => {
+const EventAction: React.FC<ModalProps> = ({ eventType, message, handleClose, handleSubmit }) => {
     const { message: baseMessage, messageActionButton, messageCancelButton, hasSubmitAction } =
         eventModalType[eventType];
 
@@ -48,30 +48,28 @@ const EventModal: React.FC<ModalProps> = ({ eventType, message, handleClose, han
     const onActionClick = showSubmitButton ? handleSubmit! : handleClose;
 
     return (
-        <div className="modal-container" data-testid="event-modal-container">
-            <div className={`modal-content`}>
-                <p className="modal-title" data-testid="event-modal-title">{baseMessage}</p>
-                <p className="modal-message" data-testid="event-modal-message">{message}</p>
+        <div className="modal-content" data-testid="event-modal-container">
+            <p className="modal-title" data-testid="event-modal-title">{baseMessage}</p>
+            <p className="modal-message" data-testid="event-modal-message">{message}</p>
 
-                <div className="modal-buttons">
-                    {showCancelButton && (
-                        <button
-                            onClick={handleClose}
-                            className="modal-button modal-cancel"
-                            data-testid="event-modal-cancel-button">
-                            {messageCancelButton}
-                        </button>
-                    )}
+            <div className="modal-buttons">
+                {showCancelButton && (
                     <button
-                        onClick={onActionClick}
-                        className="modal-button modal-action"
-                        data-testid="event-modal-action-button">
-                        {messageActionButton}
+                        onClick={handleClose}
+                        className="modal-button modal-cancel"
+                        data-testid="event-modal-cancel-button">
+                        {messageCancelButton}
                     </button>
-                </div>
+                )}
+                <button
+                    onClick={onActionClick}
+                    className="modal-button modal-action"
+                    data-testid="event-modal-action-button">
+                    {messageActionButton}
+                </button>
             </div>
         </div>
     );
 };
 
-export default EventModal;
+export default EventAction;

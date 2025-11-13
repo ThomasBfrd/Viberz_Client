@@ -12,27 +12,35 @@ const CallbackPage = () => {
     const { login, user, setUser, jwtToken } = useContext(AuthContext);
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get('code');
+
+        if (window.location.hash === "#_=_") {
+            window.location.hash = "";
+        }
+
+        const params: URLSearchParams = new URLSearchParams(window.location.search);
+        const code: string | null = params.get('code');
+
         if (!code) {
             navigate('/home');
+            return;
         }
 
         const fetchToken = async () => {
             try {
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getSpotifyToken`, {
+                    const res: Response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getSpotifyToken`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code, redirectUri: import.meta.env.VITE_REDIRECT_URI }),
                 });
+
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
                 const data: AuthData = await res.json();
-                login(data); // met à jour le context (jwtToken)
-                localStorage.setItem('refreshToken', data.refreshToken);
+                return login(data);
+
             } catch (err) {
                 console.error("Erreur getSpotifyToken:", err);
             }
-
         }
 
         fetchToken();
@@ -48,9 +56,11 @@ const CallbackPage = () => {
             setIsLoading(true);
             try {
                 const fetched: UserInfos | null = await userService.getUserInfos(jwtToken);
+
                 if (fetched) {
                     setUser(fetched);
                 }
+
             } catch (err) {
                 console.error("Erreur getUserInfos:", err);
             } finally {
@@ -61,7 +71,6 @@ const CallbackPage = () => {
         getUserInfos();
     }, [jwtToken, user, setUser]);
 
-    // 3) Navigation : seulement AFTER avoir `user`
     useEffect(() => {
         if (!user) return;
         if (!user?.user.userName || user?.user.userName.trim() === "") {
@@ -69,6 +78,7 @@ const CallbackPage = () => {
             return;
         }
         navigate("/home");
+        return;
     }, [navigate, user]);
 
     return <div>{isLoading ? <Loader /> : null}</div>;
