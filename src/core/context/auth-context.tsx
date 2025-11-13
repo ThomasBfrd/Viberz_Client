@@ -2,31 +2,14 @@ import {type Context, createContext, type ReactNode, useCallback, useEffect, use
 import type {UserInfos} from "../../shared/interfaces/user.interface.ts";
 import type {AuthData} from "../interfaces/auth-data.interface.ts";
 import type {AuthContextInterface, RefreshTokenDTO} from "../interfaces/auth-context.interface.ts";
-
-export const defaultAuthContext: AuthContextInterface = {
-    jwtToken: null,
-    refreshToken: null,
-    expiresAt: null,
-    isLoggedIn: false,
-    user: null,
-    setUser: () => {
-        throw new Error("AuthContext not initialized");
-    },
-    login: () => {
-        throw new Error("AuthContext not initialized");
-    },
-    logout: () => {
-        throw new Error("AuthContext not initialized");
-    },
-    refreshAccessToken: () => {
-        throw new Error("AuthContext not initialized");
-    },
-};
+import {setupFetchInterceptor} from "../../shared/utils/setupFetchInterceptor.ts";
+import {defaultAuthContext} from "../../shared/const/default-auth-context.ts";
 
 const AuthContext: Context<AuthContextInterface> = createContext(defaultAuthContext);
 
 function AuthProvider({children}: { children: ReactNode}) {
     const [jwtToken, setJwtToken] = useState<string | null>(null);
+    const [userId, setUserId] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [expiresAt, setExpiresAt] = useState<number | null>(null);
     const [user, setUserInfos] = useState<UserInfos | null>(null);
@@ -36,55 +19,54 @@ function AuthProvider({children}: { children: ReactNode}) {
         !!jwtToken && !!expiresAt && Date.now() < expiresAt;
 
     // --- LOGIN ---
-    const login = (data: AuthData) => {
+    const login = useCallback((data: AuthData) => {
         const expiry = Date.now() + 5 * 1000;
-        const authStorage: string | null = localStorage.getItem("auth");
-        let parsed: string = "";
 
-        if (authStorage) {
-            parsed = JSON.parse(authStorage).refreshToken
-        }
-
-        const refreshToken: string = parsed && !data.refreshToken ? parsed : data.refreshToken;
         setJwtToken(data.jwtToken);
         setRefreshToken(data.refreshToken);
+        setUserId(data.userId);
         setExpiresAt(expiry);
 
         localStorage.setItem(
             "auth",
             JSON.stringify({
                 jwtToken: data.jwtToken,
-                refreshToken: refreshToken,
+                refreshToken: data.refreshToken,
                 expiresIn: expiry,
                 userId: data.userId,
             })
         );
-    };
+
+
+    }, []);
 
     // --- LOGOUT ---
-    const logout = () => {
+    const logout = useCallback(() => {
         setJwtToken(null);
         setRefreshToken(null);
         setExpiresAt(null);
         setUserInfos(null);
         localStorage.removeItem("auth");
-        localStorage.removeItem("refreshToken");
         localStorage.removeItem("user");
-    };
+    }, []);
 
     // --- SET USER ---
-    const setUser = (userData: UserInfos) => {
+    const setUser = useCallback((userData: UserInfos) => {
         setUserInfos(userData);
-    };
+    }, []);
 
     // --- REFRESH TOKEN ---
     const refreshAccessToken = useCallback(async () => {
-        if (!refreshToken) return;
+
+        if (!refreshToken) {
+            console.warn("No refresh token available");
+            return;
+        }
 
         try {
             const bodyRequest: RefreshTokenDTO = {
-                refreshToken: refreshToken,
-                clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID
+                clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
+                refreshToken: refreshToken
             }
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/refreshSpotifyToken`, {
                 method: "POST",
@@ -95,12 +77,19 @@ function AuthProvider({children}: { children: ReactNode}) {
             if (!response.ok) throw new Error("Failed to refresh token");
 
             const data: AuthData = await response.json();
-            return login(data);
+            console.log("refresh token success", data);
+
+            if (!data.refreshToken) {
+                data.refreshToken = refreshToken;
+            }
+
+            login(data);
+
         } catch (error) {
             console.error("Refresh token failed", error);
             logout();
         }
-    }, [refreshToken]);
+    }, [login, refreshToken, logout]);
 
     // --- AUTO LOGIN AU MONTAGE ---
     useEffect(() => {
@@ -114,22 +103,25 @@ function AuthProvider({children}: { children: ReactNode}) {
             setJwtToken(parsed.jwtToken);
             setRefreshToken(parsed.refreshToken);
             setExpiresAt(parsed.expiresIn);
+            setUserId(parsed.userId);
         }
     }, []);
 
-    // Déclenche le refresh une fois que le refreshToken est en state
     useEffect(() => {
-        if (!refreshToken) return;
-        if (!expiresAt || Date.now() >= expiresAt) {
-            refreshAccessToken().then();
-        }
-    }, [refreshToken, expiresAt, refreshAccessToken]);
+        console.log("on refresh token")
+        setupFetchInterceptor(
+            () => jwtToken,
+            () => expiresAt,
+            refreshAccessToken
+        );
+    }, [expiresAt, jwtToken, refreshAccessToken]);
 
     const value: AuthContextInterface = {
         jwtToken,
         refreshToken,
         expiresAt,
         isLoggedIn,
+        userId,
         user,
         setUser,
         login,
