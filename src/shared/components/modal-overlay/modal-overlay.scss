@@ -1,0 +1,40 @@
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+
+  & .modal-overlay-container {
+    max-width: 350px;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & .modal-overlay-close-button {
+      align-self: flex-start;
+      justify-self: flex-start;
+      position: absolute;
+      border-style: hidden;
+      background: transparent;
+      fill: var(--white);
+      top: 20px;
+      right: -10px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+}
