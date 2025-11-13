@@ -137,6 +137,12 @@ export default function HomePage() {
                             )
                         })}
                     </div>
+                    <div className="home-footer">
+                        <p className="home-footer-text"
+                            onClick={() => navigate("/legal-notice")}>Legal Notice</p>
+                        <p className="home-footer-text"
+                           onClick={() => navigate("/privacy")}>Privacy</p>
+                    </div>
                 </>
 
         </div>
