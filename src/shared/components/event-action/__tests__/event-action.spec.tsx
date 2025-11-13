@@ -1,9 +1,9 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {act, cleanup, render, screen} from "@testing-library/react";
-import EventModal, {type EventType, type ModalProps} from "../event-modal";
+import EventAction, {type EventType, type ModalProps} from "../event-action.tsx";
 import userEvent from "@testing-library/user-event";
 
-describe(EventModal.name, () => {
+describe(EventAction.name, () => {
     const defaultProps: ModalProps = {
         eventType: "success" as EventType,
         message: "Success test",
@@ -44,7 +44,7 @@ describe(EventModal.name, () => {
             ])('devrait afficher la modal en $type', async ({type, title, componentProps}) => {
 
                 await act(async () => {
-                    render(<EventModal {...componentProps} />);
+                    render(<EventAction {...componentProps} />);
                 })
 
                 const modalContainer: HTMLElement | null = screen.queryByTestId("event-modal-container");
@@ -67,7 +67,7 @@ describe(EventModal.name, () => {
         it("devrait fermer la modale de confirmation si l'utilisateur clique sur cancel", async () => {
             const user = userEvent.setup();
             await act(async () => {
-                render(<EventModal {...warningProps} />);
+                render(<EventAction {...warningProps} />);
             })
 
             const modalContainer: HTMLElement | null = screen.queryByTestId("event-modal-container");
@@ -83,7 +83,7 @@ describe(EventModal.name, () => {
         it("devrait fermer la modale lors du clique sur OK", async () => {
             const user = userEvent.setup();
             await act(async () => {
-                render(<EventModal {...defaultProps} />);
+                render(<EventAction {...defaultProps} />);
             })
 
             const modalContainer: HTMLElement | null = screen.queryByTestId("event-modal-container");

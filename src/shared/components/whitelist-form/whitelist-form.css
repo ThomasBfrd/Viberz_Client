@@ -1,0 +1,58 @@
+.whitelist-form-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.whitelist-form-container .whitelist-form-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 90%;
+  max-width: 350px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: var(--background);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+.whitelist-form-container .whitelist-form-content h1, .whitelist-form-container .whitelist-form-content label, .whitelist-form-container .whitelist-form-content input {
+  color: var(--white);
+}
+.whitelist-form-container .whitelist-form-content h1 {
+  margin-bottom: 20px;
+}
+.whitelist-form-container .whitelist-form-content label {
+  margin-bottom: 10px;
+}
+.whitelist-form-container .whitelist-form-content input {
+  color: var(--dark);
+  width: 80%;
+  height: 40px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--gray);
+}
+.whitelist-form-container .whitelist-form-content .error-input {
+  color: red;
+  font-size: 14px;
+}
+.whitelist-form-container .whitelist-loading {
+  filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.whitelist-form-container .whitelist-submit {
+  width: 50%;
+  padding: 10px 0;
+  border-radius: 30px;
+  margin: 15px 0;
+  border-style: hidden;
+  background-color: var(--active);
+  color: var(--white);
+  font-size: 16px;
+}
+
+/*# sourceMappingURL=whitelist-form.css.map */

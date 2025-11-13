@@ -44,13 +44,11 @@ const GuessAnswerProp = ({answer, isCorrect, resultWave, props, title, randomSon
             )}
             onClick={() => !resultWave ? onSelectAnswer(title ? title : props[0]) : null}>
             <p className="quiz-answers-props-button-text">
-                <span>
-                    {title ? props.map((artist: string, index: number) => (
-                        <span className="artists-name" key={index}>{artist}{props.length - 1 !== index ? ', ' : ''}</span>
-                    )) : (
-                        <span className="artists-name">{props[0]}</span>
-                    )}
-                </span>
+                {title ? props.map((artist: string, index: number) => (
+                    <span className="artists-name" key={index}>{artist}{props.length - 1 !== index ? ', ' : ''}</span>
+                )) : (
+                    <span className="artists-name">{props[0]}</span>
+                )}
             </p>
         </div>
     )

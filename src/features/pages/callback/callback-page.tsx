@@ -36,8 +36,8 @@ const CallbackPage = () => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
                 const data: AuthData = await res.json();
-                login(data);
-                localStorage.setItem('refreshToken', data.refreshToken);
+                return login(data);
+
             } catch (err) {
                 console.error("Erreur getSpotifyToken:", err);
             }
@@ -70,7 +70,7 @@ const CallbackPage = () => {
 
         getUserInfos();
     }, [jwtToken, user, setUser]);
-    
+
     useEffect(() => {
         if (!user) return;
         if (!user?.user.userName || user?.user.userName.trim() === "") {

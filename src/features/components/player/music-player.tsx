@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {
     usePlaybackState,
     usePlayerDevice,
@@ -20,7 +20,7 @@ interface PlayerProps {
 
 const MusicPlayer = ({randomSong, accessToken, gameType, resultWave}: PlayerProps) => {
     const getOAuthToken = useCallback(
-        (callback: any) => callback(accessToken ?? ""),
+        (callback: (arg0: string) => Promise<unknown>) => callback(accessToken ?? ""),
         [accessToken]
     );
 
@@ -74,15 +74,6 @@ const PlayerUI = ({randomSong, accessToken, gameType, resultWave}: PlayerProps) 
                         position_ms: 0
                     }),
                 });
-
-                // Immédiatement pause pour éviter l'auto-play
-                // await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${device.device_id}`, {
-                //     method: "PUT",
-                //     headers: {
-                //         "Authorization": `Bearer ${accessToken}`,
-                //         "Content-Type": "application/json",
-                //     },
-                // });
 
                 // Initialise la duration depuis les métadonnées de la track (disponible immédiatement)
                 setDuration(randomSong?.song.track.duration_ms || 0);

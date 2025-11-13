@@ -1,8 +1,9 @@
-import './modal-artists.scss';
+import './search-artists.scss';
 import {type RefObject, useContext, useEffect, useRef, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import artistService from "../../services/artist.service.ts";
 import Loader from "../loader/loader.tsx";
+import CloseIcon from "../svg/close/close-icon.tsx";
 
 export interface ModalSearchArtistsProps {
     addSearchedArtist: (artist: string[]) => void;
@@ -93,10 +94,7 @@ const ModalSearchArtists = ({addSearchedArtist, toggleModal, artistsSelected}: M
         <div className="modal-container" data-testid="modal-search-artists-container">
             <div className="modal-card">
                 <button className="close-modal" onClick={handleCancel}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
-                        <path
-                            d="M 7.71875 6.28125 L 6.28125 7.71875 L 23.5625 25 L 6.28125 42.28125 L 7.71875 43.71875 L 25 26.4375 L 42.28125 43.71875 L 43.71875 42.28125 L 26.4375 25 L 43.71875 7.71875 L 42.28125 6.28125 L 25 23.5625 Z"></path>
-                    </svg>
+                    <CloseIcon/>
                 </button>
                 <p className="search-label">Search Artist</p>
                 <input className="input-search" type="text" onChange={handleSearch}></input>
