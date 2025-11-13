@@ -1,5 +1,5 @@
 export interface UpdateUser {
-    image: string | undefined;
+    image: string;
     email: string;
     userName: string;
     favoriteArtists: string[];

@@ -8,7 +8,7 @@ import type {UserInfos} from "../../../../shared/interfaces/user.interface.ts";
 import genresService from "../../../../shared/services/genres.service.ts";
 import userEvent, {type UserEvent} from "@testing-library/user-event";
 import userService from "../../../../shared/services/user.service.ts";
-import {type ModalSearchArtistsProps} from "../../../../shared/components/modal-search-artists/modal-artists.tsx";
+import {type ModalSearchArtistsProps} from "../../../../shared/components/search-artists/search-artists.tsx";
 
 const mockUserInfos: UserInfos = {
     user: {
@@ -34,7 +34,7 @@ const mocks = vi.hoisted(() => ({
     useNavigate: vi.fn()
 }));
 
-vi.mock("../../../../shared/components/modal-search-artists/modal-artists.tsx", () => ({
+vi.mock("../../../../shared/components/search-artists/search-artists.tsx", () => ({
     default: ({ addSearchedArtist, toggleModal }: ModalSearchArtistsProps) => {
         return (
             <div data-testid="modal-search-artists-mock">
@@ -205,22 +205,12 @@ describe(EditProfileComponent.name, () => {
             })
         })
 
-        describe("Redirection", () => {
-
-
-            it("devrait rediriger vers la page du profil au clique du submit si aucune modification n'a eu lieu", async () => {
-                const user = userEvent.setup();
-                const buttonSave: HTMLElement = screen.getByTestId("edit-profile-button-save");
-
-                await user.click(buttonSave);
-
-                expect(userService.updateUserInfos).not.toHaveBeenCalled();
-                expect(mocks.useNavigate).toHaveBeenCalledTimes(1);
-                expect(mocks.useNavigate).toHaveBeenCalledWith("/profile");
-            })
-        });
-
         describe("Sélection des artistes", () => {
+
+            afterEach(() => {
+                vi.clearAllMocks();
+                cleanup();
+            })
 
             it("devrait ajouter des artistes via la modale", async () => {
                 const user = userEvent.setup();
@@ -234,7 +224,7 @@ describe(EditProfileComponent.name, () => {
                 expect(buttonAddText[0]).toHaveTextContent("+");
                 await user.click(buttonAddButton[0]);
 
-                const modal = screen.getByTestId("modal-search-artists-mock");
+                const modal = screen.getByTestId("modal-container");
                 expect(modal).toBeInTheDocument();
 
                 const addButton = screen.getByTestId("add-artists-button-mock");
@@ -256,14 +246,14 @@ describe(EditProfileComponent.name, () => {
                 const buttonAddButton = screen.getAllByTestId("expandable-icon-button");
                 await user.click(buttonAddButton[0]);
 
-                const modal = screen.getByTestId("modal-search-artists-mock");
+                const modal = screen.getByTestId("modal-container");
                 expect(modal).toBeInTheDocument();
 
                 const closeButton = screen.getByTestId("close-modal-button-mock");
                 await user.click(closeButton);
 
                 expect(screen.queryByTestId("edit-profile-no-artists")).toBeInTheDocument();
-                const modalClosed = screen.queryByTestId("modal-search-artists-mock");
+                const modalClosed = screen.queryByTestId("modal-container");
                 expect(modalClosed).not.toBeInTheDocument();
             });
         });
@@ -397,38 +387,66 @@ describe(EditProfileComponent.name, () => {
         });
     })
 
-    describe("Envoi du formulaire", () => {
+    describe("Redirection", () => {
+
         beforeEach(async () => {
             const newMockUserInfos: UserInfos = {
                 user: {
                     ...mockUserInfos.user,
-                    userName: ""
+                    userName: "Toto"
                 },
                 xp: mockUserInfos.xp
             }
 
             vi.clearAllMocks();
-            vi.mocked(userService.updateUserInfos).mockResolvedValue({
-                user: {
-                    userName: "fake-user",
-                    email: "test@gmail.com",
-                    image: "fake-image",
-                    userType: "fake-user-type",
-                    favoriteArtists: [],
-                    favoriteGenres: []
-                },
-                xp: {
-                    userId: "fake-userId",
-                    level: 0,
-                    currentXp: 15,
-                    xpForPreviousLevel: 0,
-                    xpForNextLevel: 50,
-                    gradeName: "fake-grade"
-                }
-            });
 
             mocks.useLocation.mockReturnValue({
                 state: { userInfos: newMockUserInfos }
+            });
+
+            vi.mocked(genresService.getGenres).mockResolvedValue(["Trap", "Dubstep", "Drum & Bass"]);
+
+            await act(async () => {
+                renderEditProfilePage();
+            })
+        })
+
+        it("devrait rediriger vers la page du profil au clique du submit si aucune modification n'a eu lieu", async () => {
+            const user = userEvent.setup();
+            const buttonSave: HTMLElement = screen.getByTestId("edit-profile-button-save");
+
+            await user.click(buttonSave);
+
+            expect(userService.updateUserInfos).not.toHaveBeenCalled();
+            expect(mocks.useNavigate).toHaveBeenCalledTimes(1);
+            expect(mocks.useNavigate).toHaveBeenCalledWith("/profile");
+        })
+    });
+
+    describe("Envoi du formulaire", () => {
+        beforeEach(async () => {
+            const newMockUserInfos: UserInfos = {
+                user: {
+                    ...mockUserInfos.user
+                },
+                xp: mockUserInfos.xp
+            }
+
+            vi.clearAllMocks();
+
+            mocks.useLocation.mockReturnValue({
+                state: { userInfos: newMockUserInfos }
+            });
+
+            vi.mocked(userService.updateUserInfos).mockResolvedValue({
+                user: {
+                    ...mockUserInfos.user,
+                    userName: "newUsername",
+                    email: "newemail@test.com"
+                },
+                xp: {
+                    ...mockUserInfos.xp
+                }
             });
 
             vi.mocked(genresService.getGenres).mockResolvedValue(["Trap", "Dubstep", "Drum & Bass"]);
@@ -442,12 +460,18 @@ describe(EditProfileComponent.name, () => {
             const user = userEvent.setup();
             const userNameInput: HTMLInputElement = screen.getByTestId("edit-profile-input-username");
             const emailInput: HTMLInputElement = screen.getByTestId("edit-profile-input-email");
-            const buttonSave: HTMLElement = screen.getByTestId("edit-profile-button-save");
 
             await user.clear(userNameInput);
             await user.clear(emailInput);
             await user.type(userNameInput, "newUsername");
             await user.type(emailInput, "newemail@test.com");
+
+            await waitFor(() => {
+                expect(userNameInput).toHaveValue("newUsername");
+                expect(emailInput).toHaveValue("newemail@test.com");
+            });
+
+            const buttonSave: HTMLElement = screen.getByTestId("edit-profile-button-save");
             await user.click(buttonSave);
 
             expect(userService.updateUserInfos).toHaveBeenCalled();
@@ -457,8 +481,10 @@ describe(EditProfileComponent.name, () => {
 
         it("ne devrait pas mettre à jour le profil car aucun username n'a été saisi", async () => {
             const user = userEvent.setup();
-            const userNameInput: HTMLInputElement = screen.getByTestId("edit-profile-input-username");
             const buttonSave: HTMLElement = screen.getByTestId("edit-profile-button-save");
+            const userNameInput: HTMLInputElement = screen.getByTestId("edit-profile-input-username");
+
+            await user.clear(userNameInput);
 
             expect(userNameInput).toHaveValue("");
 

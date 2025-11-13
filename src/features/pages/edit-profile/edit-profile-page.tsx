@@ -6,13 +6,14 @@ import type {UpdateUser} from '../../../shared/interfaces/update-user.interface.
 import userService from "../../../shared/services/user.service.ts";
 import genresService from "../../../shared/services/genres.service.ts";
 import {useLocation, useNavigate} from 'react-router-dom';
-import ModalSearchArtists from "../../../shared/components/modal-search-artists/modal-artists.tsx";
+import ModalSearchArtists from "../../../shared/components/search-artists/search-artists.tsx";
 import ProfilePicture from "../../../shared/components/profile-picture/profile-picture.tsx";
 import EditIcon from "../../../assets/svg/edit-icon/edit-icon.tsx";
 import ExpandableList from "../../../shared/components/expandable-list/expandable-list.tsx";
 import {emailRegex, userNameRegex} from "../../../shared/const/input-regex.ts";
 import Loader from "../../../shared/components/loader/loader.tsx";
-import EventModal from "../../../shared/components/event-modal/event-modal.tsx";
+import ModalOverlay from "../../../shared/components/modal-overlay/modal-overlay.tsx";
+import EventAction from '../../../shared/components/event-action/event-action.tsx';
 
 export default function EditProfileComponent() {
     const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +36,7 @@ export default function EditProfileComponent() {
 
     useEffect(() => {
         const locationState: UserInfos = location.state.userInfos;
+        setUserInfos(locationState);
         setImage(locationState?.user?.image ?? "");
         setUserName(locationState?.user?.userName ?? null);
         setEmail(locationState?.user?.email ?? "");
@@ -101,7 +103,7 @@ export default function EditProfileComponent() {
         const currentImage = userInfos?.user.image?.split(',')[1] ?? userInfos?.user.image;
 
         if (updateUserPayload && userInfos &&
-            updateUserPayload.image === currentImage &&
+            currentImage?.includes(updateUserPayload.image) &&
             updateUserPayload.email === userInfos?.user.email &&
             updateUserPayload.userName === userInfos?.user.userName &&
             updateUserPayload.favoriteArtists === userInfos?.user.favoriteArtists &&
@@ -153,13 +155,13 @@ export default function EditProfileComponent() {
         setDisplayGenresList(!displayGenresList);
     }
 
-    const goToProfilePage = useCallback(() => {
+    function goToProfilePage() {
         if (!userName || userName.length === 0 || userInfos?.user?.userName.length === 0) {
             setErrorNoUserName(true);
         } else {
             navigate("/profile");
         }
-    }, [navigate, userInfos, userName]);
+    }
 
     function onChangeUsername(e: ChangeEvent<HTMLInputElement>) {
         const username: string = e.target.value;
@@ -198,19 +200,26 @@ export default function EditProfileComponent() {
         <div className="edit-profile-container" data-testid="edit-profile-container">
             {isLoading ? (<div className="loading-edit-profile"><Loader /></div>) : null}
             {errorUpdate || errorNoUserName ? (
-                <EventModal
-                    eventType="error"
-                    message={errorUpdate ? "Cannot update your profile, please try again" : "You have to set a username."}
-                    data-testid="edit-profile-error-modal"
-                    handleClose={() => errorUpdate ? setErrorUpdate(!errorUpdate) : setErrorNoUserName(!errorNoUserName)} />
+                <ModalOverlay
+                    isClosable={false}
+                    children={<EventAction
+                                eventType="error"
+                                message={errorUpdate ? "Cannot update your profile, please try again" : "You have to set a username."}
+                                data-testid="edit-profile-error-modal"
+                                handleClose={() => errorUpdate ? setErrorUpdate(!errorUpdate) : setErrorNoUserName(!errorNoUserName)}
+                                />
+                    }
+                />
             ) : null}
-            {modalIsOpened ? (
-                    <ModalSearchArtists
-                        addSearchedArtist={handleAddArtist}
-                        toggleModal={handleCloseModal}
-                        artistsSelected={artists}>
-                    </ModalSearchArtists>
-                ) : null
+            {modalIsOpened && (
+                <ModalOverlay
+                    isClosable={false}
+                    children={<ModalSearchArtists
+                                addSearchedArtist={handleAddArtist}
+                                toggleModal={handleCloseModal}
+                                artistsSelected={artists}
+                                />} />
+                )
             }
             <div className="edit-profile-content" data-testid="edit-profile-error-form">
                 <div className="buttons-navigation" data-testid="edit-profile-buttons-navigation">
