@@ -1,19 +1,22 @@
 import "./settings-page.scss";
 import emailjs from "@emailjs/browser";
-import {useContext, useEffect, useState, useRef, type RefObject, type FormEvent} from "react";
+import {useContext, useState, useRef, type RefObject, type FormEvent} from "react";
 import userService from "../../../../shared/services/user.service.ts";
 import {AuthContext} from "../../../../core/context/auth-context.tsx";
 import {useNavigate} from "react-router-dom";
+import ModalOverlay from "../../../../shared/components/modal-overlay/modal-overlay.tsx";
+import EventAction from "../../../../shared/components/event-action/event-action.tsx";
 
 export interface SettingsPageProps {
     jwtToken: string;
     userId: string;
     email: string;
-    username: string;
 }
 
-const SettingsPage = ({jwtToken, userId, email, username}: SettingsPageProps) => {
+const SettingsPage = ({jwtToken, userId, email}: SettingsPageProps) => {
     const [openBugSignal, setOpenBugSignal] = useState<boolean>(false);
+    const [emailSent, setEmailSent] = useState<boolean>(false);
+    const [errorEmail, setErrorEmail] = useState<string>("");
     const {logout} = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -23,17 +26,22 @@ const SettingsPage = ({jwtToken, userId, email, username}: SettingsPageProps) =>
 
         if (!form.current) return;
 
-        emailjs.sendForm(import.meta.env.VITE_SERVICE_EMAIL_ID, import.meta.env.VITE_TEMPLATE_EMAIL_ID, form.current, import.meta.env.VITE_PUBLIC_EMAIL_KEY)
-            .then((result) => {
-                console.log(result.text);
-            }, (error) => {
-                console.log(error.text);
+        const message: {userId: string, email: string, message: HTMLFormElement | string} = {
+            userId: userId,
+            email: email,
+            message: form.current.message.value,
+        }
+
+        emailjs.send(import.meta.env.VITE_SERVICE_EMAIL_ID, import.meta.env.VITE_TEMPLATE_EMAIL_ID, message, import.meta.env.VITE_PUBLIC_EMAIL_KEY)
+            .then(() => {
+                setEmailSent(true);
+            })
+            .catch((error: unknown) => {
+                setErrorEmail("Error sending email. Please try again later.")
+                if (!(error instanceof Error)) return;
+                console.error(error.message);
             });
     }
-
-    useEffect(() => {
-
-    }, [email, username, jwtToken, userId]);
 
     const logoutAndRedirect = () => {
         logout();
@@ -55,6 +63,15 @@ const SettingsPage = ({jwtToken, userId, email, username}: SettingsPageProps) =>
 
     return (
         <div className="settings-container">
+            {errorEmail.length > 0 || emailSent && (
+                <ModalOverlay
+                    isClosable={false}
+                    children={<EventAction
+                        eventType={errorEmail.length > 0 ? "error" : "success"}
+                        handleClose={() => setOpenBugSignal(!openBugSignal)}
+                        message={errorEmail.length > 0 ? errorEmail : "Email sent successfully."} />}
+                />
+            )}
             <div className="settings-content">
                 <h3 className="settings-title">Settings</h3>
                 <button className="delete-account button-settings" onClick={handleDeleteAccount}>Delete your account</button>
