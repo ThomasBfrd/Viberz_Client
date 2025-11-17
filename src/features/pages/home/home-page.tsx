@@ -71,80 +71,76 @@ export default function HomePage() {
 
     return (
         <div className="home-container" data-testid="home-container">
-                <>
-                {loading ? (
-                    <div className="home-loader">
-                        <Loader />
-                    </div>
-                    ) : null
-                }
-                    <div className="home-header">
-                        <div className="header-logo-profile">
-                            <div className="header-logo" data-testid="home-title">Viberz</div>
-                            {logged ? (
-                                <div className="icon-profile" onClick={onRedirectToProfile}>
-                                    {userImage ? (
-                                        <ProfilePicture image={userImage} height={50} width={50} />
-                                    ) : null}
-                                </div>
+            {loading ? (
+                <div className="home-loader">
+                    <Loader />
+                </div>
+                ) : null}
+            <div className="home-header">
+                <div className="header-logo-profile">
+                    <div className="header-logo" data-testid="home-title">Viberz</div>
+                    {logged ? (
+                        <div className="icon-profile" onClick={onRedirectToProfile}>
+                            {userImage ? (
+                                <ProfilePicture image={userImage} height={50} width={50} />
                             ) : null}
                         </div>
-                        {logged ? (
-                            <>
-                                <div className="hello">
-                                    <h1 className="hello-text" data-testid="home-username">Hello{userName ? `, ${userName}` : ""}</h1>
-                                </div>
-                            </>
-                        ) : (
-                            <div className="not-connected" data-testid="home-not-connected">
-                                <h3 className="hello-text">Login to play and discover</h3>
-                                <button
-                                    className="connect-button"
-                                    data-testid="home-connect-button"
-                                    onClick={() => initiateSpotifyAuth()}>Connect with Spotify</button>
+                    ) : null}
+                </div>
+                {logged ? (
+                    <>
+                        <div className="hello">
+                            <h1 className="hello-text" data-testid="home-username">Hello{userName ? `, ${userName}` : ""}</h1>
+                        </div>
+                    </>
+                ) : (
+                    <div className="not-connected" data-testid="home-not-connected">
+                        <h3 className="hello-text">Login to play and discover</h3>
+                        <button
+                            className="connect-button"
+                            data-testid="home-connect-button"
+                            onClick={() => initiateSpotifyAuth()}>Connect with Spotify</button>
+                    </div>
+                )
+                }
+                <div className="header-menu">
+                    <div className={categoryType === "all" ? "menu-item menu-item-active" : "menu-item"}
+                         data-testid="home-menu-item"
+                         onClick={() => setCategoryType("all")}>
+                        <p className="menu-item-text" data-testid="home-menu-item-text">All</p>
+                    </div>
+                    {types.map((type: string, index: number) => {
+                        return (
+                            <div className={categoryType === type ? "menu-item menu-item-active" : "menu-item"}
+                                 key={index}
+                                 data-testid="home-menu-item"
+                                 onClick={() => setCategoryType(type)}>
+                                <p className="menu-item-text" data-testid="home-menu-item-text">{type}</p>
                             </div>
                         )
-                        }
-                        <div className="header-menu">
-                            <div className={categoryType === "all" ? "menu-item menu-item-active" : "menu-item"}
-                                 data-testid="home-menu-item"
-                                 onClick={() => setCategoryType("all")}>
-                                <p className="menu-item-text" data-testid="home-menu-item-text">All</p>
-                            </div>
-                            {types.map((type: string, index: number) => {
-                                return (
-                                    <div className={categoryType === type ? "menu-item menu-item-active" : "menu-item"}
-                                         key={index}
-                                         data-testid="home-menu-item"
-                                         onClick={() => setCategoryType(type)}>
-                                        <p className="menu-item-text" data-testid="home-menu-item-text">{type}</p>
-                                    </div>
-                                )
-                            })}
+                    })}
+                </div>
+            </div>
+            <div className="home-body">
+                {filteredCategories && filteredCategories.map((menuItem: MenuItem, index: number) => {
+                    return (
+                        <div
+                            className={menuItem.available ? "home-category" : "home-category disabled"}
+                            style={{backgroundImage : `url(${menuItem.background})`}}
+                            onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : initiateSpotifyAuth()}
+                            key={index}>
+                            <span className="home-category-type">{menuItem.type}</span>
+                            <h3 className="home-category-name" data-testid="home-category-name">{menuItem.name}</h3>
                         </div>
-                    </div>
-                    <div className="home-body">
-                        {filteredCategories && filteredCategories.map((menuItem: MenuItem, index: number) => {
-                            return (
-                                <div
-                                    className={menuItem.available ? "home-category" : "home-category disabled"}
-                                    style={{backgroundImage : `url(${menuItem.background})`}}
-                                    onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : initiateSpotifyAuth()}
-                                    key={index}>
-                                    <span className="home-category-type">{menuItem.type}</span>
-                                    <h3 className="home-category-name" data-testid="home-category-name">{menuItem.name}</h3>
-                                </div>
-                            )
-                        })}
-                    </div>
-                    <div className="home-footer">
-                        <p className="home-footer-text"
-                            onClick={() => navigate("/legal-notice")}>Legal Notice</p>
-                        <p className="home-footer-text"
-                           onClick={() => navigate("/privacy")}>Privacy</p>
-                    </div>
-                </>
-
+                    )
+                })}
+            </div>
+            <div className="home-footer">
+                <p className="home-footer-text"
+                    onClick={() => navigate("/legal-notice")}>Legal Notice</p>
+                <p className="home-footer-text"
+                   onClick={() => navigate("/privacy")}>Privacy</p>
+            </div>
         </div>
     )
 

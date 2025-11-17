@@ -77,7 +77,6 @@ function AuthProvider({children}: { children: ReactNode}) {
             if (!response.ok) throw new Error("Failed to refresh token");
 
             const data: AuthData = await response.json();
-            console.log("refresh token success", data);
 
             if (!data.refreshToken) {
                 data.refreshToken = refreshToken;
@@ -108,7 +107,6 @@ function AuthProvider({children}: { children: ReactNode}) {
     }, []);
 
     useEffect(() => {
-        console.log("on refresh token")
         setupFetchInterceptor(
             () => jwtToken,
             () => expiresAt,

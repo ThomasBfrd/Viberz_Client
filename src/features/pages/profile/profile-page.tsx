@@ -64,8 +64,7 @@ const ProfilePage = () => {
                         <SettingsPage
                             jwtToken={jwtToken}
                             userId={userId}
-                            email={userInfos.user.email}
-                            username={userInfos?.user?.userName}/>}
+                            email={userInfos.user.email}/>}
                 />)
             }
                 <div className="profile-header">
