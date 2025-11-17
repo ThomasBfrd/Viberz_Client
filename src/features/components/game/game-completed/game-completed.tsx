@@ -29,7 +29,7 @@ const GameCompleted = ({earnedXp, resultGame, score, totalWaves, onConfirmRestar
                 </div>
                 <p className="experience-progression-text">{resultGame.currentXp} / {resultGame.xpForNextLevel}</p>
             </div>
-            <button className="game-completed-button" onClick={confirmRestart}>Rejouer</button>
+            <button className="game-completed-button" onClick={confirmRestart}>Restart</button>
         </div>
     );
 };
