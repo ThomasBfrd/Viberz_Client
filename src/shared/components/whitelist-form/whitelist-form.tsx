@@ -1,8 +1,8 @@
 import "./whitelist-form.scss";
 import {useCallback, useState} from "react";
 import Loader from "../loader/loader.tsx";
-import userService from "../../services/user.service.ts";
 import {emailRegex} from "../../const/input-regex.ts";
+import {userAuthService} from "../../services/user-auth.service.ts";
 
 export interface WhitelistFormProps {
     isWhitelisted: (value: boolean) => void;
@@ -36,7 +36,7 @@ const WhitelistForm = ({isWhitelisted}: WhitelistFormProps) => {
         setLoading(true);
         
         try {
-            const fetchIsWhitelisted = await userService.isWhitelisted(email);
+            const fetchIsWhitelisted = await userAuthService.isWhitelisted(email);
             
             if (!fetchIsWhitelisted) {
                 return setError("This email is not whitelisted");
