@@ -2,7 +2,7 @@ import type {UserXp} from "./user-xp.interface.ts";
 
 export interface UserInfos {
     user: {
-        userName: string;
+        username: string;
         email: string;
         image: string;
         userType: string;

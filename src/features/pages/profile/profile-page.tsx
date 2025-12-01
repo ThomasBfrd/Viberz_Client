@@ -33,7 +33,7 @@ const ProfilePage = () => {
                         setImage(fetched?.user?.image);
                         setGenresSelected(fetched?.user?.favoriteGenres);
                         setArtists(fetched?.user?.favoriteArtists);
-                        setUserName(fetched?.user?.userName ?? null);
+                        setUserName(fetched?.user?.username ?? null);
                     }
 
                 } catch (error) {
@@ -57,7 +57,7 @@ const ProfilePage = () => {
     return (
          isLoading ? <Loader /> : (
         <div className="profile-container" data-testid="profile-container">
-            {jwtToken && userId && userInfos?.user?.userName && onSettings && (
+            {jwtToken && userId && userInfos?.user?.username && onSettings && (
                 <ModalOverlay
                     closed={() => setOnSettings(!onSettings)}
                     children={

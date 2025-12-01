@@ -12,7 +12,7 @@ import {type ModalSearchArtistsProps} from "../../../../shared/components/search
 
 const mockUserInfos: UserInfos = {
     user: {
-        userName: "fake-user",
+        username: "fake-user",
         email: "test@gmail.com",
         image: "fake-image",
         userType: "fake-user-type",
@@ -393,7 +393,7 @@ describe(EditProfileComponent.name, () => {
             const newMockUserInfos: UserInfos = {
                 user: {
                     ...mockUserInfos.user,
-                    userName: "Toto"
+                    username: "Toto"
                 },
                 xp: mockUserInfos.xp
             }
@@ -441,7 +441,7 @@ describe(EditProfileComponent.name, () => {
             vi.mocked(userService.updateUserInfos).mockResolvedValue({
                 user: {
                     ...mockUserInfos.user,
-                    userName: "newUsername",
+                    username: "newUsername",
                     email: "newemail@test.com"
                 },
                 xp: {
