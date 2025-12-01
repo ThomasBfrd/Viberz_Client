@@ -38,7 +38,7 @@ export default function EditProfileComponent() {
         const locationState: UserInfos = location.state.userInfos;
         setUserInfos(locationState);
         setImage(locationState?.user?.image ?? "");
-        setUsername(locationState?.user?.username ?? null);
+        setUsername(locationState?.user?.username ?? "");
         setEmail(locationState?.user?.email ?? "");
         setGenresSelected(locationState?.user.favoriteGenres);
         setArtists(locationState?.user.favoriteArtists);
@@ -50,9 +50,9 @@ export default function EditProfileComponent() {
     }, [location]);
 
     useEffect(() => {
-        if (userInfos) {
-            setUsername(userInfos.user.username ?? "");
-            setEmail(userInfos.user.email ?? "");
+        if (userInfos && userInfos.user.username && userInfos.user.email) {
+            setUsername(userInfos.user.username);
+            setEmail(userInfos.user.email);
         }
     }, [userInfos]);
 
@@ -126,9 +126,8 @@ export default function EditProfileComponent() {
 
                 if (updateResult !== null) {
                     setUserInfos(updateResult);
+                    navigate("/profile");
                 }
-
-                return goToProfilePage();
             }
             catch (error: unknown) {
                 console.error("erreur", error);
@@ -164,7 +163,7 @@ export default function EditProfileComponent() {
     }
 
     function goToProfilePage() {
-        if (!username || username.length === 0 || userInfos?.user?.username.length === 0) {
+        if (username.length === 0 || userInfos?.user?.username.length === 0) {
             setErrorNoUsername(true);
         } else {
             navigate("/profile");
