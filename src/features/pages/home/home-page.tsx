@@ -13,7 +13,7 @@ export default function HomePage() {
     const [logged, setLogged] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
-    const [userName, setUserName] = useState<string | null>(null);
+    const [username, setUsername] = useState<string | null>(null);
     const [userImage, setUserImage] = useState<string | null>(null);
     const [categoryType, setCategoryType] = useState<string>("all");
 
@@ -44,7 +44,7 @@ export default function HomePage() {
             const userStorage = localStorage.getItem('user');
             if (userStorage) {
                 const user = JSON.parse(userStorage);
-                setUserName(user.userName);
+                setUsername(user.username);
                 setUserImage(user.image);
             }
             setLogged(isLoggedIn);
@@ -90,7 +90,7 @@ export default function HomePage() {
                 {logged ? (
                     <>
                         <div className="hello">
-                            <h1 className="hello-text" data-testid="home-username">Hello{userName ? `, ${userName}` : ""}</h1>
+                            <h1 className="hello-text" data-testid="home-username">Hello{username ? `, ${username}` : ""}</h1>
                         </div>
                     </>
                 ) : (

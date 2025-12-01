@@ -37,8 +37,8 @@ const userService = {
                 xp: data.xp,
             };
 
-            const userStorage: {userName: string; image: string;} = {
-                userName: userInfo?.user.username,
+            const userStorage: {username: string; image: string;} = {
+                username: userInfo?.user.username,
                 image: userInfo?.user.image
             };
             localStorage.setItem('user', JSON.stringify(userStorage));
@@ -85,6 +85,12 @@ const userService = {
                 },
                 xp: data.xp
             };
+
+            const userStorage: {username: string; image: string;} = {
+                username: userInfo?.user.username,
+                image: userInfo?.user.image
+            };
+            localStorage.setItem('user', JSON.stringify(userStorage));
 
             return userInfo;
         } catch (error) {
