@@ -20,7 +20,7 @@ function AuthProvider({children}: { children: ReactNode}) {
 
     // --- LOGIN ---
     const login = useCallback((data: AuthData) => {
-        const expiry = Date.now() + 5 * 1000;
+        const expiry = Date.now() + data.expiresIn * 1000;
 
         setJwtToken(data.jwtToken);
         setRefreshToken(data.refreshToken);

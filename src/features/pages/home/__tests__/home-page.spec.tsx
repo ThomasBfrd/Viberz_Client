@@ -76,7 +76,7 @@ describe(HomePage.name, () => {
         describe("Contenu de la page d'accueil", () => {
             beforeEach(() => {
                 localStorage.setItem(key, JSON.stringify({
-                    userName: "fake-user",
+                    username: "fake-user",
                     image: "fake-image"
                 }))
 

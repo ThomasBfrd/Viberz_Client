@@ -27,7 +27,7 @@ const userService = {
 
             const userInfo: UserInfos = {
                 user: {
-                    userName: data.user.userName ?? null,
+                    username: data.user.username ?? null,
                     email: data?.user.email,
                     image: data?.user.image?.includes("base64") ? data?.user.image : base64ToImage(data?.user.image),
                     userType: data?.user.userType,
@@ -37,8 +37,8 @@ const userService = {
                 xp: data.xp,
             };
 
-            const userStorage: {userName: string; image: string;} = {
-                userName: userInfo?.user.userName,
+            const userStorage: {username: string; image: string;} = {
+                username: userInfo?.user.username,
                 image: userInfo?.user.image
             };
             localStorage.setItem('user', JSON.stringify(userStorage));
@@ -76,7 +76,7 @@ const userService = {
 
             const userInfo: UserInfos = {
                 user: {
-                    userName: data?.user.userName,
+                    username: data?.user.username,
                     email: data?.user.email,
                     image: data?.user.image?.includes("base64") ? data?.user.image : base64ToImage(data?.user.image ?? ""),
                     userType: data?.user.userType,
@@ -85,6 +85,12 @@ const userService = {
                 },
                 xp: data.xp
             };
+
+            const userStorage: {username: string; image: string;} = {
+                username: userInfo?.user.username,
+                image: userInfo?.user.image
+            };
+            localStorage.setItem('user', JSON.stringify(userStorage));
 
             return userInfo;
         } catch (error) {
@@ -119,31 +125,6 @@ const userService = {
 
         } catch (error) {
             console.error('Can\'t update your profile:', error);
-            return null;
-        }
-    },
-
-    isWhitelisted: async (email: string) => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/is-whitelisted`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(email)
-            });
-
-            if (!response.ok) {
-                console.error(`HTTP error! status: ${response.status}`);
-                return null;
-            }
-
-            const data: boolean = await response.json();
-
-            return data;
-        }
-        catch (error) {
-            console.error('Your email address is not whitelisted:', error);
             return null;
         }
     }

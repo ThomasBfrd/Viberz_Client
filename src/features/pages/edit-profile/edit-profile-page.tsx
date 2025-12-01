@@ -22,14 +22,14 @@ export default function EditProfileComponent() {
     const [genres, setGenres] = useState<string[] | undefined>(undefined);
     const [genresSelected, setGenresSelected] = useState<string[]>([]);
     const [artists, setArtists] = useState<string[]>([]);
-    const [userName, setUserName] = useState<string>("");
+    const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [image, setImage] = useState<string>("");
-    const [errorUserName, setErrorUserName] = useState<string | null>(null);
+    const [setErrorUsername, setSetErrorUsername] = useState<string | null>(null);
     const [errorEmail, setErrorEmail] = useState<string | null>(null);
     const [displayGenresList, setDisplayGenresList] = useState<boolean>(true);
     const [errorUpdate, setErrorUpdate] = useState<boolean>(false);
-    const [errorNoUserName, setErrorNoUserName] = useState<boolean>(false);
+    const [errorNoUsername, setErrorNoUsername] = useState<boolean>(false);
     const {jwtToken} = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation()
@@ -38,7 +38,7 @@ export default function EditProfileComponent() {
         const locationState: UserInfos = location.state.userInfos;
         setUserInfos(locationState);
         setImage(locationState?.user?.image ?? "");
-        setUserName(locationState?.user?.userName ?? null);
+        setUsername(locationState?.user?.username ?? "");
         setEmail(locationState?.user?.email ?? "");
         setGenresSelected(locationState?.user.favoriteGenres);
         setArtists(locationState?.user.favoriteArtists);
@@ -48,6 +48,13 @@ export default function EditProfileComponent() {
         }
 
     }, [location]);
+
+    useEffect(() => {
+        if (userInfos && userInfos.user.username && userInfos.user.email) {
+            setUsername(userInfos.user.username);
+            setEmail(userInfos.user.email);
+        }
+    }, [userInfos]);
 
     useEffect(() => {
         if (jwtToken && !genres) {
@@ -87,15 +94,15 @@ export default function EditProfileComponent() {
     const submitForm = useCallback(async () => {
         setIsLoading(false);
 
-        if (!userName || userName.length === 0) {
-            setErrorUserName("Username is required");
+        if (!username || username.length === 0) {
+            setSetErrorUsername("Username is required");
             return;
         }
 
         const updateUserPayload: UpdateUser = {
             image: image.split(',')[1] ?? image,
             email: email,
-            userName: userName,
+            username: username,
             favoriteArtists: artists,
             favoriteGenres: genresSelected
         }
@@ -105,7 +112,7 @@ export default function EditProfileComponent() {
         if (updateUserPayload && userInfos &&
             currentImage?.includes(updateUserPayload.image) &&
             updateUserPayload.email === userInfos?.user.email &&
-            updateUserPayload.userName === userInfos?.user.userName &&
+            updateUserPayload.username === userInfos?.user.username &&
             updateUserPayload.favoriteArtists === userInfos?.user.favoriteArtists &&
             updateUserPayload.favoriteGenres === userInfos?.user.favoriteGenres) {
 
@@ -116,14 +123,14 @@ export default function EditProfileComponent() {
             try {
                 setIsLoading(true);
                 const updateResult: UserInfos | null = await userService.updateUserInfos(jwtToken, updateUserPayload);
+
                 if (updateResult !== null) {
                     setUserInfos(updateResult);
+                    navigate("/profile");
                 }
-
-                return goToProfilePage();
             }
             catch (error: unknown) {
-                console.error(error);
+                console.error("erreur", error);
                 return setErrorUpdate(true);
             }
             finally {
@@ -131,7 +138,7 @@ export default function EditProfileComponent() {
             }
         }
 
-    }, [artists, email, genresSelected, image, jwtToken, navigate, userInfos, userName]);
+    }, [artists, email, genresSelected, image, jwtToken, navigate, userInfos, username]);
 
     function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -156,8 +163,8 @@ export default function EditProfileComponent() {
     }
 
     function goToProfilePage() {
-        if (!userName || userName.length === 0 || userInfos?.user?.userName.length === 0) {
-            setErrorNoUserName(true);
+        if (username.length === 0 || userInfos?.user?.username.length === 0) {
+            setErrorNoUsername(true);
         } else {
             navigate("/profile");
         }
@@ -165,18 +172,18 @@ export default function EditProfileComponent() {
 
     function onChangeUsername(e: ChangeEvent<HTMLInputElement>) {
         const username: string = e.target.value;
-        setUserName(username);
-        setErrorNoUserName(false);
+        setUsername(username);
+        setErrorNoUsername(false);
 
 
         if (username === null || username?.length === 0) {
-            return setErrorUserName("Username is required");
+            return setSetErrorUsername("Username is required");
         } else if (username?.length < 3 || username?.length > 15) {
-            return setErrorUserName("Username must be between 3 and 15 characters");
+            return setSetErrorUsername("Username must be between 3 and 15 characters");
         } else if (!userNameRegex.test(username)) {
-            return setErrorUserName("Username is not valid");
+            return setSetErrorUsername("Username is not valid");
         } else {
-            setErrorUserName(null);
+            setSetErrorUsername(null);
             return;
         }
     }
@@ -199,14 +206,14 @@ export default function EditProfileComponent() {
     return (
         <div className="edit-profile-container" data-testid="edit-profile-container">
             {isLoading ? (<div className="loading-edit-profile"><Loader /></div>) : null}
-            {errorUpdate || errorNoUserName ? (
+            {errorUpdate || errorNoUsername ? (
                 <ModalOverlay
                     isClosable={false}
                     children={<EventAction
                                 eventType="error"
                                 message={errorUpdate ? "Cannot update your profile, please try again" : "You have to set a username."}
                                 data-testid="edit-profile-error-modal"
-                                handleClose={() => errorUpdate ? setErrorUpdate(!errorUpdate) : setErrorNoUserName(!errorNoUserName)}
+                                handleClose={() => errorUpdate ? setErrorUpdate(!errorUpdate) : setErrorNoUsername(!errorNoUsername)}
                                 />
                     }
                 />
@@ -257,10 +264,10 @@ export default function EditProfileComponent() {
                         id="username"
                         placeholder="Username"
                         data-testid="edit-profile-input-username"
-                        value={userName ?? ""}
+                        value={username ?? ""}
                         onChange={onChangeUsername}/>
-                    {errorUserName ? (
-                        <p className="error-input" data-testid="edit-profile-error-text-username">{errorUserName}</p>
+                    {setErrorUsername ? (
+                        <p className="error-input" data-testid="edit-profile-error-text-username">{setErrorUsername}</p>
                     ) : null}
                     <input
                         className="form-input"
@@ -328,10 +335,10 @@ export default function EditProfileComponent() {
                     </div>)
                 }
                 <button
-                    className={isLoading || errorEmail || errorUserName ? "action-button next disabled" :
+                    className={isLoading || errorEmail || setErrorUsername ? "action-button next disabled" :
                         "action-button next"}
                     data-testid="edit-profile-button-save"
-                    onClick={submitForm} disabled={isLoading || errorEmail !== null || errorUserName !== null}>
+                    onClick={submitForm} disabled={isLoading || errorEmail !== null || setErrorUsername !== null}>
                     <span className="action-button-text">Save</span>
                 </button>
             </div>

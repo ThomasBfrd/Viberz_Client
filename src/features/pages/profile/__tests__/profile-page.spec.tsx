@@ -34,7 +34,7 @@ describe(ProfilePage.name, () => {
         beforeEach(async () => {
             vi.mocked(userService.getUserInfos).mockResolvedValue({
                 user: {
-                    userName: "fake-user",
+                    username: "fake-user",
                     email: "test@gmail.com",
                     image: "fake-image",
                     userType: "fake-user-type",
@@ -101,7 +101,7 @@ describe(ProfilePage.name, () => {
                     state: {
                         userInfos: {
                             user: {
-                                userName: "fake-user",
+                                username: "fake-user",
                                 email: "test@gmail.com",
                                 image: "fake-image",
                                 userType: "fake-user-type",
@@ -127,7 +127,7 @@ describe(ProfilePage.name, () => {
         beforeEach(async () => {
             vi.mocked(userService.getUserInfos).mockResolvedValue({
                 user: {
-                    userName: "fake-user",
+                    username: "fake-user",
                     email: "test@gmail.com",
                     image: "fake-image",
                     userType: "fake-user-type",
