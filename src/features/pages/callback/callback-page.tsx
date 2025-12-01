@@ -73,7 +73,7 @@ const CallbackPage = () => {
 
     useEffect(() => {
         if (!user) return;
-        if (!user?.user.userName || user?.user.userName.trim() === "") {
+        if (!user?.user.username || user?.user.username.trim() === "") {
             navigate("/profile/edit", {state: {userInfos: user}});
             return;
         }
