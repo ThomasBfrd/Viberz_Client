@@ -16,8 +16,8 @@
     "@emailjs/browser": "^4.4.1",
     "clsx": "^2.1.1",
     "ogl": "^1.0.11",
-    "react": "^19.1.1",
-    "react-dom": "^19.2.0",
+    "react": "^19.1.2",
+    "react-dom": "^19.2.1",
     "react-router-dom": "^7.9.2",
     "react-spotify-web-playback-sdk": "^3.0.3"
   },
