@@ -9,7 +9,7 @@ import type {AuthData} from "../../../core/interfaces/auth-data.interface.ts";
 const CallbackPage = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    const { login, user, setUser, jwtToken } = useContext(AuthContext);
+    const { login, user, setUser, jwtToken, userId } = useContext(AuthContext);
 
     useEffect(() => {
 
@@ -27,7 +27,7 @@ const CallbackPage = () => {
 
         const fetchToken = async () => {
             try {
-                    const res: Response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/getSpotifyToken`, {
+                    const res: Response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/authentication/getSpotifyAccess`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code, redirectUri: import.meta.env.VITE_REDIRECT_URI }),
@@ -39,7 +39,7 @@ const CallbackPage = () => {
                 return login(data);
 
             } catch (err) {
-                console.error("Erreur getSpotifyToken:", err);
+                console.error("Can't retrieve user's token:", err);
             }
         }
 
@@ -50,12 +50,12 @@ const CallbackPage = () => {
     }, [])
 
     useEffect(() => {
-        if (!jwtToken || user) return;
+        if (!jwtToken || !userId || user) return;
 
         const getUserInfos = async () => {
             setIsLoading(true);
             try {
-                const fetched: UserInfos | null = await userService.getUserInfos(jwtToken);
+                const fetched: UserInfos | null = await userService.getUserInfos(jwtToken, userId);
 
                 if (fetched) {
                     setUser(fetched);
@@ -69,7 +69,7 @@ const CallbackPage = () => {
         };
 
         getUserInfos();
-    }, [jwtToken, user, setUser]);
+    }, [jwtToken, user, setUser, userId]);
 
     useEffect(() => {
         if (!user) return;

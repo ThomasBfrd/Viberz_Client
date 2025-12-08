@@ -3,7 +3,7 @@ import type {ArtistSearchResponse} from "../components/search-artists/search-art
 const artistService = {
     getSearchedArtists: async (accessToken: string, search: string) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/search?artist=${search.toLowerCase()}`,
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/searchArtist?artist=${search.toLowerCase()}`,
                 {
                     method: 'GET',
                     headers: {
