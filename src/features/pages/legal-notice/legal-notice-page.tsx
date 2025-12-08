@@ -10,7 +10,7 @@ const LegalNoticePage = () => {
     }
 
     return (
-        <div className="legal-container">
+        <div className="page-transition legal-container">
             <button className="back-button" onClick={onRedirect}>
                 Back
             </button>
