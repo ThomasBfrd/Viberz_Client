@@ -3,13 +3,14 @@ import type {UserInfos} from "../interfaces/user.interface.ts";
 import type {UpdateUser} from "../interfaces/update-user.interface.ts";
 
 const userService = {
-    getUserInfos: async (jwtToken: string) => {
+    getUserInfos: async (jwtToken: string, userId: string) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'userId': userId
                 }
             });
 
@@ -54,7 +55,7 @@ const userService = {
 
     updateUserInfos: async (jwtToken: string, updateUserInfoPayload: UpdateUser) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
@@ -101,7 +102,7 @@ const userService = {
 
     deleteUser: async (jwtToken: string, userId: string) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,

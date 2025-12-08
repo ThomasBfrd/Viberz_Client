@@ -22,11 +22,11 @@ const ProfilePage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (jwtToken) {
+        if (jwtToken && userId) {
             const fetchUser = async () => {
                 setIsLoading(true);
                 try {
-                    const fetched: UserInfos | null = await userService.getUserInfos(jwtToken);
+                    const fetched: UserInfos | null = await userService.getUserInfos(jwtToken, userId);
 
                     if (fetched) {
                         setUserInfos(fetched);
