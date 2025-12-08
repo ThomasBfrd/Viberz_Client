@@ -1,5 +1,5 @@
 import './profile-page.scss';
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import type {UserInfos} from "../../../shared/interfaces/user.interface.ts";
 import userService from "../../../shared/services/user.service.ts";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
@@ -44,7 +44,13 @@ const ProfilePage = () => {
             };
             fetchUser();
         }
-    }, [jwtToken]);
+    }, [jwtToken, userId]);
+
+    const calculateXp = useMemo(() => {
+        if (!userInfos?.xp?.currentXp || !userInfos?.xp?.xpForNextLevel) return 0;
+        
+        return ((userInfos?.xp?.currentXp - userInfos?.xp?.xpForPreviousLevel) / userInfos?.xp.xpForNextLevel) * 100
+    }, [userInfos])
 
     const onClickEdit = () => {
         navigate("/profile/edit", {
@@ -56,7 +62,7 @@ const ProfilePage = () => {
 
     return (
          isLoading ? <Loader /> : (
-        <div className="profile-container" data-testid="profile-container">
+        <div className="page-transition profile-container" data-testid="profile-container">
             {jwtToken && userId && userInfos?.user?.username && onSettings && (
                 <ModalOverlay
                     closed={() => setOnSettings(!onSettings)}
@@ -95,10 +101,10 @@ const ProfilePage = () => {
                         <h3 className="experience-value" data-testid="profile-level">{userInfos?.xp?.level}</h3>
                     </div>
                     <div className="experience-bar">
-                        {userInfos?.xp?.currentXp && userInfos?.xp?.xpForNextLevel ? (
+                        {calculateXp ? (
                             <>
                                 <div className="experience-progression-bar"
-                                     style={{width: ((userInfos?.xp?.currentXp - userInfos?.xp?.xpForPreviousLevel) / userInfos?.xp.xpForNextLevel) * 100 + '%'}}
+                                     style={{width: calculateXp + '%'}}
                                      data-testid="profile-progression-bar">
 
                                 </div>
@@ -131,9 +137,9 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="profile-footer">
-                <Footer />
+                <div className="profile-footer">
+                    <Footer />
+                </div>
             </div>
         </div>
     ))

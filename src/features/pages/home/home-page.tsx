@@ -70,7 +70,7 @@ export default function HomePage() {
     }
 
     return (
-        <div className="home-container" data-testid="home-container">
+        <div className="page-transition home-container" data-testid="home-container">
             {loading ? (
                 <div className="home-loader">
                     <Loader />
@@ -78,7 +78,7 @@ export default function HomePage() {
                 ) : null}
             <div className="home-header">
                 <div className="header-logo-profile">
-                    <div className="header-logo" data-testid="home-title">Viberz</div>
+                    <div className="header-logo" data-testid="home-title" onClick={() => navigate(('/'))}>Viberz</div>
                     {logged ? (
                         <div className="icon-profile" onClick={onRedirectToProfile}>
                             {userImage ? (

@@ -35,12 +35,27 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto-Regular', sans-serif;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-html,
+*::-webkit-scrollbar {
+    display: none;
+}
+
 body {
     height: 100vh;
     background-color: var(--background);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+
+.page-transition {
+    animation: fadeIn 0.3s ease-in-out;
+
 }
 
 .not-whitelisted {
@@ -52,4 +67,9 @@ body {
     backdrop-filter: blur(10px);
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 100;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
