@@ -228,7 +228,7 @@ export default function EditProfileComponent() {
                                 />} />
                 )
             }
-            <div className="edit-profile-content" data-testid="edit-profile-error-form">
+            <div className="page-transition edit-profile-content" data-testid="edit-profile-error-form">
                 <div className="buttons-navigation" data-testid="edit-profile-buttons-navigation">
                     <button
                         className="action-button back"

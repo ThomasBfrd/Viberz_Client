@@ -59,7 +59,7 @@ function AuthProvider({children}: { children: ReactNode}) {
     const refreshAccessToken = useCallback(async () => {
 
         if (!refreshToken) {
-            console.warn("No refresh token available");
+            console.error("No refresh token available");
             return;
         }
 
@@ -68,7 +68,7 @@ function AuthProvider({children}: { children: ReactNode}) {
                 clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
                 refreshToken: refreshToken
             }
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/refreshSpotifyToken`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/authentication/refreshSpotifyAccess`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bodyRequest),

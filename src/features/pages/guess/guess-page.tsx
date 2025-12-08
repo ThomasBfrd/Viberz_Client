@@ -254,7 +254,7 @@ const GuessPage = () => {
     }, [gameType]);
 
     return (
-        <div className="quiz-page-container" data-testid="guess-page-container">
+        <div className="page-transition quiz-page-container" data-testid="guess-page-container">
             {!gameCompleted && confirmModalVisible ? (
                 <ModalOverlay
                     isClosable={false}
@@ -309,7 +309,9 @@ const GuessPage = () => {
                     )}
                 </div>
             )}
-            <Footer onCancel={onDefiningPath} />
+            <div className="guess-footer">
+                <Footer onCancel={onDefiningPath} />
+            </div>
         </div>
     );
 };
