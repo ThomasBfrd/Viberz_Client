@@ -59,7 +59,7 @@ function AuthProvider({children}: { children: ReactNode}) {
     const refreshAccessToken = useCallback(async () => {
 
         if (!refreshToken) {
-            console.warn("No refresh token available");
+            console.error("No refresh token available");
             return;
         }
 
