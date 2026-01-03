@@ -96,16 +96,11 @@
   border-radius: 100px;
 }
 .profile-image .edit-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border-style: hidden;
   position: absolute;
   bottom: 0;
   right: -10px;
-  width: 40px;
-  height: 40px;
-  padding-left: 5px;
+  padding: 8px;
   border-radius: 100px;
   color: #fff;
   background-color: #26AAA4;

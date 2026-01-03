@@ -1,0 +1,13 @@
+.back-button {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  align-self: flex-start;
+  border-style: hidden;
+  padding: 5px 15px;
+  background-color: var(--active);
+  color: var(--white);
+  font-family: "Roboto-Bold", "sans-serif";
+  border-radius: 20px;
+  cursor: pointer;
+}

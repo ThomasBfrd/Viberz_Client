@@ -26,8 +26,9 @@
     --background: #111714;
     --dark: #182725;
     --active: #26AAA4;
-    --white: #D9D9D9;
+    --white: #ffffff;
     --gray: #cacaca;
+    --redBkg: #de4444;
 }
 
 * {
@@ -35,8 +36,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto-Regular', sans-serif;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
 }
 
 *::-webkit-scrollbar {

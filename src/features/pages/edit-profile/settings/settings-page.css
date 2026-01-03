@@ -35,7 +35,7 @@
   font-weight: bold;
 }
 .settings-container .settings-content .delete-account {
-  background-color: darkred;
+  background-color: var(--redBkg);
   color: var(--white);
 }
 .settings-container .settings-content .signal-bug {

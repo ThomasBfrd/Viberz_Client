@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  height: 90vh;
 }
 .game-completed .game-completed-title {
   color: var(--white);
@@ -62,10 +62,12 @@
 .game-completed .game-completed-button {
   margin-top: 50px;
   border-style: hidden;
-  padding: 5px;
+  padding: 10px;
   width: 75px;
   cursor: pointer;
   color: var(--white);
+  font-family: "Roboto-Medium", "sans-serif";
+  font-size: 1rem;
   background-color: var(--active);
   border-radius: 100px;
   transition: background-color 0.09s ease-in-out;

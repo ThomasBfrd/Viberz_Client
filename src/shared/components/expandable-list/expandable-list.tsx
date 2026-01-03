@@ -1,5 +1,5 @@
 import './expandable-list.scss';
-import {useState} from "react";
+import AddLessIcon from "../add-less-icon/add-less-icon.tsx";
 
 interface ExpandableListProps {
     title: string;
@@ -10,39 +10,12 @@ interface ExpandableListProps {
 }
 
 const ExpandableList = ({title, subTitle, displayButton, toggleExpand, forceIcon}: ExpandableListProps) => {
-    const [displayed, setDisplayed] = useState<boolean>(false);
-
-    const changeDisplay = () => {
-        setDisplayed(!displayed);
-        toggleExpand();
-    }
-
-    function displayIcon(): string {
-        if (!displayed && forceIcon) {
-            return "+";
-        }
-
-        if (!displayed && !forceIcon) {
-            return "-";
-        }
-
-        return "+"
-    }
 
     return (
         <div className="favorites" data-testid="expandable-list">
             <p className="title">{title}</p>
             <span className="sub-title">{subTitle}</span>
-            {displayButton ? (
-                <button className="edit-options-button"
-                        data-testid="expandable-icon-button"
-                        onClick={changeDisplay}>
-                        <span
-                            className="edit-options-button-text"
-                            data-testid="edit-options-button-text"
-                        >{displayIcon()}</span>
-                </button>
-            ) : null}
+            {displayButton && <AddLessIcon toggleExpand={toggleExpand} forceIcon={forceIcon}/>}
         </div>
     )
 }

@@ -137,7 +137,7 @@ describe(HomePage.name, () => {
             it.each([
                 {name: "Guess the genre", path: "/guess-genre"},
                 {name: "Guess the song", path: "/guess-song"},
-                {name: "Share and discover", path: "/playlists"},
+                {name: "Share and discover", path: "/discover"},
                 {name: "Learn the structures", path: "/learn-structures"},
             ])("devrait rediriger vers $path au clique sur la catégorie $name", async ({name, path}) => {
                 const user = userEvent.setup();

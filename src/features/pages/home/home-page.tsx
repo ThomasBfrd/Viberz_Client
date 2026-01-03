@@ -7,6 +7,7 @@ import ProfilePicture from "../../../shared/components/profile-picture/profile-p
 import Loader from "../../../shared/components/loader/loader.tsx";
 import type {MenuItem} from "../../../shared/interfaces/menu-item.interface.ts";
 import {menuItems} from "../../../shared/const/menu-items.ts";
+import MenuItemsScroll from "../../../shared/components/menu-items-scroll/menu-items-scroll.tsx";
 
 export default function HomePage() {
     const {isLoggedIn, jwtToken} = useContext(AuthContext);
@@ -18,20 +19,18 @@ export default function HomePage() {
     const [categoryType, setCategoryType] = useState<string>("all");
 
     const filteredCategories = useMemo(() => {
-        const category: string = categoryType.toLowerCase();
-        if (category === 'all') {
+        if (categoryType === 'all') {
             return menuItems;
         }
 
-        return menuItems.filter((item: MenuItem) => (item.type === category));
+        return menuItems.filter((item: MenuItem) => (item.value === categoryType));
     }, [categoryType]);
 
     const types = useMemo(() => {
-        const types: string[] = [];
+        const types: MenuItem[] = [];
         menuItems.forEach((menuItem: MenuItem) => {
-            const formatType = menuItem.type[0].toUpperCase() + menuItem.type.slice(1).toString();
-            if (!types.includes(formatType)) {
-                types.push(formatType);
+            if (!types.some((type: MenuItem) => type.short === menuItem.short)) {
+                types.push(menuItem);
             }
         })
         return types;
@@ -69,6 +68,10 @@ export default function HomePage() {
         }
     }
 
+    const handleChangeCategory = (type: string) => {
+        setCategoryType(type);
+    }
+
     return (
         <div className="page-transition home-container" data-testid="home-container">
             {loading ? (
@@ -104,21 +107,7 @@ export default function HomePage() {
                 )
                 }
                 <div className="header-menu">
-                    <div className={categoryType === "all" ? "menu-item menu-item-active" : "menu-item"}
-                         data-testid="home-menu-item"
-                         onClick={() => setCategoryType("all")}>
-                        <p className="menu-item-text" data-testid="home-menu-item-text">All</p>
-                    </div>
-                    {types.map((type: string, index: number) => {
-                        return (
-                            <div className={categoryType === type ? "menu-item menu-item-active" : "menu-item"}
-                                 key={index}
-                                 data-testid="home-menu-item"
-                                 onClick={() => setCategoryType(type)}>
-                                <p className="menu-item-text" data-testid="home-menu-item-text">{type}</p>
-                            </div>
-                        )
-                    })}
+                    <MenuItemsScroll currentItem={categoryType} items={types} setCurrentItem={handleChangeCategory} />
                 </div>
             </div>
             <div className="home-body">
@@ -129,8 +118,8 @@ export default function HomePage() {
                             style={{backgroundImage : `url(${menuItem.background})`}}
                             onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : initiateSpotifyAuth()}
                             key={index}>
-                            <span className="home-category-type">{menuItem.type}</span>
-                            <h3 className="home-category-name" data-testid="home-category-name">{menuItem.name}</h3>
+                            <span className="home-category-type">{menuItem.value}</span>
+                            <h3 className="home-category-name" data-testid="home-category-name">{menuItem.label}</h3>
                         </div>
                     )
                 })}

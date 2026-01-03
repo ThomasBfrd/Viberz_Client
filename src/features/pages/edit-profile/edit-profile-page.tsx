@@ -8,12 +8,13 @@ import genresService from "../../../shared/services/genres.service.ts";
 import {useLocation, useNavigate} from 'react-router-dom';
 import ModalSearchArtists from "../../../shared/components/search-artists/search-artists.tsx";
 import ProfilePicture from "../../../shared/components/profile-picture/profile-picture.tsx";
-import EditIcon from "../../../assets/svg/edit-icon/edit-icon.tsx";
 import ExpandableList from "../../../shared/components/expandable-list/expandable-list.tsx";
 import {emailRegex, userNameRegex} from "../../../shared/const/input-regex.ts";
 import Loader from "../../../shared/components/loader/loader.tsx";
 import ModalOverlay from "../../../shared/components/modal-overlay/modal-overlay.tsx";
 import EventAction from '../../../shared/components/event-action/event-action.tsx';
+import EditIcon from "../../../shared/components/svg/edit/edit-icon.tsx";
+import BackButton from "../../../shared/components/back-button/back-button.tsx";
 
 export default function EditProfileComponent() {
     const [isLoading, setIsLoading] = useState(false);
@@ -162,14 +163,6 @@ export default function EditProfileComponent() {
         setDisplayGenresList(!displayGenresList);
     }
 
-    function goToProfilePage() {
-        if (username.length === 0 || userInfos?.user?.username.length === 0) {
-            setErrorNoUsername(true);
-        } else {
-            navigate("/profile");
-        }
-    }
-
     function onChangeUsername(e: ChangeEvent<HTMLInputElement>) {
         const username: string = e.target.value;
         setUsername(username);
@@ -229,14 +222,7 @@ export default function EditProfileComponent() {
                 )
             }
             <div className="page-transition edit-profile-content" data-testid="edit-profile-error-form">
-                <div className="buttons-navigation" data-testid="edit-profile-buttons-navigation">
-                    <button
-                        className="action-button back"
-                        data-testid="edit-profile-button-back"
-                        onClick={goToProfilePage} disabled={isLoading}>
-                        <span className="action-button-text">Back</span>
-                    </button>
-                </div>
+                <BackButton disabled={isLoading} />
                 <div className="profile-image">
                     {image && (
                         <ProfilePicture
@@ -254,7 +240,7 @@ export default function EditProfileComponent() {
                     />
 
                     <label htmlFor="fileInput" className="edit-button">
-                        <EditIcon />
+                        <EditIcon height={"20px"} width={"20px"} />
                     </label>
 
                 </div>

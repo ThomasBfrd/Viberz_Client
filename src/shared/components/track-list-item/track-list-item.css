@@ -1,0 +1,135 @@
+.track-list-item {
+  height: 55px;
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  cursor: pointer;
+  padding: 20px 10px;
+}
+.track-list-item:first-child {
+  padding-top: 20px;
+}
+.track-list-item:first-child:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 18px 18px 0 0;
+}
+.track-list-item:last-child {
+  padding-bottom: 20px;
+  border-radius: 0 0 18px 18px;
+}
+.track-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+.track-list-item:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.track-list-item .track-list-item-count {
+  margin-left: 5px;
+  width: 8%;
+  color: var(--white);
+  font-size: 1rem;
+}
+.track-list-item .listen-track {
+  width: 10%;
+  color: #FFF;
+  position: relative;
+  font-size: 3px;
+  background: #FFF;
+  animation: escaleY 1s infinite ease-in-out;
+  height: 5px;
+  animation-delay: -0.16s;
+}
+.track-list-item .listen-track:before,
+.track-list-item .listen-track:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 7px;
+  background: #FFF;
+  width: 4px;
+  height: 4px;
+  animation: escaleY 1s infinite ease-in-out;
+}
+.track-list-item .listen-track:before {
+  left: 1px;
+  animation-delay: -0.32s;
+}
+.track-list-item .track-list-item-cover {
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
+  border-radius: 100%;
+  overflow: hidden;
+  margin-left: -5px;
+}
+.track-list-item .track-list-item-cover img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 100%;
+}
+.track-list-item .track-list-item-infos {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+.track-list-item .track-list-item-infos .track-list-item-name {
+  max-width: 200px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--white);
+  font-size: 0.85rem;
+  font-family: "Roboto-Regular", "sans-serif";
+}
+.track-list-item .track-list-item-infos .track-list-item-creator {
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--white);
+  opacity: 0.65;
+  font-size: 0.7rem;
+  font-family: "Roboto-Light", "sans-serif";
+}
+.track-list-item .track-list-item-likes {
+  width: 12%;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.track-list-item .track-list-item-likes .track-list-item-likes-icon {
+  height: 10px;
+  width: 10px;
+}
+.track-list-item .track-list-item-likes .track-list-item-like-text {
+  padding-left: 5px;
+  height: 3px;
+  color: var(--white);
+  font-size: 0.75rem;
+  font-family: "Roboto-Bold", "sans-serif";
+}
+
+@keyframes escaleY {
+  0%, 80%, 100% {
+    box-shadow: 0 0;
+    height: 10px;
+  }
+  40% {
+    box-shadow: 0 -5px;
+    height: 10px;
+  }
+}
+
+/*# sourceMappingURL=track-list-item.css.map */
