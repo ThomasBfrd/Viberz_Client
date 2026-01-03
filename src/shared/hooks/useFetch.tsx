@@ -14,8 +14,8 @@ export interface FetchOptions {
 };
 
 export function useFetch<T>() {
-    const [data, setData] = useState<T | null>(null as T);
-    const [isLoading, setIsLoading] = useState(false);
+    const [data, setData] = useState<T | undefined>(undefined as T);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<unknown>(undefined);
 
     const fetchData = useCallback(async (url: string, options: FetchOptions): Promise<FetchResult<T>> => {
