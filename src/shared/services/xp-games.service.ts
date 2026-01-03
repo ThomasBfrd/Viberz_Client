@@ -4,7 +4,7 @@ import type {GameHistory} from "../interfaces/game-history.interface.ts";
 const userService = {
     addGameHistory: async (jwtToken: string, gameHistory: GameHistory) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/xp-history/add-history-game`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/xp-history`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,

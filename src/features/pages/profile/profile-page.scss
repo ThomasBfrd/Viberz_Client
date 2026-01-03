@@ -23,8 +23,8 @@
 
   & .settings-icon {
     position: absolute;
-    top: 30px;
-    right: 20px;
+    top: 25px;
+    right: 10px;
     justify-self: flex-end;
     align-self: flex-end;
     border-style: none;
@@ -66,11 +66,11 @@
       width: 150px;
       border-style: hidden;
       border-radius: 100px;
-      padding: 10px;
       background-color: var(--active);
     }
 
     & .button-edit {
+      height: 40px;
       background-color: var(--active);
     }
 

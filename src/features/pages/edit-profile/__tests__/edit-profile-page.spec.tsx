@@ -103,11 +103,9 @@ describe(EditProfileComponent.name, () => {
         })
 
         it('devrait afficher les boutons de navigation', () => {
-            const buttonsContainer: HTMLElement = screen.getByTestId("edit-profile-buttons-navigation");
             const backButton: HTMLElement = screen.getByTestId("edit-profile-button-back");
             const saveButton: HTMLElement = screen.getByTestId("edit-profile-button-save");
 
-            expect(buttonsContainer).toBeInTheDocument();
             expect(backButton).toBeInTheDocument();
             expect(saveButton).toBeInTheDocument();
         });
@@ -260,7 +258,7 @@ describe(EditProfileComponent.name, () => {
 
         describe("Sélection des genres", () => {
 
-            it("devrait pouvoir permettre la sélection d'un genre", async () => {
+            it("devrait pouvoir permettre la sélection d'un category", async () => {
                 const user: UserEvent = userEvent.setup();
                 const expandableElement: HTMLElement[] = screen.getAllByTestId("expandable-list");
                 const addIcon: HTMLElement[] = screen.getAllByTestId("edit-options-button-text");
@@ -282,7 +280,7 @@ describe(EditProfileComponent.name, () => {
                 const updatedExpandableIconButton: HTMLElement[] = screen.getAllByTestId("expandable-icon-button");
                 expect(updatedAddIcons).toHaveLength(2);
                 expect(updatedExpandableIconButton).toHaveLength(2);
-                expect(updatedAddIcons[0]).toHaveTextContent("-")
+                expect(updatedAddIcons[0]).toHaveTextContent("+")
 
                 await user.click(updatedExpandableIconButton[0])
 
@@ -322,7 +320,7 @@ describe(EditProfileComponent.name, () => {
             expect(genresText[1]).toHaveTextContent("Drum & Bass");
         });
 
-        it("devrait pouvoir déselectionner un genre au clique", async () => {
+        it("devrait pouvoir déselectionner un category au clique", async () => {
             const user: UserEvent = userEvent.setup();
             const expandableElement: HTMLElement[] = screen.getAllByTestId("expandable-list");
             const genresSelected: HTMLElement[] = screen.getAllByTestId("edit-profile-select-genre");

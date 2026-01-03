@@ -1,5 +1,5 @@
 import './search-artists.scss';
-import {type RefObject, useContext, useEffect, useRef, useState} from "react";
+import {type RefObject, useContext, useRef, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import artistService from "../../services/artist.service.ts";
 import Loader from "../loader/loader.tsx";
@@ -45,12 +45,6 @@ const ModalSearchArtists = ({addSearchedArtist, toggleModal, artistsSelected}: M
             searchArtist(searchItem);
         }, delay);
     }
-
-    useEffect(() => {
-
-        return () => {
-        }
-    }, [isLoading])
 
     async function searchArtist(search: string) {
         if (jwtToken) {
