@@ -36,6 +36,14 @@
   color: rgba(255,255,255,0.15);
 }
 
+.quiz-answers-props-button-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5px;
+}
+
  .artists-name {
     text-align: center;
     font-size: 13.5px;

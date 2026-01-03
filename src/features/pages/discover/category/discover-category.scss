@@ -1,0 +1,156 @@
+.discover-gere-container {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  overflow-y: hidden;
+  width: 100%;
+  padding: 20px;
+}
+
+.discover-genre-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 20px;
+  color: var(--white);
+  margin: 0 auto;
+}
+
+.discover-genre-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  width: 100%;
+
+  & .discover-genre-header-back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    .back-button {
+      position: relative;
+      top: 0;
+      left: 0;
+    }
+
+    & .discover-genre-header-title {
+      text-align: center;
+      width: 200px;
+      font-size: 2rem;
+      font-family: "Roboto-Bold", "sans-serif";
+    }
+  }
+
+  & .discover-genre-menu {
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  & .discover-genre-header-search {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 320px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgba(38, 170, 164, 0.1);
+
+    & .discover-genre-header-search-icon {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+    }
+
+    & .discover-genre-header-search-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--active);
+      color: var(--dark);
+      background-color: var(--white);
+      outline: none;
+    }
+  }
+}
+
+.discover-genre-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.discover-genre-charts {
+  width: 100%;
+
+  & .discover-genre-charts-container {
+    width: 85vw;
+    background-color: rgba(38, 170, 164, 0.1);
+    border-radius: 30px;
+    corner-shape: squircle;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 450px;
+    overflow: scroll;
+
+    & .discover-genre-charts-item {
+      animation: fadeIn 0.25s ease-in-out;
+      width: 85vw;
+      padding: 0 5px;
+    }
+
+    & .discover-genre-item-empty {
+      padding: 30px 0;
+      height: 100%;
+      align-self: center;
+      color: var(--white);
+      justify-self: center;
+    }
+  }
+}
+
+.discover-genre-add-playlist {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  & .add-playlist-button {
+    border-radius: 30px;
+    padding: 15px 0;
+    background-color: var(--active);
+    color: var(--white);
+    font-size: 16px;
+    cursor: pointer;
+  }
+}
+
+.discover-genre-footer {
+  width: 100%;
+  justify-self: flex-end;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -13,8 +13,8 @@ export interface RandomSong {
 
 export interface Image {
     url: string;
-    height: number;
-    width: number;
+    height?: number;
+    width?: number;
 }
 
 export interface Artist {
@@ -35,6 +35,7 @@ export interface Track {
 }
 
 export interface Song {
+    images?: Array<Image>;
     track: Track;
 }
 

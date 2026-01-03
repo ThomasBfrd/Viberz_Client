@@ -6,25 +6,29 @@ import {
     useWebPlaybackSDKReady,
     WebPlaybackSDK,
 } from "react-spotify-web-playback-sdk";
-import type {Artist, RandomSong} from "../../../shared/interfaces/guess-song.interface.ts";
+import type {Artist, Track} from "../../../shared/interfaces/guess-song.interface.ts";
 import "./music-player.scss";
 import Loader from "../../../shared/components/loader/loader.tsx";
 import clsx from "clsx";
+import PlayIcon from "../../../shared/components/svg/play/play-icon.tsx";
+import PauseIcon from "../../../shared/components/svg/pause/pause-icon.tsx";
+import HeartIcon from "../../../shared/components/svg/heart/heart-icon.tsx";
+import {useFetch} from "../../../shared/hooks/useFetch.tsx";
 
 interface PlayerProps {
-    randomSong?: RandomSong | undefined;
-    gameType: string | null;
-    resultWave: boolean;
+    song: Track | undefined;
+    gameType?: string | null;
+    resultWave?: boolean;
     accessToken?: string;
+    ready?: boolean;
+    onPlayingStateChange?: (state: boolean) => void;
 }
 
-const MusicPlayer = ({randomSong, accessToken, gameType, resultWave}: PlayerProps) => {
+const MusicPlayer = ({song, accessToken, gameType, resultWave, ready, onPlayingStateChange}: PlayerProps) => {
     const getOAuthToken = useCallback(
         (callback: (arg0: string) => Promise<unknown>) => callback(accessToken ?? ""),
         [accessToken]
     );
-
-    if (!randomSong) return <Loader />;
 
     return (
         <WebPlaybackSDK
@@ -33,36 +37,51 @@ const MusicPlayer = ({randomSong, accessToken, gameType, resultWave}: PlayerProp
             initialVolume={0.5}
             connectOnInitialized={true}
         >
-            <PlayerUI randomSong={randomSong} gameType={gameType} resultWave={resultWave} accessToken={accessToken}/>
+            {gameType ? (
+                <PlayerUI song={song} gameType={gameType} resultWave={resultWave} accessToken={accessToken}/>
+            ) : (
+                <PlayerUI song={song} accessToken={accessToken} ready={ready} onPlayingStateChange={onPlayingStateChange}/>
+            )}
         </WebPlaybackSDK>
     );
 };
 
-const PlayerUI = ({randomSong, accessToken, gameType, resultWave}: PlayerProps) => {
+const PlayerUI = ({song, accessToken, gameType, resultWave, ready, onPlayingStateChange}: PlayerProps) => {
     const player = useSpotifyPlayer();
     const playbackState = usePlaybackState(true);
     const device = usePlayerDevice();
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
+    const {fetchData} = useFetch();
+    const [likedSong, setLikedSong] = useState<boolean>(false);
     const progressRef = useRef<HTMLDivElement>(null);
+    const previousSongRef = useRef<string | undefined>(undefined);
 
-    // Synchronise l'état local avec le playback réel (y compris progress et duration)
     useEffect(() => {
-        if (playbackState) {
-            setIsPlaying(!playbackState.paused);
-            setProgress(playbackState.position || 0);
-            setDuration(playbackState.duration || randomSong?.song.track.duration_ms || 0);
-        }
-    }, [playbackState, randomSong]);
+        if (!song) return;
 
-    // Charge la nouvelle chanson et la met en pause quand randomSong change ou device ready
+        const duration: number = song?.duration_ms ?? 0;
+
+        if (playbackState) {
+            const playing = !playbackState.paused;
+            setIsPlaying(playing);
+            setProgress(playbackState.position || 0);
+            setDuration(playbackState.duration || duration);
+        }
+    }, [playbackState, song, gameType]);
+
     useEffect(() => {
         const loadAndPauseSong = async () => {
             if (!device || device.status !== "ready" || !player) return;
+            if (!song) return;
+
+            const isNewSong = previousSongRef.current !== song.id;
+            previousSongRef.current = song.id;
+
+            if (!isNewSong) return;
 
             try {
-                // Charge et lance la piste via API
                 await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device.device_id}`, {
                     method: "PUT",
                     headers: {
@@ -70,31 +89,66 @@ const PlayerUI = ({randomSong, accessToken, gameType, resultWave}: PlayerProps) 
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        uris: [`spotify:track:${randomSong?.song.track.id}`],
+                        uris: [`spotify:track:${song.id}`],
                         position_ms: 0
                     }),
                 });
-
-                // Initialise la duration depuis les métadonnées de la track (disponible immédiatement)
-                setDuration(randomSong?.song.track.duration_ms || 0);
                 setProgress(0);
-
+                setDuration(song.duration_ms || 0);
+                setIsPlaying(true);
             } catch (err) {
                 console.error("Error for loading player : ", err);
             }
         };
 
         loadAndPauseSong();
+    }, [device, song, accessToken, player]);
 
-        return () => {
+    useEffect(() => {
+        if (gameType && !player) return;
 
+        const handleReadyChange = async () => {
+            if (ready) {
+                try {
+                    await player?.resume();
+                } catch (err) {
+                    console.error("Error for resuming player : ", err);
+                }
+            } else {
+                try {
+                    await player?.pause();
+                } catch (err) {
+                    console.error("Error for pausing player : ", err);
+                }
+            }
         }
-    }, [device, randomSong, player, accessToken]);
+
+        handleReadyChange();
+
+    }, [ready, gameType, player]);
 
     const handlePlayPause = async () => {
-        if (!player) return;
-        if (isPlaying) await player.pause();
-        else await player.resume();
+
+        if (!player || !device || device.status !== "ready") {
+            console.warn("Player or device not ready", {player: !!player, device, status: device?.status});
+            return;
+        }
+
+        if (onPlayingStateChange) {
+            onPlayingStateChange(!isPlaying);
+        }
+
+        try {
+            if (isPlaying) {
+                await player.pause();
+                setIsPlaying(false);
+            } else {
+                await player.resume();
+                setIsPlaying(true);
+            }
+        } catch (err) {
+            console.error("Error for play/pause : ", err);
+        }
     };
 
     const displayTimecodes = useCallback(() => {
@@ -121,78 +175,94 @@ const PlayerUI = ({randomSong, accessToken, gameType, resultWave}: PlayerProps) 
         }
     };
 
-    // Optionnel : Afficher un loading si SDK pas prêt
+    const onLikeSong = useCallback(async () => {
+        if (!song?.id || !accessToken) return;
+
+        const result = await fetchData('https://api.spotify.com/v1/me/tracks', {
+            method: likedSong ? 'DELETE' : 'PUT',
+            jwtToken: accessToken,
+            body: {
+                ids: [song?.id]
+            }
+        });
+
+        if (result?.success) {
+            setLikedSong(!likedSong);
+        }
+    }, [song?.id, accessToken, fetchData, likedSong]);
+
     const sdkReady = useWebPlaybackSDKReady();
-    if (!sdkReady || !device) return <Loader />;
+    if (!sdkReady || !device) return <Loader/>;
 
     return (
-        <div className="container">
-            <div className="informations">
-                <div className="cover">
-                    <img
-                        src={randomSong?.song.track.album.images[0]?.url || ''}
-                        alt={`${randomSong?.song.track.name} cover`}
-                        className={clsx(
-                            gameType === "guess-song" && !resultWave && "hidden-text",
-                            gameType === "guess-song" && resultWave && "reveal-text"
-                        )}
-                        style={{width: '100%', height: '100%', objectFit: 'cover'}}
-                    />
-                </div>
-                <div className="informations-text">
-                    <div className="informations-text-artists">
-                            <p className="artists">
-                        {randomSong?.song.track.artists.map((artist: Artist, index: number) => (
-                                <span key={index}
-                                      className={clsx(
-                                          gameType === "guess-song" && !resultWave && "hidden-text",
-                                          gameType === "guess-song" && resultWave && "reveal-text"
-                                      )}
-                                >
-                                    {artist.name}{randomSong?.song.track.artists.length - 1 !== index ? ', ' : ''}
-                                </span>
-                        ))}
-                            </p>
-                    </div>
-                    <p className={clsx(
-                        "song-text",
-                        gameType === "guess-song" && !resultWave && "hidden-text",
-                        gameType === "guess-song" && resultWave && "reveal-text"
-                    )}>{randomSong?.song.track.name}</p>
-                </div>
-                <div className="play">
-                    <button className="play-button" onClick={handlePlayPause}>
-                        {!isPlaying ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" height="40px" width="40px" viewBox="0 0 512 512">
-                                <path
-                                    fill="#fff"
-                                    d="M256,0C114.625,0,0,114.625,0,256c0,141.374,114.625,256,256,256c141.374,0,256-114.626,256-256
-                            C512,114.625,397.374,0,256,0z M351.062,258.898l-144,85.945c-1.031,0.626-2.344,0.657-3.406,0.031
-                            c-1.031-0.594-1.687-1.702-1.687-2.937v-85.946v-85.946c0-1.218,0.656-2.343,1.687-2.938c1.062-0.609,2.375-0.578,3.406,0.031
-                            l144,85.962c1.031,0.586,1.641,1.718,1.641,2.89C352.703,257.187,352.094,258.297,351.062,258.898z"
-                                />
-                            </svg>
+        <div className="player-container" style={{
+            width: gameType ? '320px' : '100%',
+            background: gameType ?? `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)), url(${song?.album.images[0]?.url || undefined})`,
+            backdropFilter: gameType ?? "blur(8px)",
+        }}>
+            <div className="player-body">
+                <div className="player-informations">
+                    <div className="player-cover">
+                        {(!ready && !song) && !gameType ? (
+                            <div className="player-cover-music"></div>
                         ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 16 16"
-                                 fill="none">
-                                <path d="M7 1H2V15H7V1Z" fill="#fff"/>
-                                <path d="M14 1H9V15H14V1Z" fill="#fff"/>
-                            </svg>
+                            <img
+                                src={song?.album.images[0]?.url || undefined}
+                                alt={`${song?.name} cover`}
+                                className={clsx(
+                                    gameType === "guess-song" && !resultWave && "player-hidden-text",
+                                    gameType === "guess-song" && resultWave && "player-reveal-text"
+                                )}
+                            />
                         )}
+                    </div>
+                    <div className="player-informations-text">
+                        <div className="player-informations-text-artists">
+                            <p className="player-artists">
+                                {song?.artists.map((artist: Artist, index: number) => (
+                                    <span key={index}
+                                          className={clsx(
+                                              gameType === "guess-song" && !resultWave && "player-hidden-text",
+                                              gameType === "guess-song" && resultWave && "player-reveal-text"
+                                          )}
+                                    >
+                                    {artist.name}{song?.artists.length - 1 !== index ? ', ' : ''}
+                                </span>
+                                ))}
+                            </p>
+                        </div>
+                        <p className={clsx(
+                            "player-song-text",
+                            gameType === "guess-song" && !resultWave && "player-hidden-text",
+                            gameType === "guess-song" && resultWave && "player-reveal-text"
+                        )}>{song?.name}</p>
+                    </div>
+                </div>
+                <div className="player-play">
+                    <button className="player-play-button" onClick={handlePlayPause}>
+                        {!isPlaying ? <PlayIcon/> : <PauseIcon/>}
                     </button>
+                    {!gameType ? (
+                        <button className="content-icon"
+                             style={{backgroundColor: likedSong ? "#182725" : "#26AAA4FF"}}
+                             onClick={onLikeSong}
+                             data-testid="player-social-like">
+                            <HeartIcon height={"20px"} width={"20px"} />
+                        </button>
+                    ) : null}
                 </div>
             </div>
             <div
-                className="progress-container"
+                className="player-progress-container"
             >
-                <div className="progress-bar" ref={progressRef}
+                <div className="player-progress-bar" ref={progressRef}
                      onClick={handleChangePosition}>
                     <div
-                        className="progress-bar-active"
+                        className="player-progress-bar-active"
                         style={{width: `${duration ? (progress / duration) * 100 : 0}%`}}
                     />
                 </div>
-                <p className="time-text">
+                <p className="player-time-text">
                     {displayTimecodes()}
                 </p>
             </div>
