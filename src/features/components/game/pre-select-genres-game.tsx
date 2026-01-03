@@ -25,9 +25,9 @@ const PreSelectGenresGame = ({allGenres, startGameWithGenres}: PreSelectGenresGa
     }, [genres]);
 
     return (
-        <div className="quiz-content">
-            <p className="guess-song-debut">Select genres (max 3)</p>
-            <div className="select-genres-container">
+        <div className="select-genres-container">
+            <div className="select-genres-content">
+                <p className="guess-song-debut">Select genres (max 3)</p>
                 <div className="select-genres-list">
                     {allGenres ? allGenres.map((genre: string, index: number) => (
                         <label htmlFor="select-genre" key={index} className="select-genre-item">
@@ -46,7 +46,8 @@ const PreSelectGenresGame = ({allGenres, startGameWithGenres}: PreSelectGenresGa
                 <button type="submit"
                         className={genres.length === 0 || genres.length > 3 ? "submit-selected-genres quiz-action-button disabled" : "submit-selected-genres quiz-action-button"}
                         onClick={() => onStartGameWithGenres()}>
-                    Save and play</button>
+                    Save and play
+                </button>
             </div>
         </div>
     )

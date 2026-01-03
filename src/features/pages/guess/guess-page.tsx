@@ -241,9 +241,7 @@ const GuessPage = () => {
     }, [navigate, path]);
     
     const onConfirmRestart = useCallback(() => {
-        if (gameType === "guess-song") {
-            setReadyGuessSong(true);
-        }
+        setIsLoadingSongs(false);
 
         setRandomSongs(null);
         setWave(1);
@@ -251,6 +249,12 @@ const GuessPage = () => {
         setScore(0);
         setEarnedXp(0);
         setResultWave(false);
+        setRandomSong(null);
+        setSongs([]);
+
+        if (gameType === "guess-song") {
+            setReadyGuessSong(true);
+        }
     }, [gameType]);
 
     return (
@@ -279,7 +283,7 @@ const GuessPage = () => {
                             <div className="quiz-player">
                                 {randomSong ? (
                                     <MusicPlayer 
-                                        randomSong={randomSong} 
+                                        song={randomSong?.song.track}
                                         gameType={gameType} 
                                         resultWave={resultWave} 
                                         accessToken={randomSongs?.accessToken} />

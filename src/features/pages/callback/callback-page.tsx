@@ -26,11 +26,12 @@ const CallbackPage = () => {
         }
 
         const fetchToken = async () => {
+            const redirect: string = `https://${import.meta.env.VITE_CLIENT_URL}${import.meta.env.VITE_REDIRECT_URI}`
             try {
                     const res: Response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/authentication/getSpotifyAccess`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ code, redirectUri: import.meta.env.VITE_REDIRECT_URI }),
+                    body: JSON.stringify({ code, redirectUri: redirect }),
                 });
 
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);

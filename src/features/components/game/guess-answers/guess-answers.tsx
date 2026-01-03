@@ -41,7 +41,7 @@ const GuessAnswers = ({
 
     return (
         <div className="quiz-answers">
-            <p className="quiz-answers-text">{gameType === ACTIVITY_TYPE.GUESS_GENRE ? "What genre is this?" : "Who produced this track?"}</p>
+            <p className="quiz-answers-text">{gameType === ACTIVITY_TYPE.GUESS_GENRE ? "What category is this?" : "Who produced this track?"}</p>
             <div className="quiz-answers-props">
                 {gameType === ACTIVITY_TYPE.GUESS_GENRE ? (
                     randomSong && otherGenres && otherGenres.map((genre: string, index: number) => (
