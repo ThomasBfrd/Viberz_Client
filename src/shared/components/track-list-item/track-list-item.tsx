@@ -31,7 +31,7 @@ const TrackListItem = <T extends Playlist | Track,>({item, cover, title, subtitl
                 <img src={cover} alt="playlist-image"/>
             </div>
             <div className="track-list-item-infos">
-                <p className="track-list-item-name" style={{maxWidth: likes ? "200px" : "270px"}}>{title}</p>
+                <p className="track-list-item-name">{title}</p>
                 <p className="track-list-item-creator">
                     {subtitle} {genres ? <span> - {genres?.join(', ')}</span> : null}
                 </p>

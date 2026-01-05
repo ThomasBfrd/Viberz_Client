@@ -23,6 +23,7 @@ import {base64ToImage} from "../../../../shared/utils/base64-images.ts";
 import BackButton from "../../../../shared/components/back-button/back-button.tsx";
 import DeleteIcon from "../../../../shared/components/svg/delete/delete-icon.tsx";
 import EventAction from "../../../../shared/components/event-action/event-action.tsx";
+import {Tooltip} from "react-tooltip";
 
 interface PlayerState {
     song: Track | undefined;
@@ -247,13 +248,16 @@ const PlaylistPage = () => {
             <div className="playlist-content">
                 <BackButton disabled={isLoading} />
                 {playlistOwner === userId && (
-                    <div className="playlist-header-delete">
+                    <div className="playlist-header-owner-actions">
+                        <button className="button-edit" aria-label="Edit playlist" onClick={handleCloseAddPlaylistModal} data-testid="playlist-edit-button">
+                            <EditIcon height={"15px"} width={"15px"} />
+                        </button>
                         <button
                             className="playlist-header-delete-button"
                             aria-label="Delete playlist"
                             onClick={onConfirmDeletePlaylist}
                             data-testid="playlist-delete-button">
-                            <DeleteIcon height={"30px"} width={"30px"} />
+                            <DeleteIcon height={"15px"} width={"15px"} />
                         </button>
                     </div>
                 )}
@@ -264,19 +268,23 @@ const PlaylistPage = () => {
                         className="playlist-header-cover"
                     />
                     <div className="playlist-header-name-container" data-testid="playlist-header-name-container">
-                        <h2 className="playlist-header-title">{playlist.name}</h2>
-                        {playlistOwner === userId && (
-                            <button className="button-edit" aria-label="Edit playlist" onClick={handleCloseAddPlaylistModal} data-testid="playlist-edit-button">
-                                <EditIcon height={"15px"} width={"15px"} />
-                            </button>
-                        )}
+                        <p
+                            data-tooltip-id="my-tooltip"
+                            data-tooltip-content={playlist.name}
+                            data-tooltip-place="top"
+                            className="playlist-header-title">
+                            <Tooltip id="my-tooltip" className="example"/>
+                            {playlist.name}</p>
                     </div>
-                    <span className="playlist-header-genre">{playlist.genreList.join(", ")}</span>
-                    <div className="playlist-header-user">
-                        <div className="user-image">
-                            <ProfilePicture image={userImageProfile} />
+                    <div className="playlist-header-genres-user">
+                        <span className="playlist-header-genre">{playlist.genreList.join(", ")}</span>
+                        <span className="playlist-header-separator">|</span>
+                        <div className="playlist-header-user">
+                            <div className="user-image">
+                                <ProfilePicture image={userImageProfile} />
+                            </div>
+                            <p className="playlist-header-created">{playlist.userName}</p>
                         </div>
-                        <p className="playlist-header-created">{playlist.userName}</p>
                     </div>
                 </div>
 
@@ -292,7 +300,7 @@ const PlaylistPage = () => {
                             className="content-icon"
                             style={{ backgroundColor: playlist.likedByUser ? "#182725" : "#26AAA4FF" }}
                         >
-                            <HeartIcon height="20px" width="20px" />
+                            <HeartIcon height="15px" width="15px" />
                         </div>
                         <div className="playlist-social-text">
                             <span>{playlist.likes}</span>
@@ -306,9 +314,9 @@ const PlaylistPage = () => {
                         aria-label={playerState.isPlaying ? "Pause" : "Play"}
                     >
                         {playerState.isPlaying ? (
-                            <PauseIcon height="30px" width="30px" />
+                            <PauseIcon height="20px" width="20px" />
                         ) : (
-                            <PlayIcon height="30px" width="30px" circle={false} />
+                            <PlayIcon height="20px" width="20px" circle={false} />
                         )}
                     </button>
 
@@ -324,7 +332,7 @@ const PlaylistPage = () => {
                             </div>
                         )}
                         <div className="content-icon">
-                            <ShareIcon height="20px" width="20px" />
+                            <ShareIcon height="15px" width="15px" />
                         </div>
                         <div className="playlist-social-text">
                             <span>Share</span>

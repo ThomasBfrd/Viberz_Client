@@ -28,13 +28,11 @@
       font-size: 0.9rem;
       font-family: "Roboto-Medium", "sans-serif";
     }
+  }
 
-    &:hover {
-      background-color: var(--background);
-
-      & p {
-        font-family: "Roboto-Bold", "sans-serif";
-      }
+  @media (hover: hover) {
+    .footer-item:hover {
+      background-color: var(--dark);
     }
   }
 
@@ -54,9 +52,7 @@
     width: 20%;
   }
 
-  & .active-likes {
+  & .footer-item-likes-active {
     background-color: var(--background);
-    border-radius: 100px;
-    width: 20%;
   }
 }

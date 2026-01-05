@@ -28,11 +28,10 @@
   font-size: 0.9rem;
   font-family: "Roboto-Medium", "sans-serif";
 }
-.footer-container .footer-item:hover {
-  background-color: var(--background);
-}
-.footer-container .footer-item:hover p {
-  font-family: "Roboto-Bold", "sans-serif";
+@media (hover: hover) {
+  .footer-container .footer-item:hover {
+    background-color: var(--dark);
+  }
 }
 .footer-container .current-path {
   background-color: var(--background);
@@ -47,10 +46,8 @@
   border-radius: 100px;
   width: 20%;
 }
-.footer-container .active-likes {
+.footer-container .footer-item-likes-active {
   background-color: var(--background);
-  border-radius: 100px;
-  width: 20%;
 }
 
 /*# sourceMappingURL=footer.css.map */

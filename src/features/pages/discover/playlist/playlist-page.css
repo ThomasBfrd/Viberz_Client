@@ -2,32 +2,61 @@
   display: flex;
   position: relative;
   z-index: 1;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   padding: 20px;
 }
 
+.example {
+  font-size: 0.8em;
+}
+
+.react-tooltip {
+  text-wrap: wrap;
+  max-width: 250px;
+  width: 100%;
+  font-size: 0.6em !important;
+}
+
 .playlist-content {
   height: 100%;
+  max-width: 480px;
   width: 100%;
+  margin: 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  gap: 20px;
   color: var(--white);
-  margin: 0 auto;
 }
 
-.playlist-header-delete {
+.playlist-header-owner-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
   position: absolute;
   top: 0;
   right: 0;
   border-style: hidden;
   cursor: pointer;
 }
-.playlist-header-delete .playlist-header-delete-button {
+.playlist-header-owner-actions .button-edit {
+  padding: 8px;
+  position: relative;
+  border-style: hidden;
+  background-color: var(--active);
+  border-radius: 100px;
+  cursor: pointer;
+}
+.playlist-header-owner-actions .button-edit .button-edit-icon {
+  height: 100%;
+  width: 100%;
+  margin-left: 2px;
+}
+.playlist-header-owner-actions .playlist-header-delete-button {
   background-color: var(--redBkg);
   padding: 8px;
   border-radius: 100px;
@@ -35,6 +64,7 @@
 }
 
 .playlist-header {
+  margin-top: 15px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -48,29 +78,29 @@
   align-items: center;
   gap: 10px;
 }
-.playlist-header .button-edit {
-  padding: 10px;
-  position: relative;
-  border-style: hidden;
-  background-color: var(--active);
-  border-radius: 100px;
-  cursor: pointer;
-}
-.playlist-header .button-edit .button-edit-icon {
-  height: 100%;
-  width: 100%;
-  margin-left: 2px;
-}
 .playlist-header .playlist-header-title {
-  font-size: 2rem;
+  text-align: center;
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.5em;
   font-family: "Roboto-Bold", "sans-serif";
+}
+.playlist-header .playlist-header-genres-user {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 10px;
 }
 .playlist-header .playlist-header-user {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
 }
 .playlist-header .playlist-header-user .user-image {
   height: 20px;
@@ -90,7 +120,7 @@
 .playlist-header .playlist-header-genre {
   font-size: 0.8rem;
   font-family: "Roboto-Light", "sans-serif";
-  padding: 0 0 10px 0;
+  transform: translateY(2px);
 }
 .playlist-header .playlist-tracks-count {
   font-size: 0.8rem;
@@ -116,13 +146,10 @@
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 10px;
   border-style: hidden;
 }
 .playlist-actions .playlist-social {
   position: relative;
-  height: 60px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -248,6 +275,7 @@
 }
 
 .playlist-footer {
+  min-height: 125px;
   display: flex;
   justify-content: center;
   align-items: center;

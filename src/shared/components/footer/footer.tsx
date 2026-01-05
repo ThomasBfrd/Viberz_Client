@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useMemo, useState} from "react";
+import {useMemo} from "react";
 import './footer.scss';
 import clsx from "clsx";
 
@@ -11,6 +11,7 @@ export interface Footer {
 export interface FooterProps {
     onCancel?: (path: string) => void;
     seeLikedPlaylists?: () => void;
+    likedButtonClicked?: boolean;
     path?: string;
     userLikes?: boolean;
 }
@@ -30,11 +31,9 @@ const routes: Array<Footer> = [
     }
 ];
 
-const Footer = ({onCancel, userLikes = false, path, seeLikedPlaylists}: FooterProps) => {
+const Footer = ({onCancel, userLikes = false, path, seeLikedPlaylists, likedButtonClicked}: FooterProps) => {
     const location = useLocation();
-    const {likedButtonClicked} = location.state ?? false;
     const navigate = useNavigate();
-    const [likedDisplayed, setLikedDisplayed] = useState<boolean>(likedButtonClicked);
 
     const actualPath: string = useMemo(() => {
         return location.pathname;
@@ -48,9 +47,8 @@ const Footer = ({onCancel, userLikes = false, path, seeLikedPlaylists}: FooterPr
         }
     }, [userLikes])
 
-    function onRedirectTo(targetPath: string) {
+    const onRedirectTo = (targetPath: string) => {
         if (userLikes && targetPath === "/discover/all") {
-            setLikedDisplayed(!likedDisplayed);
             return seeLikedPlaylists && seeLikedPlaylists();
         }
 
@@ -69,9 +67,8 @@ const Footer = ({onCancel, userLikes = false, path, seeLikedPlaylists}: FooterPr
                         className={clsx(
                             "footer-item",
                             actualPath === route.path && "current-path",
-                            userLikes && !likedDisplayed && route.name === "Liked" && "footer-item-likes",
-                            userLikes && likedDisplayed && route.name === "Liked" && "active-likes",
-                            userLikes && route.name === "Liked" && likedButtonClicked && "active-likes"
+                            userLikes && !likedButtonClicked && route.name === "Liked" && "footer-item-likes",
+                            userLikes && likedButtonClicked && route.name === "Liked" && "footer-item-likes footer-item-likes-active"
                         )}
                         key={index}
                         onClick={() => onRedirectTo(path ?? route.path)}>
