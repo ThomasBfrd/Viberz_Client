@@ -9,7 +9,6 @@
 }
 
 .discover-genre-content {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,6 +16,8 @@
   gap: 20px;
   color: var(--white);
   margin: 0 auto;
+  max-width: 480px;
+  width: 100%;
 }
 
 .discover-genre-header {
@@ -90,27 +91,45 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
+  width: 100%;
 }
 
 .discover-genre-charts {
   width: 100%;
 
   & .discover-genre-charts-container {
-    width: 85vw;
+    width: 100%;
     background-color: rgba(38, 170, 164, 0.1);
     border-radius: 30px;
     corner-shape: squircle;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: flex-start;
     height: 450px;
     overflow: scroll;
 
     & .discover-genre-charts-item {
       animation: fadeIn 0.25s ease-in-out;
-      width: 85vw;
-      padding: 0 5px;
+      width: 100%;
+
+      &[data-first="true"] .track-list-item {
+        padding-top: 20px;
+        border-radius: 18px 18px 0 0;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.15);
+          border-radius: 18px 18px 0 0;
+        }
+      }
+
+      & .track-list-item:hover {
+        background-color: rgba(0, 0, 0, 0.15);
+      }
+
+      &[data-last="true"] .track-list-item {
+        padding-bottom: 20px;
+        border-radius: 0 0 18px 18px;
+      }
     }
 
     & .discover-genre-item-empty {
@@ -153,4 +172,8 @@
   to {
     opacity: 1;
   }
+}
+
+@media screen and (min-width: 480px) {
+
 }

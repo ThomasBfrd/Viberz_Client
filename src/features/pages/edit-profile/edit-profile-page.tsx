@@ -1,4 +1,4 @@
-import './edit-profile-page.scss';
+import "./edit-profile-page.scss";
 import {type ChangeEvent, useCallback, useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../../core/context/auth-context.tsx";
 import type {UserInfos} from "../../../shared/interfaces/user.interface.ts";
@@ -222,7 +222,9 @@ export default function EditProfileComponent() {
                 )
             }
             <div className="page-transition edit-profile-content" data-testid="edit-profile-error-form">
-                <BackButton disabled={isLoading} />
+                <div className="edit-profile-back-button">
+                    <BackButton disabled={isLoading} />
+                </div>
                 <div className="profile-image">
                     {image && (
                         <ProfilePicture
