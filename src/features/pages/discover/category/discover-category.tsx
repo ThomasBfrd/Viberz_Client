@@ -22,6 +22,7 @@ const DiscoverCategory = () => {
     const {jwtToken} = useContext(AuthContext);
     const {category} = useParams<{category: string}>();
     const navigate = useNavigate();
+    const location = useLocation();
     const {likedButtonClicked} = useLocation().state ?? false;
     const {fetchData} = useFetch<PaginatedData<Playlist>>();
     const [likedPlaylists, setLikedPlaylists] = useState<boolean>(likedButtonClicked);
@@ -36,6 +37,15 @@ const DiscoverCategory = () => {
     const menuItems: FamilyGenres[] = useMemo(() => {
         return FAMILY_GENRES.filter((genre: FamilyGenres) => genre.path !== "all")
     }, [])
+
+    useEffect(() => {
+        if (likedButtonClicked) {
+            navigate(location.pathname, {
+                replace: true,
+                state: null
+            })
+        }
+    }, [navigate, likedButtonClicked, location.pathname]);
 
     const {data: paginatedData, isFetching, error} = useQuery({
         queryKey: ['playlists', {jwtToken, category, searchTerm, page, likedPlaylists}],
@@ -191,11 +201,14 @@ const DiscoverCategory = () => {
                                     next={fetchMoreData}
                                     hasMore={hasMore}
                                     scrollableTarget="scrollableDiv"
-                                    className="discover-genre-charts-item"
                                     loader={<Loader />}
                                     scrollThreshold={0.8}>
                                     {allPlaylists.length > 0 ? (allPlaylists.map((playlist: Playlist, index: number) => (
-                                        <div className="discover-genre-charts-item" key={playlist.id}>
+                                        <div
+                                            className="discover-genre-charts-item"
+                                            data-first={index === 0}
+                                            data-last={index === allPlaylists.length - 1}
+                                            key={playlist.id}>
                                             <TrackListItem
                                                 item={playlist}
                                                 index={index}
@@ -219,7 +232,7 @@ const DiscoverCategory = () => {
                     </div>
                 </div>
                 <div className="discover-genre-footer">
-                    <Footer userLikes={true} seeLikedPlaylists={handleSeePlaylistLikes} />
+                    <Footer userLikes={true} seeLikedPlaylists={handleSeePlaylistLikes} likedButtonClicked={likedPlaylists} />
                 </div>
             </div>
         </div>

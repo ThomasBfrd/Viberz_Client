@@ -10,23 +10,6 @@
   cursor: pointer;
   padding: 20px 10px;
 }
-.track-list-item:first-child {
-  padding-top: 20px;
-}
-.track-list-item:first-child:hover {
-  background-color: rgba(0, 0, 0, 0.15);
-  border-radius: 18px 18px 0 0;
-}
-.track-list-item:last-child {
-  padding-bottom: 20px;
-  border-radius: 0 0 18px 18px;
-}
-.track-list-item:hover {
-  background-color: rgba(0, 0, 0, 0.15);
-}
-.track-list-item:not(:last-child) {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
 .track-list-item .track-list-item-count {
   margin-left: 5px;
   width: 8%;
@@ -129,6 +112,12 @@
   40% {
     box-shadow: 0 -5px;
     height: 10px;
+  }
+}
+@media screen and (min-width: 480px) {
+  .track-list-item .track-list-item-infos .track-list-item-name {
+    max-width: 300px;
+    width: 100%;
   }
 }
 
