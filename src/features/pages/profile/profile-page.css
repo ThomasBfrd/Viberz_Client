@@ -34,6 +34,13 @@
 .profile-header .settings-icon:hover .settings-icon {
   fill: var(--active);
 }
+.profile-header .icon-profile {
+  position: relative;
+  cursor: pointer;
+  border: 2px solid var(--white);
+  border-radius: 100px;
+  overflow: hidden;
+}
 .profile-header .profile-header-infos {
   display: flex;
   justify-content: center;
