@@ -8,15 +8,20 @@ import Loader from "../../../shared/components/loader/loader.tsx";
 import type {MenuItem} from "../../../shared/interfaces/menu-item.interface.ts";
 import {menuItems} from "../../../shared/const/menu-items.ts";
 import MenuItemsScroll from "../../../shared/components/menu-items-scroll/menu-items-scroll.tsx";
+import PersonIcon from "../../../shared/components/svg/person/person-icon.tsx";
+import ModalOverlay from "../../../shared/components/modal-overlay/modal-overlay.tsx";
+import WhitelistForm from "../../../shared/components/whitelist-form/whitelist-form.tsx";
 
 export default function HomePage() {
-    const {isLoggedIn, jwtToken} = useContext(AuthContext);
+    const {isLoggedIn, jwtToken, guest} = useContext(AuthContext);
     const [logged, setLogged] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const [username, setUsername] = useState<string | null>(null);
     const [userImage, setUserImage] = useState<string | null>(null);
     const [categoryType, setCategoryType] = useState<string>("all");
+    const [isWhitelisted, setIsWhitelisted] = useState<boolean>(false);
+    const [modalWhitelist, setModalWhitelist] = useState<boolean>(false);
 
     const filteredCategories = useMemo(() => {
         if (categoryType === 'all') {
@@ -39,32 +44,58 @@ export default function HomePage() {
     useEffect(() => {
         setLoading(true);
 
-        const timeout = setTimeout(() => {
-            const userStorage = localStorage.getItem('user');
-            if (userStorage) {
-                const user = JSON.parse(userStorage);
-                setUsername(user.username);
-                setUserImage(user.image);
-            }
-            setLogged(isLoggedIn);
-            setLoading(false);
-        }, 250);
+        const userStorage = localStorage.getItem('user');
+        if (userStorage) {
+            const user = JSON.parse(userStorage);
+            setUsername(user.username);
+            setUserImage(user.image);
+        }
+        setLogged(isLoggedIn);
+        setLoading(false);
 
-        return () => clearTimeout(timeout);
     }, [isLoggedIn]);
 
+    const checkWhitelistedStored = () => {
+        const whiteListFromStorage = localStorage.getItem('viberz-whitelist');
+
+        if (whiteListFromStorage) {
+            setIsWhitelisted(JSON.parse(whiteListFromStorage));
+        } else {
+            setModalWhitelist(true);
+            setIsWhitelisted(false);
+        }
+    }
+
+    const handleChangeWhitelistedStatus = (isWhitelisted: boolean) => {
+
+        if (isWhitelisted) {
+            setModalWhitelist(false);
+            localStorage.setItem('viberz-whitelist', JSON.stringify(true));
+            return initiateSpotifyAuth();
+        } else {
+            localStorage.removeItem('viberz-whitelist');
+        }
+
+        setIsWhitelisted(isWhitelisted);
+    }
 
     function onRedirectToCategory(path: string) {
-        if (path) {
+        if (path && isLoggedIn) {
             navigate(path);
         }
+
+        return;
     }
 
     function onRedirectToProfile() {
         if (isLoggedIn) {
             navigate('/profile');
         } else {
-            initiateSpotifyAuth();
+            checkWhitelistedStored();
+
+            if (isWhitelisted) {
+                initiateSpotifyAuth();
+            }
         }
     }
 
@@ -72,8 +103,24 @@ export default function HomePage() {
         setCategoryType(type);
     }
 
+    const connectAsGuest = () => {
+        const stored = localStorage.getItem('viberz-whitelist');
+        if (stored) {
+            localStorage.removeItem('viberz-whitelist');
+        }
+
+        return navigate("/callback")
+    }
+
     return (
         <div className="page-transition home-container" data-testid="home-container">
+            {modalWhitelist && (
+                <ModalOverlay
+                    closed={() => setModalWhitelist(!modalWhitelist)}
+                    isClosable={true}
+                    children={<WhitelistForm isWhitelisted={handleChangeWhitelistedStatus} />}
+                />
+            )}
             {loading ? (
                 <div className="home-loader">
                     <Loader />
@@ -85,24 +132,44 @@ export default function HomePage() {
                     {logged ? (
                         <div className="icon-profile" onClick={onRedirectToProfile}>
                             {userImage ? (
-                                <ProfilePicture image={userImage} height={50} width={50} />
-                            ) : null}
+                                <ProfilePicture image={userImage} height={"50px"} width={"50px"} />
+                            ) : (
+                                <PersonIcon height={"50px"} width={"50px"} />
+                            )}
                         </div>
                     ) : null}
                 </div>
                 {logged ? (
                     <>
                         <div className="hello">
-                            <h1 className="hello-text" data-testid="home-username">Hello{username ? `, ${username}` : ""}</h1>
+                            <h1 className="hello-text" data-testid="home-username">Hello{username ? `, ${username}` : " Guest"}</h1>
                         </div>
+                        {guest && (
+                            <div className="login-actions">
+                                <button
+                                    className="connect-button"
+                                    data-testid="home-connect-button"
+                                    onClick={checkWhitelistedStored}>Connect with Spotify
+                                </button>
+                            </div>
+                        )}
                     </>
                 ) : (
                     <div className="not-connected" data-testid="home-not-connected">
                         <h3 className="hello-text">Login to play and discover</h3>
-                        <button
-                            className="connect-button"
-                            data-testid="home-connect-button"
-                            onClick={() => initiateSpotifyAuth()}>Connect with Spotify</button>
+                        <div className="login-actions">
+                            <button
+                                className="connect-button"
+                                data-testid="home-connect-button"
+                                onClick={checkWhitelistedStored}>Connect with Spotify
+                            </button>
+                            <p className="connection-button-text">Or</p>
+                            <button
+                                className="connect-button"
+                                data-testid="home-connect-guest-button"
+                                onClick={connectAsGuest}>Guest
+                            </button>
+                        </div>
                     </div>
                 )
                 }
@@ -116,7 +183,7 @@ export default function HomePage() {
                         <div
                             className={menuItem.available ? "home-category" : "home-category disabled"}
                             style={{backgroundImage : `url(${menuItem.background})`}}
-                            onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : initiateSpotifyAuth()}
+                            onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : checkWhitelistedStored()}
                             key={index}>
                             <span className="home-category-type">{menuItem.value}</span>
                             <h3 className="home-category-name" data-testid="home-category-name">{menuItem.label}</h3>

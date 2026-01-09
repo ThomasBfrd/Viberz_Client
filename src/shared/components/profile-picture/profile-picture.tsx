@@ -2,8 +2,8 @@ import './profile-picture.scss';
 
 interface ProfilePictureProps {
     image: string;
-    width?: number;
-    height?: number;
+    width?: string;
+    height?: string;
 }
 
 const ProfilePicture = ({image, width, height}: ProfilePictureProps) => {

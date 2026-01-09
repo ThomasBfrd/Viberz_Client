@@ -69,25 +69,6 @@
     margin-bottom: 10px;
   }
 
-  & .not-connected {
-    margin-top: 20px;
-
-    & .connect-button {
-      border-style: hidden;
-      margin-top: 10px;
-      margin-left: 10px;
-      width: fit-content;
-      height: fit-content;
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 20px;
-      background-color: var(--active);
-      color: var(--white);
-      font-size: 1rem;
-      font-family: 'Roboto-Medium', 'sans-serif';
-    }
-  }
-
   & .icon-profile {
     position: relative;
     cursor: pointer;
@@ -96,6 +77,7 @@
     border: 2px solid var(--white);
     border-radius: 100px;
     align-self: flex-end;
+    overflow: hidden;
   }
 
   & .hello {
@@ -107,11 +89,46 @@
     margin-top: 20px;
   }
 
+  & .login-actions {
+    margin-left: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+
+    & .connection-button-text {
+      color: var(--white);
+      font-size: 1.2rem;
+      font-family: 'Roboto-Medium', 'sans-serif';
+      transform: translateY(-5px);
+    }
+  }
+
   & .header-menu {
     width: 100%;
     margin-bottom: 20px;
     padding: 0 5px;
   }
+}
+
+.not-connected {
+  margin-top: 20px;
+}
+
+.connect-button {
+  cursor: pointer;
+  border-style: hidden;
+  margin-top: 10px;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  background-color: var(--active);
+  color: var(--white);
+  font-size: 1rem;
+  font-family: 'Roboto-Medium', 'sans-serif';
 }
 
 .home-body {
