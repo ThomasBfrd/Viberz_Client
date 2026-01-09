@@ -5,6 +5,7 @@ export const defaultAuthContext: AuthContextInterface = {
     userId: null,
     refreshToken: null,
     expiresAt: null,
+    guest: false,
     isLoggedIn: false,
     user: null,
     setUser: () => {

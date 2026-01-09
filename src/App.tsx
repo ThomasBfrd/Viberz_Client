@@ -1,11 +1,9 @@
 import './App.css'
 import {Route, Routes} from "react-router-dom";
-import {lazy, Suspense, useEffect, useState} from "react";
+import {lazy, Suspense} from "react";
 import Loader from "./shared/components/loader/loader.tsx";
 import HomePage from "./features/pages/home/home-page.tsx";
 import Aurora from "./shared/components/external/Aurora/aurora.tsx";
-import ModalOverlay from "./shared/components/modal-overlay/modal-overlay.tsx";
-import WhitelistForm from "./shared/components/whitelist-form/whitelist-form.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -22,28 +20,6 @@ const DiscoverCategory = lazy(() => import("./features/pages/discover/category/d
 const Playlist = lazy(() => import("./features/pages/discover/playlist/playlist-page.tsx"));
 
 function App() {
-    const [isWhitelisted, setIsWhitelisted] = useState<boolean>(false);
-
-    useEffect(() => {
-        const whiteListFromStorage = localStorage.getItem('viberz-whitelist');
-
-        if (whiteListFromStorage) {
-            setIsWhitelisted(JSON.parse(whiteListFromStorage));
-        } else {
-            setIsWhitelisted(false);
-        }
-    }, [])
-
-    const handleChangeWhitelistedStatus = (isWhitelisted: boolean) => {
-
-        if (isWhitelisted) {
-            localStorage.setItem('viberz-whitelist', JSON.stringify(true));
-        } else {
-            localStorage.removeItem('viberz-whitelist');
-        }
-
-        setIsWhitelisted(isWhitelisted);
-    }
 
     return (
         <>
@@ -55,13 +31,6 @@ function App() {
                         amplitude={0.5}
                         speed={0.3}
                     />
-                    {!isWhitelisted && (
-                        <ModalOverlay
-                            closed={() => setIsWhitelisted(!isWhitelisted)}
-                            isClosable={false}
-                            children={<WhitelistForm isWhitelisted={handleChangeWhitelistedStatus} />}
-                        />
-                    )}
                     <Routes>
                         <Route path="/home" element={<HomePage/>}/>
                         <Route path="/callback" element={<Callback/>}/>

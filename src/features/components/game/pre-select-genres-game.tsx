@@ -1,6 +1,8 @@
 import Loader from "../../../shared/components/loader/loader.tsx";
 import './pre-select-genres-game.scss';
-import {useCallback, useState} from "react";
+import {useCallback, useContext, useMemo, useState} from "react";
+import {AVAILABLE_GENRES} from "../../../shared/const/available-genres.ts";
+import {AuthContext} from "../../../core/context/auth-context.tsx";
 
 interface PreSelectGenresGameProps {
     allGenres: string[];
@@ -9,6 +11,16 @@ interface PreSelectGenresGameProps {
 
 const PreSelectGenresGame = ({allGenres, startGameWithGenres}: PreSelectGenresGameProps) => {
     const [genres, setGenres] = useState<string[]>([]);
+    const {guest} = useContext(AuthContext);
+
+    const genresList = useMemo(() => {
+        if (guest) {
+            return allGenres.filter((genre: string) => AVAILABLE_GENRES.includes(genre));
+        };
+        
+        return allGenres;
+        
+    }, [allGenres])
 
     const onStartGameWithGenres = useCallback(() => {
         return startGameWithGenres(genres);
@@ -29,7 +41,7 @@ const PreSelectGenresGame = ({allGenres, startGameWithGenres}: PreSelectGenresGa
             <div className="select-genres-content">
                 <p className="guess-song-debut">Select genres (max 3)</p>
                 <div className="select-genres-list">
-                    {allGenres ? allGenres.map((genre: string, index: number) => (
+                    {genresList ? genresList.map((genre: string, index: number) => (
                         <label htmlFor="select-genre" key={index} className="select-genre-item">
                             <button
                                 className={genres.includes(genre) ? "select-genre-button selected-genre-button" : "select-genre-button"}

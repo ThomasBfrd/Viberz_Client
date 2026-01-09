@@ -13,6 +13,7 @@ function AuthProvider({children}: { children: ReactNode}) {
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [expiresAt, setExpiresAt] = useState<number | null>(null);
     const [user, setUserInfos] = useState<UserInfos | null>(null);
+    const [guest, setGuest] = useState<boolean>(false);
 
     // Vérifie si le token est encore valide
     const isLoggedIn =
@@ -26,6 +27,7 @@ function AuthProvider({children}: { children: ReactNode}) {
         setRefreshToken(data.refreshToken);
         setUserId(data.userId);
         setExpiresAt(expiry);
+        setGuest(!data.userId);
 
         localStorage.setItem(
             "auth",
@@ -34,6 +36,7 @@ function AuthProvider({children}: { children: ReactNode}) {
                 refreshToken: data.refreshToken,
                 expiresIn: expiry,
                 userId: data.userId,
+                guest: !data.userId
             })
         );
 
@@ -46,6 +49,7 @@ function AuthProvider({children}: { children: ReactNode}) {
         setRefreshToken(null);
         setExpiresAt(null);
         setUserInfos(null);
+        setGuest(false);
         localStorage.removeItem("auth");
         localStorage.removeItem("user");
     }, []);
@@ -68,7 +72,7 @@ function AuthProvider({children}: { children: ReactNode}) {
                 clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
                 refreshToken: refreshToken
             }
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/authentication/refreshSpotifyAccess`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/authentication/${bodyRequest.refreshToken ? 'refreshSpotifyAccess' : 'refreshGuestAccess'}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bodyRequest),
@@ -103,6 +107,7 @@ function AuthProvider({children}: { children: ReactNode}) {
             setRefreshToken(parsed.refreshToken);
             setExpiresAt(parsed.expiresIn);
             setUserId(parsed.userId);
+            setGuest(!parsed.userId);
         }
     }, []);
 
@@ -120,6 +125,7 @@ function AuthProvider({children}: { children: ReactNode}) {
         expiresAt,
         isLoggedIn,
         userId,
+        guest,
         user,
         setUser,
         login,
