@@ -12,7 +12,7 @@
 }
 .track-list-item .track-list-item-count {
   margin-left: 5px;
-  width: 8%;
+  width: 5%;
   color: var(--white);
   font-size: 1rem;
 }
@@ -64,8 +64,7 @@
   gap: 5px;
 }
 .track-list-item .track-list-item-infos .track-list-item-name {
-  max-width: 200px;
-  width: 100%;
+  width: clamp(140px, 40vw, 400px);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -74,7 +73,8 @@
   font-family: "Roboto-Regular", "sans-serif";
 }
 .track-list-item .track-list-item-infos .track-list-item-creator {
-  width: 180px;
+  width: 100%;
+  max-width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -112,12 +112,6 @@
   40% {
     box-shadow: 0 -5px;
     height: 10px;
-  }
-}
-@media screen and (min-width: 480px) {
-  .track-list-item .track-list-item-infos .track-list-item-name {
-    max-width: 300px;
-    width: 100%;
   }
 }
 

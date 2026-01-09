@@ -31,7 +31,7 @@ interface PlayerState {
 }
 
 const PlaylistPage = () => {
-    const {jwtToken, userId} = useContext(AuthContext);
+    const {jwtToken, userId, guest} = useContext(AuthContext);
     const location = useLocation();
     const navigate = useNavigate();
     const {playlistId} = useParams<{playlistId: string}>();
@@ -268,13 +268,14 @@ const PlaylistPage = () => {
                         className="playlist-header-cover"
                     />
                     <div className="playlist-header-name-container" data-testid="playlist-header-name-container">
-                        <p
+                        <div
                             data-tooltip-id="my-tooltip"
                             data-tooltip-content={playlist.name}
                             data-tooltip-place="top"
                             className="playlist-header-title">
                             <Tooltip id="my-tooltip" className="example"/>
-                            {playlist.name}</p>
+                            <p>{playlist.name}</p>
+                        </div>
                     </div>
                     <div className="playlist-header-genres-user">
                         <span className="playlist-header-genre">{playlist.genreList.join(", ")}</span>
@@ -287,60 +288,59 @@ const PlaylistPage = () => {
                         </div>
                     </div>
                 </div>
-
-                <div className="playlist-actions">
-                    <button
-                        className="playlist-social"
-                        onClick={handleLike}
-                        disabled={likeMutation.isPending}
-                        data-testid="playlist-social-like"
-                        aria-label={playlist.likedByUser ? "Unlike playlist" : "Like playlist"}
-                    >
-                        <div
-                            className="content-icon"
-                            style={{ backgroundColor: playlist.likedByUser ? "#182725" : "#26AAA4FF" }}
+                {!guest && (
+                    <div className="playlist-actions">
+                        <button
+                            className="playlist-social"
+                            onClick={handleLike}
+                            disabled={likeMutation.isPending}
+                            data-testid="playlist-social-like"
+                            aria-label={playlist.likedByUser ? "Unlike playlist" : "Like playlist"}
                         >
-                            <HeartIcon height="15px" width="15px" />
-                        </div>
-                        <div className="playlist-social-text">
-                            <span>{playlist.likes}</span>
-                        </div>
-                    </button>
-
-                    <button
-                        className="playlist-social-play-button"
-                        onClick={handlePlayPause}
-                        disabled={tracks.length === 0}
-                        aria-label={playerState.isPlaying ? "Pause" : "Play"}
-                    >
-                        {playerState.isPlaying ? (
-                            <PauseIcon height="20px" width="20px" />
-                        ) : (
-                            <PlayIcon height="20px" width="20px" circle={false} />
-                        )}
-                    </button>
-
-                    <button
-                        className="playlist-social share"
-                        onClick={handleShare}
-                        data-testid="playlist-social-share"
-                        aria-label="Share playlist"
-                    >
-                        {shareNotification && (
-                            <div className="shared">
-                                <p>Playlist copied to clipboard!</p>
+                            <div
+                                className="content-icon"
+                                style={{ backgroundColor: playlist.likedByUser ? "#182725" : "#26AAA4FF" }}
+                            >
+                                <HeartIcon height="15px" width="15px" />
                             </div>
-                        )}
-                        <div className="content-icon">
-                            <ShareIcon height="15px" width="15px" />
-                        </div>
-                        <div className="playlist-social-text">
-                            <span>Share</span>
-                        </div>
-                    </button>
-                </div>
+                            <div className="playlist-social-text">
+                                <span>{playlist.likes}</span>
+                            </div>
+                        </button>
 
-                <div className="playlist-tracks">Tracks</div>
+                        <button
+                            className="playlist-social-play-button"
+                            onClick={handlePlayPause}
+                            disabled={tracks.length === 0}
+                            aria-label={playerState.isPlaying ? "Pause" : "Play"}
+                        >
+                            {playerState.isPlaying ? (
+                                <PauseIcon height="20px" width="20px" />
+                            ) : (
+                                <PlayIcon height="20px" width="20px" circle={false} />
+                            )}
+                        </button>
+
+                        <button
+                            className="playlist-social share"
+                            onClick={handleShare}
+                            data-testid="playlist-social-share"
+                            aria-label="Share playlist"
+                        >
+                            {shareNotification && (
+                                <div className="shared">
+                                    <p>Playlist copied to clipboard!</p>
+                                </div>
+                            )}
+                            <div className="content-icon">
+                                <ShareIcon height="15px" width="15px" />
+                            </div>
+                            <div className="playlist-social-text">
+                                <span>Share</span>
+                            </div>
+                        </button>
+                    </div>
+                )}
                 <div className="playlist-body">
                     {tracks.length === 0 ? (
                         <p>No tracks in this playlist</p>
@@ -363,12 +363,18 @@ const PlaylistPage = () => {
                 </div>
 
                 <div className="playlist-footer">
+                {guest ? (
+                    <div className="playlist-footer-guest">
+                        <p>Users must log in before listening these tracks.</p>
+                    </div>
+                ) : (
                     <MusicPlayer
                         accessToken={data?.accessToken}
                         song={playerState?.song}
                         ready={playerState.isPlaying}
                         onPlayingStateChange={handlePlayerStateChange}
                     />
+                    )}
                 </div>
             </div>
         </div>

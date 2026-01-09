@@ -16,7 +16,7 @@ import AddLessIcon from "../../../shared/components/add-less-icon/add-less-icon.
 import {FAMILY_GENRES, GENRE_PATH} from "../../../shared/const/family-genres.ts";
 
 const DiscoverPage = () => {
-    const {jwtToken} = useContext(AuthContext);
+    const {jwtToken, guest} = useContext(AuthContext);
     const navigate = useNavigate();
     const {fetchData} = useFetch<PaginatedData<Playlist>>();
     const [openAddPlaylistModal, setOpenAddPlaylistModal] = useState<boolean>(false);
@@ -78,7 +78,9 @@ const DiscoverPage = () => {
                     <AddPlaylistForm closeModal={onRedirectToPlaylist} updating={false} />}
                 />}
                 <div className="playlist-add-button" data-testid="add-playlist-button">
-                    <AddLessIcon toggleExpand={handleCloseAddPlaylistModal} onlyAdd={true} />
+                    {!guest && (
+                        <AddLessIcon toggleExpand={handleCloseAddPlaylistModal} onlyAdd={true} />
+                    )}
                 </div>
             <div className="discover-content">
                 <div className="discover-header">
@@ -120,13 +122,15 @@ const DiscoverPage = () => {
                                 <div className="discover-families-item-cover"></div>
                             </div>
                         ))}
-                        <div
-                            className="discover-families-item"
-                            id="discover-family-5"
-                            onClick={() => onRedirectToFamily('my-playlists')}>
-                            <p className="discover-families-item-name">My playlists</p>
-                            <div className="discover-families-item-cover"></div>
-                        </div>
+                        {!guest && (
+                            <div
+                                className="discover-families-item"
+                                id="discover-family-5"
+                                onClick={() => onRedirectToFamily('my-playlists')}>
+                                <p className="discover-families-item-name">My playlists</p>
+                                <div className="discover-families-item-cover"></div>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="discover-footer">

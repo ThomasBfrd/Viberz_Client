@@ -100,6 +100,7 @@
     align-content: center;
     justify-content: center;
     gap: 10px;
+    margin-bottom: 10px;
   }
 
   & .playlist-header-user {
@@ -162,6 +163,7 @@
   justify-content: center;
   align-items: flex-start;
   border-style: hidden;
+  margin-bottom: 10px;
 
   & .playlist-social {
     position: relative;
@@ -254,12 +256,12 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  //gap: 12px;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 40px;
   corner-shape: squircle;
   scrollbar-color: var(--active) transparent;
   -ms-overflow-style: none;
+  margin-bottom: 10px;
 
   &::-webkit-scrollbar {
     width: 0;
@@ -296,7 +298,6 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      //width: 45%;
       font-size: 0.8rem;
       color: var(--white);
       opacity: 1;
@@ -312,6 +313,21 @@
   align-items: center;
   width: 100%;
   border-radius: 14px;
+}
+
+.playlist-footer-guest {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background-color: rgba(38, 170, 164, 0.3);
+  corner-shape: squircle;
+  border-radius: 70px;
+  padding: 15px;
+  text-wrap: balance;
+  text-align: center;
 }
 
 @keyframes slide-up {
@@ -333,5 +349,11 @@
   100% {
     opacity: 0;
     bottom: 60px;
+  }
+}
+
+@media screen and (min-height: 768px) {
+  .playlist-body {
+    height: 27rem;
   }
 }

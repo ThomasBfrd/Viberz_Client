@@ -48,6 +48,7 @@
   gap: 20px;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 50px;
 
   & .subtitle {
     align-self: flex-start;
@@ -103,10 +104,6 @@
 
 .discover-body-families {
   width: 100%;
-  //display: grid;
-  //grid-template-columns: 1fr 1fr;
-  //grid-template-rows: 150px 150px;
-  //gap: 15px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -123,18 +120,23 @@
   #discover-family-5 {
     grid-column: span 2 / span 2;
     grid-row-start: 3;
+    text-align: center;
     height: 60px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     & .discover-families-item-name {
-      max-width: 200px;
-      left: 75px;
-      top: 15px;
+      position: relative;
+      max-width: 100%;
+      top: 0;
+      left: 0;
     }
   }
 
   & .discover-families-item {
     position: relative;
-    //width: calc(100vw / 2.58);
     height: 100px;
     cursor: pointer;
     border-radius: 30px;
