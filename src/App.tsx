@@ -5,6 +5,10 @@ import Loader from "./shared/components/loader/loader.tsx";
 import HomePage from "./features/pages/home/home-page.tsx";
 import Aurora from "./shared/components/external/Aurora/aurora.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+
+
 
 const queryClient = new QueryClient();
 
@@ -48,6 +52,8 @@ function App() {
                     </Routes>
                 </Suspense>
             </QueryClientProvider>
+            <Analytics/>
+            <SpeedInsights/>
         </>
     )
 }
