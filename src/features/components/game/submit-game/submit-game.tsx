@@ -1,6 +1,8 @@
 import "./submit-game.scss";
 import type {OtherRandomSong} from "../../../../shared/interfaces/guess-song.interface.ts";
 import HeartIcon from "../../../../shared/components/svg/heart/heart-icon.tsx";
+import {useContext} from "react";
+import {AuthContext} from "../../../../core/context/auth-context.tsx";
 
 export interface SubmitGameProps {
     resultWave: boolean;
@@ -14,6 +16,7 @@ export interface SubmitGameProps {
 }
 
 const SubmitGame = ({resultWave, finishedLastWave, liked, answer, onLikeSong, onNextQuestion, onSubmitAnswer, onCompleteGame}: SubmitGameProps) => {
+    const { guest } = useContext(AuthContext);
 
     function likeSong() {
         return onLikeSong();
@@ -33,7 +36,7 @@ const SubmitGame = ({resultWave, finishedLastWave, liked, answer, onLikeSong, on
 
     return (
         <div className="quiz-submit">
-            {resultWave && (
+            {resultWave && !guest && (
                 <button className={liked ? "quiz-button-like liked" : "quiz-button-like"} onClick={likeSong}>
                     <HeartIcon />
                 </button>

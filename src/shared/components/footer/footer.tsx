@@ -1,7 +1,8 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useMemo} from "react";
+import {useContext, useMemo} from "react";
 import './footer.scss';
 import clsx from "clsx";
+import {AuthContext} from "../../../core/context/auth-context.tsx";
 
 export interface Footer {
     name: string;
@@ -34,18 +35,19 @@ const routes: Array<Footer> = [
 const Footer = ({onCancel, userLikes = false, path, seeLikedPlaylists, likedButtonClicked}: FooterProps) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { guest } = useContext(AuthContext);
 
     const actualPath: string = useMemo(() => {
         return location.pathname;
     }, [location.pathname]);
     
     const availableRoutes = useMemo(() => {
-        if (!userLikes) {
+        if (!userLikes || guest) {
             return routes.filter(route => route.path !== "/discover/all");
         } else {
             return routes;
         }
-    }, [userLikes])
+    }, [guest, userLikes])
 
     const onRedirectTo = (targetPath: string) => {
         if (userLikes && targetPath === "/discover/all") {

@@ -11,6 +11,7 @@ export interface AuthContextInterface {
     refreshToken: string | null;
     expiresAt: number | null;
     isLoggedIn: boolean;
+    guest: boolean;
     userId: string | null;
     user: UserInfos | null;
     setUser: (userData: UserInfos) => void;

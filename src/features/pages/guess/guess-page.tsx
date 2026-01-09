@@ -45,7 +45,7 @@ const GuessPage = () => {
     const [genres, setGenres] = useState<string[]>([]);
     const [songs, setSongs] = useState<OtherRandomSong[]>([])
     const [allGenres, setAllGenres] = useState<string[]>([]);
-    const {jwtToken} = useContext(AuthContext);
+    const {jwtToken, guest} = useContext(AuthContext);
     const [confirmModalVisible, setConfirmModalVisible] = useState<boolean>(false);
     const [path, setPath] = useState<string>("");
     const [liked, setLiked] = useState<boolean>(false);
@@ -54,13 +54,14 @@ const GuessPage = () => {
     const totalWaves: number = 6;
 
     useEffect(() => {
-
+        const profile: number = guest ? 1 : 0;
+        
         if (jwtToken && gameType === "guess-genre" && wave === 1 && !randomSongs && !isLoadingSongs) {
             setIsLoadingSongs(true);
 
             const getSongFromRandomPlaylist = async () => {
                 try {
-                    const fetchRandomSongs: RandomGuessSongs = await guessService.getSongs(jwtToken, ACTIVITY_TYPE.GUESS_GENRE);
+                    const fetchRandomSongs: RandomGuessSongs = await guessService.getSongs(jwtToken, ACTIVITY_TYPE.GUESS_GENRE, profile);
                     setRandomSongs(fetchRandomSongs);
                 } catch (error) {
                     console.error(error)
@@ -77,7 +78,7 @@ const GuessPage = () => {
             
             const getSongFromRandomPlaylist = async () => {
                 try {
-                    const fetchRandomSongs : RandomGuessSongs = await guessService.getSongs(jwtToken, ACTIVITY_TYPE.GUESS_SONG, genres);
+                    const fetchRandomSongs : RandomGuessSongs = await guessService.getSongs(jwtToken, ACTIVITY_TYPE.GUESS_SONG, profile, genres);
                     setRandomSongs(fetchRandomSongs);
                 } catch (error) {
                     console.error(error)
@@ -89,7 +90,7 @@ const GuessPage = () => {
             getSongFromRandomPlaylist();
         }
         
-    }, [gameType, genres, isLoadingSongs, jwtToken, randomSongs, readyGuessSong, wave]);
+    }, [gameType, genres, guest, isLoadingSongs, jwtToken, randomSongs, readyGuessSong, wave]);
 
     useEffect(() => {
 
@@ -151,15 +152,27 @@ const GuessPage = () => {
             const saveProgression = async () => {
                 try {
                     const fetchSaveProgression: ResultGame | undefined = await xpGamesService.addGameHistory(jwtToken, history);
-
                     setResultGame(fetchSaveProgression);
                 } catch (error) {
                     console.error(error)
                 }
             }
-            saveProgression();
+
+            if (!guest) {
+                saveProgression();
+            }
+
+            setResultGame({
+                userId: "guest",
+                level: 3,
+                currentXp: 150,
+                xpForPreviousLevel: 120,
+                xpForNextLevel: 250,
+                gradeName: "Begginer",
+                levelUp: false
+            })
         }
-    }, [earnedXp, gameCompleted, gameType, jwtToken, score]);
+    }, [earnedXp, gameCompleted, gameType, guest, jwtToken, score]);
 
     const onSelectGenre: (genre:string) => void = useCallback((genre: string) => {
         setAnswer(genre);
@@ -184,7 +197,6 @@ const GuessPage = () => {
 
         if (wave === totalWaves - 1) {
             setFinishedLastWave(true);
-            return;
         }
     }, [answer, earnedXp, gameType, randomSong?.earnedXp, randomSong?.genre, randomSong?.song.track.name, score, wave])
 
@@ -217,8 +229,6 @@ const GuessPage = () => {
     
     const onFinishGame = useCallback(() => {
         setGameCompleted(true);
-        setFinishedLastWave(false);
-        return;
     }, []);
 
     const onNextQuestion = useCallback(() => {
@@ -282,10 +292,11 @@ const GuessPage = () => {
                             <StepperGame wave={wave} totalWaves={totalWaves} />
                             <div className="quiz-player">
                                 {randomSong ? (
-                                    <MusicPlayer 
+                                    <MusicPlayer
                                         song={randomSong?.song.track}
                                         gameType={gameType} 
                                         resultWave={resultWave} 
+                                        ready={!resultWave}
                                         accessToken={randomSongs?.accessToken} />
                                 ) : (
                                     <p style={{color: '#fff'}}>Loading song...</p>

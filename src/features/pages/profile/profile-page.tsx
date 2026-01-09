@@ -9,6 +9,8 @@ import {useNavigate} from "react-router-dom";
 import Footer from "../../../shared/components/footer/footer.tsx";
 import ModalOverlay from "../../../shared/components/modal-overlay/modal-overlay.tsx";
 import SettingsPage from "../edit-profile/settings/settings-page.tsx";
+import PersonIcon from "../../../shared/components/svg/person/person-icon.tsx";
+import {GUEST_CONTEXT} from "../../../shared/mocks/const/guest-context-mock.ts";
 
 const ProfilePage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,11 +20,18 @@ const ProfilePage = () => {
     const [genresSelected, setGenresSelected] = useState<string[]>([]);
     const [artists, setArtists] = useState<string[]>([]);
     const [onSettings, setOnSettings] = useState<boolean>(false);
-    const {jwtToken, userId} = useContext(AuthContext);
+    const {jwtToken, userId, guest} = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (jwtToken && userId) {
+        if (guest) {
+            setGenresSelected(GUEST_CONTEXT.genres);
+            setArtists(GUEST_CONTEXT.artists);
+        }
+    }, [guest]);
+
+    useEffect(() => {
+        if (jwtToken && userId && !guest) {
             const fetchUser = async () => {
                 setIsLoading(true);
                 try {
@@ -44,15 +53,20 @@ const ProfilePage = () => {
             };
             fetchUser();
         }
-    }, [jwtToken, userId]);
+    }, [guest, jwtToken, userId]);
 
     const calculateXp = useMemo(() => {
+        if (guest) return (
+            (GUEST_CONTEXT.currentXp - GUEST_CONTEXT.xpForPreviousLevel) / GUEST_CONTEXT.xpForNextLevel
+        )
+
         if (!userInfos?.xp?.currentXp || !userInfos?.xp?.xpForNextLevel) return 0;
-        
         return ((userInfos?.xp?.currentXp - userInfos?.xp?.xpForPreviousLevel) / userInfos?.xp.xpForNextLevel) * 100
-    }, [userInfos])
+    }, [guest, userInfos?.xp?.currentXp, userInfos?.xp.xpForNextLevel, userInfos?.xp?.xpForPreviousLevel])
 
     const onClickEdit = () => {
+        if (guest) return;
+
         navigate("/profile/edit", {
             state: {
                 userInfos: userInfos
@@ -76,6 +90,7 @@ const ProfilePage = () => {
                 <div className="profile-header">
                 <button
                     className="settings-icon"
+                    style={{display: guest ? "none" : "block"}}
                     onClick={() => setOnSettings(!onSettings)}
                     data-testid="edit-profile-button-settings-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 122.88 122.878" enableBackground="new 0 0 122.88 122.878" xmlSpace="preserve">
@@ -84,21 +99,25 @@ const ProfilePage = () => {
                         </g>
                     </svg>
                 </button>
-                {image ? (
-                    <ProfilePicture image={image} height={90} width={90}/>
-                ) : null}
+                <div className="icon-profile">
+                    {image ? (
+                        <ProfilePicture image={image} height={"90px"} width={"90px"}/>
+                    ) : (
+                        <PersonIcon height={"90px"} width={"90px"} />
+                    )}
+                </div>
                 <div className="profile-header-infos">
-                    <p className="profile-header-infos-name" data-testid="profile-username">@{userName?.toLowerCase()}</p>
+                    <p className="profile-header-infos-name" data-testid="profile-username">@{userName?.toLowerCase() ?? "guest"}</p>
                 </div>
                 <div className="profile-header-buttons">
-                    <button className="button-edit" onClick={onClickEdit} data-testid="edit-button">Edit</button>
+                    <button className="button-edit" style={{display: guest ? "none" : "block"}} disabled={guest} onClick={onClickEdit} data-testid="edit-button">Edit</button>
                 </div>
             </div>
             <div className="profile-body">
                 <div className="experience">
                     <div className="experience-text">
                         <p className="experience-label">lvl.</p>
-                        <h3 className="experience-value" data-testid="profile-level">{userInfos?.xp?.level}</h3>
+                        <h3 className="experience-value" data-testid="profile-level">{guest ? GUEST_CONTEXT.lvl : userInfos?.xp?.level}</h3>
                     </div>
                     <div className="experience-bar">
                         {calculateXp ? (
@@ -106,9 +125,8 @@ const ProfilePage = () => {
                                 <div className="experience-progression-bar"
                                      style={{width: calculateXp + '%'}}
                                      data-testid="profile-progression-bar">
-
                                 </div>
-                                <p className="experience-progression-text" data-testid="profile-progression-text">{userInfos?.xp.currentXp} / {userInfos?.xp.xpForNextLevel}</p>
+                                <p className="experience-progression-text" data-testid="profile-progression-text">{ guest ? GUEST_CONTEXT.currentXp : userInfos?.xp.currentXp} / { guest ? GUEST_CONTEXT.xpForNextLevel : userInfos?.xp.xpForNextLevel}</p>
                             </>
                         ) : null}
                     </div>

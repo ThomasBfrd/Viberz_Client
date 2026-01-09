@@ -32,6 +32,7 @@ export interface Track {
     id: string;
     name: string;
     duration_ms: number;
+    preview_url?: string; // optional URL for guest mode playback
 }
 
 export interface Song {

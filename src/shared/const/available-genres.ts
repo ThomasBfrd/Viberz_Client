@@ -1,0 +1,1 @@
+export const AVAILABLE_GENRES = ['EDM Trap', 'Dubstep', 'Drum & Bass', 'Bass House'];

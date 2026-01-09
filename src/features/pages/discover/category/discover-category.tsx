@@ -19,7 +19,7 @@ import BackButton from "../../../../shared/components/back-button/back-button.ts
 import MenuItemsScroll from "../../../../shared/components/menu-items-scroll/menu-items-scroll.tsx";
 
 const DiscoverCategory = () => {
-    const {jwtToken} = useContext(AuthContext);
+    const {jwtToken, guest} = useContext(AuthContext);
     const {category} = useParams<{category: string}>();
     const navigate = useNavigate();
     const location = useLocation();
@@ -228,7 +228,9 @@ const DiscoverCategory = () => {
                         </div>
                     </div>
                     <div className="discover-genre-add-playlist" data-testid="add-playlist-button">
-                        <button type="button" className="add-playlist-button" onClick={handleCloseAddPlaylistModal}>Add your own playlist !</button>
+                        {!guest && (
+                            <button type="button" className="add-playlist-button" onClick={handleCloseAddPlaylistModal}>Add your own playlist !</button>
+                        )}
                     </div>
                 </div>
                 <div className="discover-genre-footer">

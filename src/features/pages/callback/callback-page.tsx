@@ -12,23 +12,18 @@ const CallbackPage = () => {
     const { login, user, setUser, jwtToken, userId } = useContext(AuthContext);
 
     useEffect(() => {
-
-        if (window.location.hash === "#_=_") {
-            window.location.hash = "";
-        }
-
         const params: URLSearchParams = new URLSearchParams(window.location.search);
         const code: string | null = params.get('code');
 
-        if (!code) {
-            navigate('/home');
-            return;
-        }
+        // if (!code) {
+        //     navigate('/home');
+        //     return;
+        // }
 
         const fetchToken = async () => {
             const redirect: string = `https://${import.meta.env.VITE_CLIENT_URL}${import.meta.env.VITE_REDIRECT_URI}`
             try {
-                    const res: Response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/authentication/getSpotifyAccess`, {
+                    const res: Response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/authentication/${code ? 'getSpotifyAccess' : 'getGuestAccess'}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code, redirectUri: redirect }),
@@ -73,12 +68,18 @@ const CallbackPage = () => {
     }, [jwtToken, user, setUser, userId]);
 
     useEffect(() => {
-        if (!user) return;
-        if (!user?.user.username || user?.user.username.trim() === "") {
+        const params: URLSearchParams = new URLSearchParams(window.location.search);
+        const code: string | null = params.get('code');
+
+        if (code && !user) return;
+
+        if (code && !user?.user.username || user?.user.username.trim() === "") {
             navigate("/profile/edit", {state: {userInfos: user}});
             return;
         }
+
         navigate("/home");
+
         return;
     }, [navigate, user]);
 
