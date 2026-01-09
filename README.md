@@ -132,9 +132,10 @@ The project uses Vitest and React Testing Library for testing:
 - Generate coverage report: `npm run test:coverage`
 
 ## 🖼️ Screenshots
-![Home](https://i.postimg.cc/bYZyhk0y/www-viberz-app-home-Pixel-6a-1.png)
-![Profile](https://i.postimg.cc/44YfgVvH/www-viberz-app-home-Pixel-6a.png)
-![Guess Game](https://i.postimg.cc/MZn6SV0M/www-viberz-app-home-Pixel-6a-2.png)
+![Home](https://i.postimg.cc/hvCXkScs/image.png)
+![Profile](https://i.postimg.cc/WbW9ngLp/image.png)
+![Guess Game](https://i.postimg.cc/c42RCmGD/image.png)
+![Discover](https://i.postimg.cc/YCLxzPzf/image.png)
 
 ## 📄 License
 
