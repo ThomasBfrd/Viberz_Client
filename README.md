@@ -29,9 +29,25 @@ features and gamification.
 - Full Spotify integration with Web Playback SDK
 - Real-time music streaming
 - Requires Spotify Premium
+- Guest Mode: Play without authentication using royalty-free music from No Copyright Sounds
+  - Access game modes with limitations
+  - No account required, no Spotify Premium needed
+
+### 🎶 Discover
+- Explore Public Playlists: Browse community-curated and user-submitted Spotify playlists
+- Genre Filtering: Sort playlists by music families:
+  - Bass Music
+  - Hard Music
+  - House & Tech
+  - EDM
+- Playlist Ranking: Discover playlists sorted by community engagement (most liked)
+- Music Discovery: Stream all tracks directly via Spotify Web Playback SDK (Spotify Premium only)
+- Like & Interact:
+  - Save individual tracks to your Spotify Likes library
+  - Like playlists in Viberz to build your personalized collection
+- Contribute: Share your own public Spotify playlists with the community
 
 ### 🚧 Coming Soon
-- Community-curated playlists
 - Leaderboards and challenges
 - Learn genres structures
 
@@ -64,6 +80,7 @@ Create a `.env` file at the root with:
 ````typescript
 // Backend
   VITE_BACKEND_URL="https://localhost:7053"
+  VITE_CLIENT_URL="YOUR PUBLIC URL REDIRECTION WITHOUT 'HTTPS://'"
 
 // Spotify API
   VITE_SPOTIFY_CLIENT_ID="YOUR SPOTIFY CLIENT ID"
