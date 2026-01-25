@@ -261,6 +261,7 @@ const GuessPage = () => {
         setResultWave(false);
         setRandomSong(null);
         setSongs([]);
+        setFinishedLastWave(false);
 
         if (gameType === "guess-song") {
             setReadyGuessSong(true);
