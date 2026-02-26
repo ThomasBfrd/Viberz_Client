@@ -28,7 +28,7 @@ export default function EditProfileComponent() {
     const [image, setImage] = useState<string>("");
     const [setErrorUsername, setSetErrorUsername] = useState<string | null>(null);
     const [errorEmail, setErrorEmail] = useState<string | null>(null);
-    const [displayGenresList, setDisplayGenresList] = useState<boolean>(true);
+    const [displayGenresList, setDisplayGenresList] = useState<boolean>(false);
     const [errorUpdate, setErrorUpdate] = useState<boolean>(false);
     const [errorNoUsername, setErrorNoUsername] = useState<boolean>(false);
     const {jwtToken} = useContext(AuthContext);
@@ -44,8 +44,8 @@ export default function EditProfileComponent() {
         setGenresSelected(locationState?.user.favoriteGenres);
         setArtists(locationState?.user.favoriteArtists);
 
-        if (locationState?.user.favoriteGenres.length > 0) {
-            setDisplayGenresList(false);
+        if (locationState?.user.favoriteGenres.length === 0) {
+            setDisplayGenresList(true);
         }
 
     }, [location]);
@@ -271,11 +271,10 @@ export default function EditProfileComponent() {
                 <ExpandableList
                     title="Favorite genres"
                     subTitle="(Max. 3)"
-                    displayButton={!(genresSelected.length === 0)}
-                    forceIcon={!displayGenresList && genresSelected.length > 0}
+                    initialToggleValue={displayGenresList}
                     toggleExpand={handleToggleSelectGenre} />
                 <div className="favorites-container" data-testid="edit-profile-favorites-container">
-                    {genresSelected.length === 0 || displayGenresList ? (
+                    {displayGenresList ? (
                         genres?.map((genre: string, index: number) => (
                             <div key={index}
                                  className={genresSelected.includes(genre) ?
@@ -303,9 +302,9 @@ export default function EditProfileComponent() {
                 <ExpandableList
                     title="Favorite artists"
                     subTitle="(Max. 3)"
-                    displayButton={true}
                     toggleExpand={() => setModalIsOpened(!modalIsOpened)}
-                    forceIcon={true}/>
+                    initialToggleValue={true}
+                    forceIcon={true} />
                 {artists.length === 0 ? (
                         <div>
                             <p className="form-message" data-testid="edit-profile-no-artists">No artists selected</p>
