@@ -20,7 +20,6 @@ export default function HomePage() {
     const [username, setUsername] = useState<string | null>(null);
     const [userImage, setUserImage] = useState<string | null>(null);
     const [categoryType, setCategoryType] = useState<string>("all");
-    const [isWhitelisted, setIsWhitelisted] = useState<boolean>(false);
     const [modalWhitelist, setModalWhitelist] = useState<boolean>(false);
 
     const filteredCategories = useMemo(() => {
@@ -55,31 +54,15 @@ export default function HomePage() {
 
     }, [isLoggedIn]);
 
-    const checkWhitelistedStored = () => {
-        const whiteListFromStorage = localStorage.getItem('viberz-whitelist');
-
-        if (whiteListFromStorage) {
-            setIsWhitelisted(JSON.parse(whiteListFromStorage));
-        } else {
-            setModalWhitelist(true);
-            setIsWhitelisted(false);
-        }
-    }
-
     const handleChangeWhitelistedStatus = (isWhitelisted: boolean) => {
 
         if (isWhitelisted) {
             setModalWhitelist(false);
-            localStorage.setItem('viberz-whitelist', JSON.stringify(true));
             return initiateSpotifyAuth();
-        } else {
-            localStorage.removeItem('viberz-whitelist');
         }
-
-        setIsWhitelisted(isWhitelisted);
     }
 
-    function onRedirectToCategory(path: string) {
+    const onRedirectToCategory = (path: string): void => {
         if (path && isLoggedIn) {
             navigate(path);
         }
@@ -87,15 +70,9 @@ export default function HomePage() {
         return;
     }
 
-    function onRedirectToProfile() {
+    const onRedirectToProfile = (): void => {
         if (isLoggedIn) {
             navigate('/profile');
-        } else {
-            checkWhitelistedStored();
-
-            if (isWhitelisted) {
-                initiateSpotifyAuth();
-            }
         }
     }
 
@@ -149,7 +126,7 @@ export default function HomePage() {
                                 <button
                                     className="connect-button"
                                     data-testid="home-connect-button"
-                                    onClick={checkWhitelistedStored}>Connect with Spotify
+                                    onClick={() => setModalWhitelist(!modalWhitelist)}>Connect with Spotify
                                 </button>
                             </div>
                         )}
@@ -161,7 +138,7 @@ export default function HomePage() {
                             <button
                                 className="connect-button"
                                 data-testid="home-connect-button"
-                                onClick={checkWhitelistedStored}>Connect with Spotify
+                                onClick={() => setModalWhitelist(true)}>Connect with Spotify
                             </button>
                             <p className="connection-button-text">Or</p>
                             <button
@@ -183,7 +160,7 @@ export default function HomePage() {
                         <div
                             className={menuItem.available ? "home-category" : "home-category disabled"}
                             style={{backgroundImage : `url(${menuItem.background})`}}
-                            onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : checkWhitelistedStored()}
+                            onClick={() => jwtToken && (onRedirectToCategory(menuItem.path))}
                             key={index}>
                             <span className="home-category-type">{menuItem.value}</span>
                             <h3 className="home-category-name" data-testid="home-category-name">{menuItem.label}</h3>
