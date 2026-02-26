@@ -17,6 +17,7 @@ const SettingsPage = ({jwtToken, userId, email}: SettingsPageProps) => {
     const [openBugSignal, setOpenBugSignal] = useState<boolean>(false);
     const [emailSent, setEmailSent] = useState<boolean>(false);
     const [errorEmail, setErrorEmail] = useState<string>("");
+    const [confirmDeleteModal, setConfirmDeleteModal] = useState<boolean>(false);
     const {logout} = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -61,6 +62,10 @@ const SettingsPage = ({jwtToken, userId, email}: SettingsPageProps) => {
         }
     }
 
+    const confirmDeleteProfile = async () => {
+        await handleDeleteAccount();
+    }
+
     return (
         <div className="settings-container">
             {errorEmail.length > 0 || emailSent && (
@@ -72,9 +77,18 @@ const SettingsPage = ({jwtToken, userId, email}: SettingsPageProps) => {
                         message={errorEmail.length > 0 ? errorEmail : "Email sent successfully."} />}
                 />
             )}
+            {confirmDeleteModal &&
+                <ModalOverlay
+                    isClosable={false}
+                    children={<EventAction
+                        eventType={"warning"}
+                        message={`Are you sure you want to delete your account?`}
+                        handleClose={() => setConfirmDeleteModal(false)}
+                        handleSubmit={confirmDeleteProfile} />} />
+            }
             <div className="settings-content">
                 <h3 className="settings-title">Settings</h3>
-                <button className="delete-account button-settings" onClick={handleDeleteAccount}>Delete your account</button>
+                <button className="delete-account button-settings" onClick={() => setConfirmDeleteModal(!confirmDeleteModal)}>Delete your account</button>
                 <button
                     className="signal-bug button-settings"
                     onClick={() => setOpenBugSignal(!openBugSignal)}
