@@ -95,14 +95,8 @@
   border-color: transparent;
 }
 
-.profile-image {
+.edit-picture {
   position: relative;
-
-  & .image {
-    width: 100px;
-    height: 100px;
-    border-radius: 100px;
-  }
 
   & .edit-button {
     border-style: hidden;

@@ -99,13 +99,13 @@ const ProfilePage = () => {
                         </g>
                     </svg>
                 </button>
-                <div className="icon-profile">
-                    {image ? (
-                        <ProfilePicture image={image} height={"90px"} width={"90px"}/>
-                    ) : (
+                {image ? (
+                    <ProfilePicture image={image} height={"90px"} width={"90px"}/>
+                ) : (
+                    <div className="icon-profile">
                         <PersonIcon height={"90px"} width={"90px"} />
-                    )}
-                </div>
+                    </div>
+                )}
                 <div className="profile-header-infos">
                     <p className="profile-header-infos-name" data-testid="profile-username">@{userName?.toLowerCase() ?? "guest"}</p>
                 </div>

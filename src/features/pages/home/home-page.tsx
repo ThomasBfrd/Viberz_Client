@@ -106,15 +106,17 @@ export default function HomePage() {
             <div className="home-header">
                 <div className="header-logo-profile">
                     <div className="header-logo" data-testid="home-title" onClick={() => navigate(('/'))}>Viberz</div>
-                    {logged ? (
-                        <div className="icon-profile" onClick={onRedirectToProfile}>
+                    {logged && (
+                        <div onClick={onRedirectToProfile}>
                             {userImage ? (
                                 <ProfilePicture image={userImage} height={"50px"} width={"50px"} />
                             ) : (
-                                <PersonIcon height={"50px"} width={"50px"} />
+                                <div className="icon-profile">
+                                    <PersonIcon height={"50px"} width={"50px"} />
+                                </div>
                             )}
                         </div>
-                    ) : null}
+                    )}
                 </div>
                 {logged ? (
                     <>

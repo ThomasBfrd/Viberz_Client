@@ -225,7 +225,7 @@ export default function EditProfileComponent() {
                 <div className="edit-profile-back-button">
                     <BackButton disabled={isLoading} />
                 </div>
-                <div className="profile-image">
+                <div className="edit-picture">
                     {image && (
                         <ProfilePicture
                             image={image}
