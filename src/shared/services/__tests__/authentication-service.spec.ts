@@ -4,7 +4,8 @@ import {initiateSpotifyAuth} from "../authentication.service.ts";
 vi.stubEnv("VITE_RESPONSE_TYPE", "code");
 vi.stubEnv("VITE_SPOTIFY_CLIENT_ID", "client123");
 vi.stubEnv("VITE_SCOPES", "user-read-email");
-vi.stubEnv("VITE_REDIRECT_URI", "http://localhost:3000/callback");
+vi.stubEnv("VITE_CLIENT_URL", "localhost:3000");
+vi.stubEnv("VITE_REDIRECT_URI", "/callback");
 
 describe(initiateSpotifyAuth.name, () => {
 
@@ -14,7 +15,7 @@ describe(initiateSpotifyAuth.name, () => {
             response_type: "code",
             client_id: "client123",
             scope: "user-read-email",
-            redirect_uri: "http://localhost:3000/callback",
+            redirect_uri: "https://localhost:3000/callback",
         })
 
         vi.spyOn(window, "location", "get").mockReturnValue({

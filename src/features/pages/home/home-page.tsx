@@ -4,7 +4,6 @@ import {AuthContext} from "../../../core/context/auth-context.tsx";
 import './home-page.css';
 import {useNavigate} from "react-router-dom";
 import ProfilePicture from "../../../shared/components/profile-picture/profile-picture.tsx";
-import Loader from "../../../shared/components/loader/loader.tsx";
 import type {MenuItem} from "../../../shared/interfaces/menu-item.interface.ts";
 import {menuItems} from "../../../shared/const/menu-items.ts";
 import MenuItemsScroll from "../../../shared/components/menu-items-scroll/menu-items-scroll.tsx";
@@ -15,7 +14,6 @@ import WhitelistForm from "../../../shared/components/whitelist-form/whitelist-f
 export default function HomePage() {
     const {isLoggedIn, jwtToken, guest} = useContext(AuthContext);
     const [logged, setLogged] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const [username, setUsername] = useState<string | null>(null);
     const [userImage, setUserImage] = useState<string | null>(null);
@@ -41,7 +39,6 @@ export default function HomePage() {
     }, [])
 
     useEffect(() => {
-        setLoading(true);
 
         const userStorage = localStorage.getItem('user');
         if (userStorage) {
@@ -50,7 +47,6 @@ export default function HomePage() {
             setUserImage(user.image);
         }
         setLogged(isLoggedIn);
-        setLoading(false);
 
     }, [isLoggedIn]);
 
@@ -98,11 +94,6 @@ export default function HomePage() {
                     children={<WhitelistForm isWhitelisted={handleChangeWhitelistedStatus} />}
                 />
             )}
-            {loading ? (
-                <div className="home-loader">
-                    <Loader />
-                </div>
-                ) : null}
             <div className="home-header">
                 <div className="header-logo-profile">
                     <div className="header-logo" data-testid="home-title" onClick={() => navigate(('/'))}>Viberz</div>
