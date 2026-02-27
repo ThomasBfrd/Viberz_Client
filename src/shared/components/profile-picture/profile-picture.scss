@@ -1,4 +1,12 @@
-.profile-image img {
+.profile-image {
+  position: relative;
+  cursor: pointer;
+  border: 2px solid var(--white);
+  border-radius: 100px;
+  overflow: hidden;
+
+  & img {
     object-fit: cover;
-    transform: scale(1.1);
+    height: 100%;
   }
+}

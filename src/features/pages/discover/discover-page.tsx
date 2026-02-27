@@ -79,7 +79,7 @@ const DiscoverPage = () => {
                 />}
                 <div className="playlist-add-button" data-testid="add-playlist-button">
                     {!guest && (
-                        <AddLessIcon toggleExpand={handleCloseAddPlaylistModal} onlyAdd={true} />
+                        <AddLessIcon initialValue={false} toggleExpand={handleCloseAddPlaylistModal} onlyAdd={true} />
                     )}
                 </div>
             <div className="discover-content">

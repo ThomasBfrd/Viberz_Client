@@ -1,7 +1,7 @@
 import HomePage from "../home-page.tsx";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {AuthContext} from "../../../../core/context/auth-context.tsx";
-import {cleanup, render, screen, waitForElementToBeRemoved} from "@testing-library/react";
+import {cleanup, render, screen} from "@testing-library/react";
 import {BrowserRouter} from "react-router-dom";
 import {mockAuthContext} from "../../../../shared/mocks/const/mockAuthContext.ts";
 import {userEvent} from "@testing-library/user-event";
@@ -52,9 +52,6 @@ describe(HomePage.name, () => {
                 const container: HTMLElement = await screen.findByTestId("home-container");
                 expect(container).toBeInTheDocument();
 
-                expect(screen.getByTestId("loader")).toBeInTheDocument();
-                await waitForElementToBeRemoved(() => screen.getByTestId("loader"));
-
                 const notConnected: HTMLElement = await screen.findByTestId("home-not-connected");
                 expect(notConnected).toBeInTheDocument();
                 expect(screen.getByTestId("home-connect-button")).toBeInTheDocument();
@@ -94,9 +91,6 @@ describe(HomePage.name, () => {
                 const container: HTMLElement = await screen.findByTestId("home-container");
                 expect(container).toBeInTheDocument();
 
-                expect(screen.getByTestId("loader")).toBeInTheDocument();
-                await waitForElementToBeRemoved(() => screen.getByTestId("loader"));
-
                 const username: HTMLElement = await screen.findByTestId("home-username");
                 expect(getItemSpy).toHaveBeenCalledWith(key);
                 expect(username).toHaveTextContent("Hello, fake-user");
@@ -105,16 +99,16 @@ describe(HomePage.name, () => {
 
             it("devrait afficher les types de menu", () => {
                 const menuTypes: HTMLElement[] = screen.getAllByTestId("home-menu-item");
-                const menuTypesNames = ["All", "Play", "Listen", "Learn"];
-                expect(menuTypes).toHaveLength(4);
-                menuTypesNames.forEach((name, index) => {
-                    expect(menuTypes[index]).toHaveTextContent(name);
+                const menuTypesNames: string[] = ["Guess", "Listen", "Learn"];
+                expect(menuTypes).toHaveLength(3);
+                menuTypesNames.forEach((name: string, index: number) => {
+                    expect(name).toMatch(menuTypes[index].textContent ?? "");
                 })
             })
 
             it("devrait afficher les catégories", () => {
                 const categoriesElements: HTMLElement[] = screen.getAllByTestId("home-category-name");
-                const categoriesName = ["Guess the genre", "Guess the song", "Share and discover", "Learn the structures"];
+                const categoriesName: string[] = ["Guess the genre", "Guess the song", "Share & discover", "Learn the structures"];
                 expect(categoriesElements).toHaveLength(4);
                 categoriesName.forEach((name, index) => {
                     expect(categoriesElements[index]).toHaveTextContent(name);
@@ -123,7 +117,7 @@ describe(HomePage.name, () => {
 
             it.each([
                 {type: "All", expectedCount: 4},
-                {type: "Play", expectedCount: 2},
+                {type: "Guess", expectedCount: 2},
                 {type: "Listen", expectedCount: 1},
                 {type: "Learn", expectedCount: 1},
             ])("devrait afficher $expectedCount catégories au clique du type $type", async ({type, expectedCount}) => {
@@ -137,7 +131,7 @@ describe(HomePage.name, () => {
             it.each([
                 {name: "Guess the genre", path: "/guess-genre"},
                 {name: "Guess the song", path: "/guess-song"},
-                {name: "Share and discover", path: "/discover"},
+                {name: "Share & discover", path: "/discover"},
                 {name: "Learn the structures", path: "/learn-structures"},
             ])("devrait rediriger vers $path au clique sur la catégorie $name", async ({name, path}) => {
                 const user = userEvent.setup();

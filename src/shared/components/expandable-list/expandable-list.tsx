@@ -7,15 +7,16 @@ interface ExpandableListProps {
     displayButton?: boolean;
     toggleExpand: () => void;
     forceIcon?: boolean;
+    initialToggleValue: boolean;
 }
 
-const ExpandableList = ({title, subTitle, displayButton, toggleExpand, forceIcon}: ExpandableListProps) => {
+const ExpandableList = ({title, subTitle, displayButton = true, toggleExpand, forceIcon, initialToggleValue}: ExpandableListProps) => {
 
     return (
         <div className="favorites" data-testid="expandable-list">
             <p className="title">{title}</p>
             <span className="sub-title">{subTitle}</span>
-            {displayButton && <AddLessIcon toggleExpand={toggleExpand} forceIcon={forceIcon}/>}
+            {displayButton && <AddLessIcon initialValue={initialToggleValue} toggleExpand={toggleExpand} forceIcon={forceIcon}/>}
         </div>
     )
 }
