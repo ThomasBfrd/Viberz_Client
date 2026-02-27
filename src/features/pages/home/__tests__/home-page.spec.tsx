@@ -99,16 +99,16 @@ describe(HomePage.name, () => {
 
             it("devrait afficher les types de menu", () => {
                 const menuTypes: HTMLElement[] = screen.getAllByTestId("home-menu-item");
-                const menuTypesNames = ["Guess", "Listen", "Learn"];
+                const menuTypesNames: string[] = ["Guess", "Listen", "Learn"];
                 expect(menuTypes).toHaveLength(3);
-                menuTypesNames.forEach((name, index) => {
-                    expect(name).toMatch(menuTypes[index].textContent);
+                menuTypesNames.forEach((name: string, index: number) => {
+                    expect(name).toMatch(menuTypes[index].textContent ?? "");
                 })
             })
 
             it("devrait afficher les catégories", () => {
                 const categoriesElements: HTMLElement[] = screen.getAllByTestId("home-category-name");
-                const categoriesName = ["Guess the genre", "Guess the song", "Share & discover", "Learn the structures"];
+                const categoriesName: string[] = ["Guess the genre", "Guess the song", "Share & discover", "Learn the structures"];
                 expect(categoriesElements).toHaveLength(4);
                 categoriesName.forEach((name, index) => {
                     expect(categoriesElements[index]).toHaveTextContent(name);

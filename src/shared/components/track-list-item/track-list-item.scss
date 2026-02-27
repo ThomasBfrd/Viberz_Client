@@ -68,7 +68,7 @@
     gap: 5px;
 
     & .track-list-item-name {
-      width: clamp(140px, 40vw, 400px);
+      width: 100%;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -124,10 +124,3 @@
     height: 10px;
   }
 }
-
-//@media screen and (min-width: 480px) {
-//  .track-list-item .track-list-item-infos .track-list-item-name {
-//    max-width: 300px;
-//    width: 100%;
-//  }
-//}
