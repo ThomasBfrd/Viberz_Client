@@ -4,7 +4,6 @@ import {AuthContext} from "../../../core/context/auth-context.tsx";
 import './home-page.css';
 import {useNavigate} from "react-router-dom";
 import ProfilePicture from "../../../shared/components/profile-picture/profile-picture.tsx";
-import Loader from "../../../shared/components/loader/loader.tsx";
 import type {MenuItem} from "../../../shared/interfaces/menu-item.interface.ts";
 import {menuItems} from "../../../shared/const/menu-items.ts";
 import MenuItemsScroll from "../../../shared/components/menu-items-scroll/menu-items-scroll.tsx";
@@ -15,12 +14,10 @@ import WhitelistForm from "../../../shared/components/whitelist-form/whitelist-f
 export default function HomePage() {
     const {isLoggedIn, jwtToken, guest} = useContext(AuthContext);
     const [logged, setLogged] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const [username, setUsername] = useState<string | null>(null);
     const [userImage, setUserImage] = useState<string | null>(null);
     const [categoryType, setCategoryType] = useState<string>("all");
-    const [isWhitelisted, setIsWhitelisted] = useState<boolean>(false);
     const [modalWhitelist, setModalWhitelist] = useState<boolean>(false);
 
     const filteredCategories = useMemo(() => {
@@ -42,7 +39,6 @@ export default function HomePage() {
     }, [])
 
     useEffect(() => {
-        setLoading(true);
 
         const userStorage = localStorage.getItem('user');
         if (userStorage) {
@@ -51,35 +47,18 @@ export default function HomePage() {
             setUserImage(user.image);
         }
         setLogged(isLoggedIn);
-        setLoading(false);
 
     }, [isLoggedIn]);
-
-    const checkWhitelistedStored = () => {
-        const whiteListFromStorage = localStorage.getItem('viberz-whitelist');
-
-        if (whiteListFromStorage) {
-            setIsWhitelisted(JSON.parse(whiteListFromStorage));
-        } else {
-            setModalWhitelist(true);
-            setIsWhitelisted(false);
-        }
-    }
 
     const handleChangeWhitelistedStatus = (isWhitelisted: boolean) => {
 
         if (isWhitelisted) {
             setModalWhitelist(false);
-            localStorage.setItem('viberz-whitelist', JSON.stringify(true));
             return initiateSpotifyAuth();
-        } else {
-            localStorage.removeItem('viberz-whitelist');
         }
-
-        setIsWhitelisted(isWhitelisted);
     }
 
-    function onRedirectToCategory(path: string) {
+    const onRedirectToCategory = (path: string): void => {
         if (path && isLoggedIn) {
             navigate(path);
         }
@@ -87,15 +66,9 @@ export default function HomePage() {
         return;
     }
 
-    function onRedirectToProfile() {
+    const onRedirectToProfile = (): void => {
         if (isLoggedIn) {
             navigate('/profile');
-        } else {
-            checkWhitelistedStored();
-
-            if (isWhitelisted) {
-                initiateSpotifyAuth();
-            }
         }
     }
 
@@ -121,23 +94,20 @@ export default function HomePage() {
                     children={<WhitelistForm isWhitelisted={handleChangeWhitelistedStatus} />}
                 />
             )}
-            {loading ? (
-                <div className="home-loader">
-                    <Loader />
-                </div>
-                ) : null}
             <div className="home-header">
                 <div className="header-logo-profile">
                     <div className="header-logo" data-testid="home-title" onClick={() => navigate(('/'))}>Viberz</div>
-                    {logged ? (
-                        <div className="icon-profile" onClick={onRedirectToProfile}>
+                    {logged && (
+                        <div onClick={onRedirectToProfile}>
                             {userImage ? (
                                 <ProfilePicture image={userImage} height={"50px"} width={"50px"} />
                             ) : (
-                                <PersonIcon height={"50px"} width={"50px"} />
+                                <div className="icon-profile">
+                                    <PersonIcon height={"50px"} width={"50px"} />
+                                </div>
                             )}
                         </div>
-                    ) : null}
+                    )}
                 </div>
                 {logged ? (
                     <>
@@ -149,7 +119,7 @@ export default function HomePage() {
                                 <button
                                     className="connect-button"
                                     data-testid="home-connect-button"
-                                    onClick={checkWhitelistedStored}>Connect with Spotify
+                                    onClick={() => setModalWhitelist(!modalWhitelist)}>Connect with Spotify
                                 </button>
                             </div>
                         )}
@@ -161,7 +131,7 @@ export default function HomePage() {
                             <button
                                 className="connect-button"
                                 data-testid="home-connect-button"
-                                onClick={checkWhitelistedStored}>Connect with Spotify
+                                onClick={() => setModalWhitelist(true)}>Connect with Spotify
                             </button>
                             <p className="connection-button-text">Or</p>
                             <button
@@ -183,7 +153,7 @@ export default function HomePage() {
                         <div
                             className={menuItem.available ? "home-category" : "home-category disabled"}
                             style={{backgroundImage : `url(${menuItem.background})`}}
-                            onClick={() => jwtToken ? (onRedirectToCategory(menuItem.path)) : checkWhitelistedStored()}
+                            onClick={() => jwtToken && (onRedirectToCategory(menuItem.path))}
                             key={index}>
                             <span className="home-category-type">{menuItem.value}</span>
                             <h3 className="home-category-name" data-testid="home-category-name">{menuItem.label}</h3>

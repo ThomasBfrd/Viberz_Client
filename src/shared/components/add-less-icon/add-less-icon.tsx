@@ -1,40 +1,36 @@
-import {useState} from "react";
+import {useMemo} from "react";
 import "./add-less-icon.scss";
 
 interface AddLessIconProps {
+    initialValue: boolean;
     forceIcon?: boolean;
     onlyAdd?: boolean;
     toggleExpand: () => void;
 }
 
-const AddLessIcon = ({toggleExpand, onlyAdd, forceIcon}: AddLessIconProps) => {
-    const [displayed, setDisplayed] = useState<boolean>(false);
+const AddLessIcon = ({initialValue, toggleExpand, onlyAdd, forceIcon}: AddLessIconProps) => {
 
     const changeDisplay = () => {
-        setDisplayed(!displayed);
         toggleExpand();
     }
 
-    function displayIcon(): string {
-        if (!displayed && forceIcon) {
+    const displayIcon = useMemo(() => {
+        if (forceIcon || onlyAdd) {
             return "+";
         }
 
-        if (displayed && !forceIcon && !onlyAdd) {
-            return "-";
-        }
-
-        return "+"
-    }
+        return initialValue ? "-" : "+"
+    }, [forceIcon, initialValue, onlyAdd])
 
     return (
         <button className="edit-options-button"
                 data-testid="expandable-icon-button"
                 onClick={changeDisplay}>
-                        <span
-                            className="edit-options-button-text"
-                            data-testid="edit-options-button-text"
-                        >{displayIcon()}</span>
+                <span
+                    className="edit-options-button-text"
+                    data-testid="edit-options-button-text"
+                >{displayIcon}
+                </span>
         </button>
     )
 }

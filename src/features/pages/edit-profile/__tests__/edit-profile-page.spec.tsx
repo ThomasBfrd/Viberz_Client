@@ -219,8 +219,8 @@ describe(EditProfileComponent.name, () => {
                 const buttonAddButton = screen.getAllByTestId("expandable-icon-button");
                 const buttonAddText = screen.getAllByTestId("edit-options-button-text");
                 expect(buttonAdd).toHaveLength(2);
-                expect(buttonAddText[0]).toHaveTextContent("+");
-                await user.click(buttonAddButton[0]);
+                expect(buttonAddText[1]).toHaveTextContent("+");
+                await user.click(buttonAddButton[1]);
 
                 const modal = screen.getByTestId("modal-container");
                 expect(modal).toBeInTheDocument();
@@ -242,7 +242,7 @@ describe(EditProfileComponent.name, () => {
                 expect(screen.getByTestId("edit-profile-no-artists")).toBeInTheDocument();
 
                 const buttonAddButton = screen.getAllByTestId("expandable-icon-button");
-                await user.click(buttonAddButton[0]);
+                await user.click(buttonAddButton[1]);
 
                 const modal = screen.getByTestId("modal-container");
                 expect(modal).toBeInTheDocument();
@@ -258,7 +258,7 @@ describe(EditProfileComponent.name, () => {
 
         describe("Sélection des genres", () => {
 
-            it("devrait pouvoir permettre la sélection d'un category", async () => {
+            it("devrait pouvoir permettre la sélection d'un genre", async () => {
                 const user: UserEvent = userEvent.setup();
                 const expandableElement: HTMLElement[] = screen.getAllByTestId("expandable-list");
                 const addIcon: HTMLElement[] = screen.getAllByTestId("edit-options-button-text");
@@ -267,9 +267,9 @@ describe(EditProfileComponent.name, () => {
                 const genresElements: HTMLElement[] = screen.getAllByTestId("edit-profile-selected-genre-text");
 
                 expect(expandableElement).toHaveLength(2);
-                expect(addIcon).toHaveLength(1);
-                expect(expandableIconButton).toHaveLength(1);
-                expect(addIcon[0]).toHaveTextContent("+");
+                expect(addIcon).toHaveLength(2);
+                expect(expandableIconButton).toHaveLength(2);
+                expect(addIcon[0]).toHaveTextContent("-");
                 expect(genresElements).toHaveLength(3);
                 expect(genreToAdd[0]).toHaveClass("favorites-card");
 
@@ -280,13 +280,13 @@ describe(EditProfileComponent.name, () => {
                 const updatedExpandableIconButton: HTMLElement[] = screen.getAllByTestId("expandable-icon-button");
                 expect(updatedAddIcons).toHaveLength(2);
                 expect(updatedExpandableIconButton).toHaveLength(2);
-                expect(updatedAddIcons[0]).toHaveTextContent("+")
+                expect(updatedAddIcons[0]).toHaveTextContent("-")
 
                 await user.click(updatedExpandableIconButton[0])
 
                 const updatedGenresList: HTMLElement[] = screen.getAllByTestId("edit-profile-selected-genre-text");
                 expect(updatedGenresList).toHaveLength(1);
-                expect(updatedGenresList[0]).toHaveTextContent("Trap")
+                expect(updatedGenresList[0]).toHaveTextContent("Trap");
             })
         });
     })

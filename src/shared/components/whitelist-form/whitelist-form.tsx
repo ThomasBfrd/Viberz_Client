@@ -1,5 +1,5 @@
 import "./whitelist-form.scss";
-import {useCallback, useState} from "react";
+import {useCallback, useState, type ChangeEvent} from "react";
 import Loader from "../loader/loader.tsx";
 import {emailRegex} from "../../const/input-regex.ts";
 import {userAuthService} from "../../services/user-auth.service.ts";
@@ -13,9 +13,9 @@ const WhitelistForm = ({isWhitelisted}: WhitelistFormProps) => {
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     
-    const onChange = useCallback((e: any) => {
+    const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        const email = e.target.value;
+        const email: string = e.target.value;
         setEmail(email);
     }, [])
 
